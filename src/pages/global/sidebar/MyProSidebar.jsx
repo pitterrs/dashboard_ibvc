@@ -1,6 +1,5 @@
-// docs https://github.com/azouaoui-med/react-pro-sidebar
 import { useState } from "react";
-import { Menu, Sidebar, MenuItem } from "react-pro-sidebar";
+import { Menu, Sidebar, MenuItem, SubMenu } from "react-pro-sidebar";
 import { useProSidebar } from "react-pro-sidebar";
 
 import { useSidebarContext } from "./sidebarContext";
@@ -9,14 +8,15 @@ import { Link } from "react-router-dom";
 import { tokens } from "../../../theme";
 import { useTheme, Box, Typography, IconButton } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
+import MusicNoteOutlinedIcon from '@mui/icons-material/MusicNoteOutlined';
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
-import ReceiptOutlinedIcon from "@mui/icons-material/ReceiptOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
+import Woman2OutlinedIcon from '@mui/icons-material/Woman2Outlined';
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
+import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
+import Diversity3OutlinedIcon from '@mui/icons-material/Diversity3Outlined';
+import CurrencyExchangeOutlinedIcon from '@mui/icons-material/CurrencyExchangeOutlined';
+import AddHomeWorkOutlinedIcon from '@mui/icons-material/AddHomeWorkOutlined';
 
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -24,6 +24,8 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import SwitchRightOutlinedIcon from "@mui/icons-material/SwitchRightOutlined";
 import SwitchLeftOutlinedIcon from "@mui/icons-material/SwitchLeftOutlined";
+import "./style.css"
+
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -173,58 +175,178 @@ const MyProSidebar = () => {
               color={colors.grey[300]}
               sx={{ m: "15px 20px 5px 20px" }}
             >
-              Data
+              Secretaria
             </Typography>
-            <Item
+            {/* <Item
               title="Manage Team"
               to="/team"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
             <Item
-              title="Contacts Information"
-              to="/contacts"
+              title="Relatório de Membros"
+              to="/membros"
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
+              title="Cadastrar Membro"
+              to="/novomembro"
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Aniversariantes"
+              to="/teste"
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            {/* <Item
+              title="Contacts Information"
+              to="/contacts"
+              icon={<ContactsOutlinedIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            /> */}
+            {/* <Item
               title="Invoices Balances"
               to="/invoices"
               icon={<ReceiptOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
 
             <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 20px 5px 20px" }}
             >
-              Pages
+              Equipes/Ministerios
             </Typography>
-            <Item
-              title="Profile Form"
-              to="/form"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Calendar"
-              to="/calendar"
-              icon={<CalendarTodayOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="FAQ Page"
-              to="/faq"
-              icon={<HelpOutlineOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            {/* Inicio Sub Menu */}
+            <SubMenu component={<Link className="link texto-menu" />} icon={<CurrencyExchangeOutlinedIcon className="tamanho" />} label="Comissão de Finanças" >
+              <MenuItem>
+                <Item
+                  title="Gerenciar Equipe"
+                  to="/comissaofinancas"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+              <MenuItem>
+                <Item
+                  title="Adicionar Pessoa"
+                  to="/addfinancas"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+            </SubMenu>
+            {/* Fim Sub Menu */}
+            {/* Inicio Sub Menu */}
+            <SubMenu component={<Link className="link texto-menu" />} icon={<Diversity3OutlinedIcon className="tamanho" />} label="Corpo Diaconal" >
+              <MenuItem>
+                <Item
+                  title="Gerenciar Equipe"
+                  to="/corpodiaconal"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+              <MenuItem>
+                <Item
+                  title="Adicionar Membro"
+                  to="/adddiacono"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+            </SubMenu>
+            {/* Fim Sub Menu */}
+            {/* Inicio Sub Menu */}
+            <SubMenu component={<Link className="link texto-menu" />} icon={<Woman2OutlinedIcon className="tamanho" />} label="Mensageiras do Rei" >
+              <MenuItem>
+                <Item
+                  title="Gerenciar Membros"
+                  to="/mensageiras"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+              <MenuItem>
+                <Item
+                  title="Adicionar Mensageira"
+                  to="/addmensageira"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+            </SubMenu>
+            {/* Fim Sub Menu */}
+            {/* Inicio Sub Menu */}
+            <SubMenu component={<Link className="link texto-menu" />} icon={<MusicNoteOutlinedIcon className="tamanho" />} label="Ministério de Música" >
+              <MenuItem>
+                <Item
+                  title="Gerenciar Membros"
+                  to="/team"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+              <MenuItem>
+                <Item
+                  title="Adicionar Membro"
+                  to="/contacts"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+            </SubMenu>
+            {/* Fim Sub Menu */}
+            {/* Inicio Sub Menu */}
+            <SubMenu component={<Link className="link texto-menu" />} icon={<EmojiPeopleOutlinedIcon className="tamanho" />} label="Ministério de Dança" >
+              <MenuItem>
+                <Item
+                  title="Gerenciar Membros"
+                  to="/team"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+              <MenuItem>
+                <Item
+                  title="Adicionar Membro"
+                  to="/contacts"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+            </SubMenu>
+            {/* Fim Sub Menu */}
+            {/* Inicio Sub Menu */}
+            <SubMenu component={<Link className="link texto-menu" />} icon={<AddHomeWorkOutlinedIcon className="tamanho" />} label="Comissão de Patrimônio" >
+              <MenuItem>
+                <Item
+                  title="Gerenciar Membros"
+                  to="/team"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+              <MenuItem>
+                <Item
+                  title="Adicionar Membro"
+                  to="/contacts"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+            </SubMenu>
+            {/* Fim Sub Menu */}
 
             <Typography
               variant="h6"

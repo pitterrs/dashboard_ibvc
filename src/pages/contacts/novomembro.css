@@ -1,0 +1,16 @@
+.fundo{
+    background-color: #1F2A40 !important;
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+.teste{
+    background-color: #3f547e;
+    color: #FFF;
+}
+
+.modal-content{
+    background-color: #141c2c
+}
