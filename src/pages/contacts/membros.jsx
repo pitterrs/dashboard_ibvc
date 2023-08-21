@@ -18,9 +18,38 @@ const Membros = () => {
   const ChangeData = (data) => {
     let retorno = {};
     for (var linha of data) {
-      // Object.defineProperty(linha, 'icone', {
-      //   value: <HomeOutlinedIcon />,
-      // })
+      
+      if (linha.nascimento){
+        const ano_aniversario = linha.nascimento.substr(0, 4);
+        const mes_aniversario = linha.nascimento.substr(5, 2);
+        const dia_aniversario = linha.nascimento.substr(8, 2);
+        // const idade = idade(ano,mes,dia);
+        const CalcIdade = (ano_aniversario, mes_aniversario, dia_aniversario) =>{
+          var d = new Date,
+              ano_atual = d.getFullYear(),
+              mes_atual = d.getMonth() + 1,
+              dia_atual = d.getDate(),
+      
+              ano_aniversario = +ano_aniversario,
+              mes_aniversario = +mes_aniversario,
+              dia_aniversario = +dia_aniversario,
+      
+              quantos_anos = ano_atual - ano_aniversario;
+      
+          if (mes_atual < mes_aniversario || mes_atual == mes_aniversario && dia_atual < dia_aniversario) {
+              quantos_anos--;
+          }
+      
+          return quantos_anos < 0 ? 0 : quantos_anos;
+        }
+
+        const idade = CalcIdade(ano_aniversario,mes_aniversario,dia_aniversario);
+
+        Object.defineProperty(linha, 'idade', {
+          value: idade,
+        })
+      }
+
       if (linha.nascimento) {
         const newdate = new Date(linha.nascimento);
         const dia = (newdate.getDate() + 1) < 10 ? `0${(newdate.getDate() + 1)}` : (newdate.getDate() + 1);;
@@ -31,6 +60,7 @@ const Membros = () => {
           value: formatDate,
         })
       }
+
       if (linha.conversao) {
         const newdate = new Date(linha.conversao);
         const dia = (newdate.getDate() + 1) < 10 ? `0${(newdate.getDate() + 1)}` : (newdate.getDate() + 1);;
@@ -41,6 +71,7 @@ const Membros = () => {
           value: formatDate,
         })
       }
+
       if (linha.batismo) {
         const newdate = new Date(linha.batismo);
         const dia = (newdate.getDate() + 1) < 10 ? `0${(newdate.getDate() + 1)}` : (newdate.getDate() + 1);;

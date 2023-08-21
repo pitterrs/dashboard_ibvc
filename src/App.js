@@ -17,6 +17,12 @@ import Novomembro from "./pages/contacts/novomembro";
 import Mensageiras from "./pages/mensageiras/mensageiras";
 import AddMensageira from "./pages/mensageiras/addmensageira";
 import FormFloatingLayoutExample from "./pages/contacts/teste";
+import Transacoes from "./pages/financeiro/transacoes";
+import VisaoGeral from "./pages/financeiro/geral";
+import Contas from "./pages/financeiro/contas";
+import CentroCusto from "./pages/financeiro/custo";
+import Lancamentos from "./pages/financeiro/lancamentos";
+import Fornecedores from "./pages/financeiro/fornecedores";
 import Form from "./pages/form";
 import Calendar from "./pages/calendar";
 import Bar from "./pages/bar";
@@ -46,7 +52,13 @@ const App = () => {
                 <Route path="/adddiacono" element={<AddDiacono />} />
                 <Route path="/mensageiras" element={<Mensageiras />} />
                 <Route path="/addmensageira" element={<AddMensageira />} />
-                {/* <Route path="/contacts" element={<Contacts />} /> */}
+                <Route path="/dashboard" element={<VisaoGeral />} />
+                <Route path="/transacoes" element={<Transacoes />} />
+                <Route path="/contas" element={<Contas />} />
+                <Route path="/centrocusto" element={<CentroCusto />} />
+                <Route path="/lancamentos" element={<Lancamentos />} />
+                <Route path="/fornecedores" element={<Fornecedores />} />
+                <Route path="/teste" element={<FormFloatingLayoutExample />} />
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/form" element={<Form />} />
                 <Route path="/bar" element={<Bar />} />

@@ -4,17 +4,22 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Button from '@mui/material/Button';
+import ChangeFinancas from "./modificarfinancas";
+import { toast, ToastContainer } from "react-toastify";
 
 import Header from "../../components/Header";
 
 const ComissaoFinancas = () => {
-  
-  const [membros, setMembros] = useState([]);
 
-  const getMembros = async () => {
+  const [financas, setFinancas] = useState([]);
+  const [show, setShow] = useState(false);
+  const [financa, setFinanca] = useState(null);
+
+  const getFinancas = async () => {
     try {
-      const res = await axios.get(`http://localhost:8800/`);
-      setMembros(res.data)
+      const res = await axios.get(`http://localhost:8800/getfinancas`);
+      setFinancas(res.data)
     } catch (error) {
       console.log('erro desconhecido');
     }
@@ -23,7 +28,11 @@ const ComissaoFinancas = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const columns = [
-    { field: "id", headerName: "Id", width: 100 },
+    {
+      field: "icone", headerName: "", renderCell: ({ row: { id } }) => {
+        return <Button onClick={() => handleEdit(financas, id)} variant="contained">Modificar</Button>;
+      }, width: 100
+    },
     {
       field: "nome",
       headerName: "Name",
@@ -35,9 +44,16 @@ const ComissaoFinancas = () => {
     { field: "cargo", headerName: "Cargo", width: 250 },
   ];
 
+  const handleEdit = (financas, id) => {
+    const id2 = [id];
+    const selectedRowsData = id2.map((id) => financas.find((row) => row.id === id));
+    setFinanca(selectedRowsData);
+    setShow(true);
+  }
+
   useEffect(() => {
-    getMembros();
-  },[setMembros]);
+    getFinancas();
+  }, [setFinancas]);
 
   return (
     <Box m="20px">
@@ -78,10 +94,14 @@ const ComissaoFinancas = () => {
         }}
       >
         <DataGrid
-          rows={membros}
+          rows={financas}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
         />
+        {show && (
+          <ChangeFinancas show={show} setShow={setShow} financa={financa} setFinanca={setFinanca} getFinancas={getFinancas} />
+        )}
+        <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
       </Box>
     </Box>
   );

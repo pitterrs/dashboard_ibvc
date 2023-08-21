@@ -1,12 +1,48 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ResponsiveLine } from "@nivo/line";
 import { useTheme } from "@mui/material";
 import { tokens } from "../theme";
 import { mockLineData } from "../data/mockData";
+import { mockMembros } from "../data/mockData";
+import axios from "axios";
 
 const LineChart = ({ isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const [dataChart, setDataChart] = useState([]);
+
+  const chartData = async () =>{
+    //Captura a quantidade de membros ativos atualmente
+    try {
+        const res = await axios.get(`http://localhost:8800/getallinativos`);
+        const res2 = await axios.get(`http://localhost:8800/getallativos`);
+        const dados = mockMembros();
+        let n = 0;
+        while(n < 12){
+          Object.defineProperty(dados[0].data[n], 'y', {
+            value: res2.data[n].quantidade,
+          })
+          n++;
+        }
+
+        n = 0;
+        while(n < 12){
+          Object.defineProperty(dados[1].data[n], 'y', {
+            value: res.data[n].quantidade,
+          })
+          n++;
+        }
+
+        setDataChart(dados);
+    } catch (error) {
+        console.log('erro desconhecido');
+    }
+  }
+
+  useEffect(() => {
+    chartData();
+  }, []);
+
   return (
     <ResponsiveLine
       theme={{
@@ -44,7 +80,8 @@ const LineChart = ({ isDashboard = false }) => {
         },
       }}
       curve="catmullRom"
-      data={mockLineData}
+      data={dataChart}
+      // data={dataChart}
       colors={isDashboard ? { datum: "color" } : { scheme: "nivo" }}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       xScale={{ type: "point" }}
@@ -52,7 +89,7 @@ const LineChart = ({ isDashboard = false }) => {
         type: "linear",
         min: "auto",
         max: "auto",
-        stacked: true,
+        stacked: false,
         reverse: false,
       }}
       yFormat=" >-.2f"

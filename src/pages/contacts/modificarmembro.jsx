@@ -48,6 +48,11 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
 
     const handleEdit = async (e) => {
 
+        let totalmembrosativos = 0;
+        let qntmembrosatual = [];
+        let totalmembrosinativos = 0;
+        let qntmembrosatual2 = [];
+
         if (!nome) { return toast.warn("Campo 'Nome' é obrigatório"); }
 
         await axios
@@ -80,6 +85,91 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
                 }
             )
             .catch(({ data }) => toast.error(data));
+
+        //Captura a quantidade de membros ativos atualmente
+        try {
+            const res = await axios.get(`http://localhost:8800/totalmembrosativos`);
+            totalmembrosativos = res.data[0].quantidade
+        } catch (error) {
+            console.log('erro desconhecido');
+        }
+
+        //Verifica se já existe um registro de quantidades para o mês atual
+        try {
+            const res = await axios.get(`http://localhost:8800/qntmembrosatual`);
+            qntmembrosatual = res.data
+        } catch (error) {
+            console.log('erro desconhecido');
+        }
+
+        //Atualiza/Cria o registro na tabela de quantidades total de membros ativos para o mês atual
+        if (qntmembrosatual.length == 0) {
+            const dataAtual = new Date();
+            const ano = dataAtual.getFullYear();
+            let mes = dataAtual.getMonth() + 1;
+            if (mes < 10) {
+                mes = '0' + mes;
+            }
+            await axios
+                .post("http://localhost:8800/addqntmembros", {
+                    ano: ano,
+                    mes: mes,
+                    quantidade: totalmembrosativos,
+                })
+                .then(({ data }) => console.log(data))
+                .catch(({ data }) => console.log(data));
+        } else {
+            await axios
+                .put("http://localhost:8800/changeqntmembros", {
+                    ano: qntmembrosatual[0].ano,
+                    mes: qntmembrosatual[0].mes,
+                    quantidade: totalmembrosativos,
+                }).then(({ data }) => console.log(data))
+                .catch(({ data }) => console.log(data));
+        }
+
+        //////////////
+        //Captura a quantidade de membros ativos atualmente
+        try {
+            const res = await axios.get(`http://localhost:8800/totalmembrosinativos`);
+            totalmembrosinativos = res.data[0].quantidade
+        } catch (error) {
+            console.log('erro desconhecido');
+        }
+
+        //Verifica se já existe um registro de quantidades para o mês atual
+        try {
+            const res = await axios.get(`http://localhost:8800/qntmembrosatual2`);
+            qntmembrosatual2 = res.data
+        } catch (error) {
+            console.log('erro desconhecido');
+        }
+
+        //Atualiza/Cria o registro na tabela de quantidades total de membros ativos para o mês atual
+        if (qntmembrosatual2.length == 0) {
+            const dataAtual = new Date();
+            const ano = dataAtual.getFullYear();
+            let mes = dataAtual.getMonth() + 1;
+            if (mes < 10) {
+                mes = '0' + mes;
+            }
+            await axios
+                .post("http://localhost:8800/addqntmembros2", {
+                    ano: ano,
+                    mes: mes,
+                    quantidade: totalmembrosinativos,
+                })
+                .then(({ data }) => console.log(data))
+                .catch(({ data }) => console.log(data));
+        } else {
+            await axios
+                .put("http://localhost:8800/changeqntmembros2", {
+                    ano: qntmembrosatual2[0].ano,
+                    mes: qntmembrosatual2[0].mes,
+                    quantidade: totalmembrosinativos,
+                }).then(({ data }) => console.log(data))
+                .catch(({ data }) => console.log(data));
+        }
 
         setShow(false);
         getMembros();
@@ -222,12 +312,12 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
                                                     />
                                                     <Form.Check
                                                         inline
-                                                        label="Outro"
+                                                        label="Aclamação"
                                                         name="admissao"
                                                         type={type}
-                                                        id="outro"
-                                                        value="Outro"
-                                                        checked={admissao == 'Outro' ? 'True' : ''}
+                                                        id="Aclamacao"
+                                                        value="Aclamação"
+                                                        checked={admissao == 'Aclamação' ? 'True' : ''}
                                                     />
                                                 </div>
                                             ))}

@@ -2,20 +2,62 @@ import React from "react";
 import { Box, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataContacts } from "../../data/mockData";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import Button from '@mui/material/Button';
+import ChangeMensageiras from "./modificarmensageira";
+import { toast, ToastContainer } from "react-toastify";
 import Header from "../../components/Header";
 
-const Mensageiras = () => {
+const CorpoDiaconal = () => {
 
-  const [membros, setMembros] = useState([]);
+  const [mensageiras, setMensageiras] = useState([]);
+  const [show, setShow] = useState(false);
+  const [mensageira, setMensageira] = useState(null);
 
-  const getMembros = async () => {
+  const ChangeData = (data) => {
+    let retorno = {};
+    for (var linha of data) {
+      
+      if (linha.nascimento){
+        const ano_aniversario = linha.nascimento.substr(0, 4);
+        const mes_aniversario = linha.nascimento.substr(5, 2);
+        const dia_aniversario = linha.nascimento.substr(8, 2);
+        const CalcIdade = (ano_aniversario, mes_aniversario, dia_aniversario) =>{
+          var d = new Date,
+              ano_atual = d.getFullYear(),
+              mes_atual = d.getMonth() + 1,
+              dia_atual = d.getDate(),
+      
+              ano_aniversario = +ano_aniversario,
+              mes_aniversario = +mes_aniversario,
+              dia_aniversario = +dia_aniversario,
+      
+              quantos_anos = ano_atual - ano_aniversario;
+      
+          if (mes_atual < mes_aniversario || mes_atual == mes_aniversario && dia_atual < dia_aniversario) {
+              quantos_anos--;
+          }
+      
+          return quantos_anos < 0 ? 0 : quantos_anos;
+        }
+
+        const idade = CalcIdade(ano_aniversario,mes_aniversario,dia_aniversario);
+
+        Object.defineProperty(linha, 'idade', {
+          value: idade,
+        })
+      }
+    }
+    return (
+      retorno = data
+    );
+  };
+
+  const getMensageiras = async () => {
     try {
-      const res = await axios.get(`http://localhost:8800/`);
-      setMembros(res.data)
+      const res = await axios.get(`http://localhost:8800/getmensageiras`);
+      setMensageiras(ChangeData(res.data))
     } catch (error) {
       console.log('erro desconhecido');
     }
@@ -24,7 +66,11 @@ const Mensageiras = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const columns = [
-    { field: "id", headerName: "Id", width: 100 },
+    {
+      field: "icone", headerName: "", renderCell: ({ row: { id } }) => {
+        return <Button onClick={() => handleEdit(mensageiras, id)} variant="contained">Modificar</Button>;
+      }, width: 100
+    },
     { field: "nome", headerName: "Name da Mensageira", cellClassName: "name-column--cell", width: 200 },
     { field: "idade", headerName: "Idade", type: "number", headerAlign: "left",align: "left", width: 100 },
     { field: "nascimento", headerName: "Data de Nascimento", type: "date", width: 115 },
@@ -34,20 +80,29 @@ const Mensageiras = () => {
     { field: "situacao", headerName: "Situação", width: 100 },
     { field: "funcao", headerName: "Função", width: 100 },
     { field: "responsavel1", headerName: "Responsável Principal", width: 150 },
-    { field: "contato1", headerName: "Contato Responsável", width: 120 },
+    { field: "resp1email", headerName: "Email Responsável Principal", width: 120 },
+    { field: "resp1contato", headerName: "Contato Responsável Principal", width: 120 },
     { field: "responsavel2", headerName: "Responsável Secundário", width: 150 },
-    { field: "contato2", headerName: "Contato do Secundário", width: 130 },
-    { field: "observacao", headerName: "Observações", width: 100 },
+    { field: "resp2email", headerName: "Email Responsável Secundário", width: 150 },
+    { field: "resp2contato", headerName: "Contato do Responsável Secundário", width: 130 },
+    { field: "outrasinfos", headerName: "Observações", width: 100 },
   ];
 
+  const handleEdit = (mensageiras, id) => {
+    const id2 = [id];
+    const selectedRowsData = id2.map((id) => mensageiras.find((row) => row.id === id));
+    setMensageira(selectedRowsData);
+    setShow(true);
+  }
+
   useEffect(() => {
-    getMembros();
-  }, [setMembros]);
+    getMensageiras();
+  }, [setMensageiras]);
 
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="Relatório de Membros" subtitle="Relatório com todos os membros cadastrados" />
+        <Header title="Mensageiras do Rei" subtitle="Relatório das Mensageiras do Rei" />
       </Box>
       <Box
         m="8px 0 0 0"
@@ -83,13 +138,17 @@ const Mensageiras = () => {
         }}
       >
         <DataGrid
-          rows={membros}
+          rows={mensageiras}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
         />
+        {show && (
+          <ChangeMensageiras show={show} setShow={setShow} mensageira={mensageira} setMensageira={setMensageira} getMensageiras={getMensageiras} />
+        )}
+        <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
       </Box>
     </Box>
   );
 };
 
-export default Mensageiras;
+export default CorpoDiaconal;

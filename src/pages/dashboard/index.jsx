@@ -20,11 +20,213 @@ import GeographyChart from "../../components/GeographyChart";
 import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import Groups2OutlinedIcon from '@mui/icons-material/Groups2Outlined';
+import Diversity3OutlinedIcon from '@mui/icons-material/Diversity3Outlined';
+import ArrowDownwardOutlinedIcon from '@mui/icons-material/ArrowDownwardOutlined';
+import Person3Icon from '@mui/icons-material/Person3';
+import Person2Icon from '@mui/icons-material/Person2';
+import Groups2Icon from '@mui/icons-material/Groups2';
+import GroupsIcon from '@mui/icons-material/Groups';
 
 const Dashboard = () => {
   const theme = useTheme();
   const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
   const colors = tokens(theme.palette.mode);
+  const [allHomens, setHomens] = useState();
+  const [allMulheres, setMulheres] = useState();
+  const [totalmembrosativos, settotalmembrosativos] = useState();
+  let qntmembrosatual = [];
+  let qntmembrosatual2 = [];
+  let qntmembrosanterior = [];
+  let totalmembrosinativos = 0;
+  const [porcentagemMembrosAtivos, setPorcentagemMembrosAtivos] = useState();
+  const [increase, setIncrease] = useState();
+  const [qntmembrosinativos, setqntmembrosinativos] = useState();
+
+  const getMembros = async () => {
+    let totalMembrosativos = 0;
+    let qntMembrosatual = [];
+
+    try {
+      const res = await axios.get(`http://localhost:8800/getallhomens`);
+      setHomens(res.data[0].genero)
+    } catch (error) {
+      console.log('erro desconhecido');
+    }
+
+    try {
+      const res = await axios.get(`http://localhost:8800/getallmulheres`);
+      setMulheres(res.data[0].genero)
+    } catch (error) {
+      console.log('erro desconhecido');
+    }
+
+    ///////////////////////////////////////////
+
+    //Captura a quantidade de membros ativos atualmente
+    try {
+      const res = await axios.get(`http://localhost:8800/totalmembrosativos`);
+      totalMembrosativos = res.data[0].quantidade
+    } catch (error) {
+      console.log('erro desconhecido');
+    }
+
+    //Verifica se já existe um registro de quantidades para o mês atual
+    try {
+      const res = await axios.get(`http://localhost:8800/qntmembrosatual`);
+      qntMembrosatual = res.data
+    } catch (error) {
+      console.log('erro desconhecido');
+    }
+
+    //Atualiza/Cria o registro na tabela de quantidades total de membros ativos para o mês atual
+
+    if (qntMembrosatual.length == 0) {
+      const dataAtual = new Date();
+      const ano = dataAtual.getFullYear();
+      let mes = dataAtual.getMonth() + 1;
+      if (mes < 10) {
+        mes = '0' + mes;
+      }
+      await axios
+        .post("http://localhost:8800/addqntmembros", {
+          ano: ano,
+          mes: mes,
+          quantidade: totalMembrosativos,
+        })
+        .then(({ data }) => console.log(data))
+        .catch(({ data }) => console.log(data));
+
+    } else {
+      await axios
+        .put("http://localhost:8800/changeqntmembros", {
+          ano: qntMembrosatual[0].ano,
+          mes: qntMembrosatual[0].mes,
+          quantidade: totalMembrosativos,
+        }).then(({ data }) => console.log(data))
+        .catch(({ data }) => console.log(data));
+    }
+
+    ///////////////////////////////////////////
+
+    //Captura a quantidade de membros ativos atualmente
+    try {
+      const res = await axios.get(`http://localhost:8800/totalmembrosativos`);
+      settotalmembrosativos(res.data[0].quantidade)
+    } catch (error) {
+      console.log('erro desconhecido');
+    }
+
+    //Recupera quantidade de membros ativos do mês atual
+    try {
+      const res = await axios.get(`http://localhost:8800/qntmembrosatual`);
+      qntmembrosatual = res.data
+    } catch (error) {
+      console.log('erro desconhecido');
+    }
+
+    //Recupera quantidade de membros ativos do mês passado
+    try {
+      const res = await axios.get(`http://localhost:8800/qntmembrosanterior`);
+      qntmembrosanterior = res.data
+    } catch (error) {
+      console.log('erro desconhecido');
+    }
+
+    if (qntmembrosanterior.length > 0) {
+      const anterior = qntmembrosanterior[0].quantidade;
+      const atual = (qntmembrosatual.length > 0 ? qntmembrosatual[0].quantidade : 0);
+      const calculo = calculaporcentagem(atual, anterior)
+
+      if (calculo > 0) {
+        let numero = Math.round(calculo * 100);
+        const porcentagem = '+' + numero + '%';
+        setIncrease(porcentagem);
+      } else if (calculo == 0) {
+        const porcentagem = '+0%'
+        setIncrease(porcentagem);
+      } else {
+        const numero = Math.round(calculo * 100);
+        const porcentagem = numero + '%';
+        setIncrease(porcentagem);
+      }
+
+      setPorcentagemMembrosAtivos(calculo);
+    } else if (qntmembrosanterior.length == 0 && qntmembrosatual.length == 0) {
+      const calculo = 0;
+      const porcentagem = '+0%'
+      setIncrease(porcentagem);
+      setPorcentagemMembrosAtivos(calculo);
+    } else if (qntmembrosanterior.length == 0 && qntmembrosatual.length > 0) {
+      const calculo = 1;
+      const numero = Math.round(qntmembrosatual[0].quantidade * 100)
+      const porcentagem = '+' + numero + '%';
+      setIncrease(porcentagem);
+      setPorcentagemMembrosAtivos(calculo);
+    }
+
+    //Captura a quantidade de membros inativos atualmente
+    try {
+      const res = await axios.get(`http://localhost:8800/totalmembrosinativos`);
+      totalmembrosinativos = res.data[0].quantidade
+    } catch (error) {
+      console.log('erro desconhecido');
+    }
+
+    setqntmembrosinativos(totalmembrosinativos)
+
+    //Verifica se já existe um registro de quantidades de inativos para o mês atual
+    try {
+      const res = await axios.get(`http://localhost:8800/qntmembrosatual2`);
+      qntmembrosatual2 = res.data
+    } catch (error) {
+      console.log('erro desconhecido');
+    }
+
+    //Atualiza/Cria o registro na tabela de quantidades total de membros ativos para o mês atual
+    if (qntmembrosatual2.length == 0) {
+      const dataAtual = new Date();
+      const ano = dataAtual.getFullYear();
+      let mes = dataAtual.getMonth() + 1;
+      if (mes < 10) {
+        mes = '0' + mes;
+      }
+      await axios
+        .post("http://localhost:8800/addqntmembros2", {
+          ano: ano,
+          mes: mes,
+          quantidade: totalmembrosinativos,
+        })
+        .then(({ data }) => console.log(data))
+        .catch(({ data }) => console.log(data));
+    } else {
+      await axios
+        .put("http://localhost:8800/changeqntmembros2", {
+          ano: qntmembrosatual2[0].ano,
+          mes: qntmembrosatual2[0].mes,
+          quantidade: totalmembrosinativos,
+        }).then(({ data }) => console.log(data))
+        .catch(({ data }) => console.log(data));
+    }
+
+  }
+
+  const calculaporcentagem = (atual, anterior) => {
+    let calculo = 0;
+    if (anterior > 0) {
+      calculo = (((atual - anterior) * 100) / anterior) / 100;
+    }
+    return (
+      calculo
+    )
+  }
+
+  useEffect(() => {
+    getMembros();
+  }, []);
+
   return (
     <Box m="20px">
       {/* HEADER */}
@@ -65,15 +267,16 @@ const Dashboard = () => {
             justifyContent="center"
           >
             <StatBox
-              title="12,361"
-              subtitle="Emails Sent"
-              progress="0.75"
-              increase="+14%"
+              title={totalmembrosativos}
+              subtitle='Membros Ativos'
+              progress={porcentagemMembrosAtivos}
+              increase={increase}
               icon={
-                <EmailIcon
-                  sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                <Diversity3OutlinedIcon
+                  sx={{ color: colors.greenAccent[600], fontSize: "35px" }}
                 />
               }
+              icon2={<ProgressCircle progress={porcentagemMembrosAtivos} />}
             />
           </Box>
         </Grid>
@@ -86,15 +289,16 @@ const Dashboard = () => {
             justifyContent="center"
           >
             <StatBox
-              title="431,225"
-              subtitle="Sales Obtained"
+              title={qntmembrosinativos}
+              subtitle="Membros Inativos"
               progress="0.50"
-              increase="+21%"
+              increase=''
               icon={
-                <PointOfSaleIcon
-                  sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                <Groups2OutlinedIcon
+                  sx={{ color: colors.greenAccent[600], fontSize: "35px" }}
                 />
               }
+              icon2={<ArrowDownwardOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "50px" }} />}
             />
           </Box>
         </Grid>
@@ -107,15 +311,16 @@ const Dashboard = () => {
             justifyContent="center"
           >
             <StatBox
-              title="32,441"
-              subtitle="New Clients"
+              title={allHomens}
+              subtitle="Total Homens"
               progress="0.30"
-              increase="+5%"
+              increase=""
               icon={
-                <PersonAddIcon
-                  sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                <GroupsIcon
+                  sx={{ color: colors.greenAccent[600], fontSize: "35px" }}
                 />
               }
+              icon2={<Person2Icon sx={{ color: colors.greenAccent[600], fontSize: "50px" }} />}
             />
           </Box>
         </Grid>
@@ -128,15 +333,16 @@ const Dashboard = () => {
             justifyContent="center"
           >
             <StatBox
-              title="1,325,134"
-              subtitle="Traffic Received"
+              title={allMulheres}
+              subtitle="Total Mulheres"
               progress="0.80"
-              increase="+43%"
+              increase=""
               icon={
-                <TrafficIcon
-                  sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+                <Groups2Icon
+                  sx={{ color: colors.greenAccent[600], fontSize: "36px" }}
                 />
               }
+              icon2={<Person3Icon sx={{ color: colors.greenAccent[600], fontSize: "50px" }} />}
             />
           </Box>
         </Grid>
@@ -165,14 +371,14 @@ const Dashboard = () => {
                     fontWeight="600"
                     color={colors.grey[100]}
                   >
-                    Revenue Generated
+                    Grafico Anual de Membros
                   </Typography>
                   <Typography
                     variant="h5"
                     fontWeight="600"
                     color={colors.greenAccent[500]}
                   >
-                    $58,373,698
+                    Ativos/Inativos
                   </Typography>
                 </Box>
                 <Box>

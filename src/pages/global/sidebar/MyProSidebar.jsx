@@ -8,15 +8,13 @@ import { Link } from "react-router-dom";
 import { tokens } from "../../../theme";
 import { useTheme, Box, Typography, IconButton } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import MusicNoteOutlinedIcon from '@mui/icons-material/MusicNoteOutlined';
 import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import Woman2OutlinedIcon from '@mui/icons-material/Woman2Outlined';
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
-import EmojiPeopleOutlinedIcon from '@mui/icons-material/EmojiPeopleOutlined';
 import Diversity3OutlinedIcon from '@mui/icons-material/Diversity3Outlined';
 import CurrencyExchangeOutlinedIcon from '@mui/icons-material/CurrencyExchangeOutlined';
-import AddHomeWorkOutlinedIcon from '@mui/icons-material/AddHomeWorkOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -156,7 +154,7 @@ const MyProSidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Harun Jeylan
+                  Pitter Rezende
                 </Typography>
               </Box>
             </Box>
@@ -288,7 +286,7 @@ const MyProSidebar = () => {
             </SubMenu>
             {/* Fim Sub Menu */}
             {/* Inicio Sub Menu */}
-            <SubMenu component={<Link className="link texto-menu" />} icon={<MusicNoteOutlinedIcon className="tamanho" />} label="Ministério de Música" >
+            {/* <SubMenu component={<Link className="link texto-menu" />} icon={<MusicNoteOutlinedIcon className="tamanho" />} label="Ministério de Música" >
               <MenuItem>
                 <Item
                   title="Gerenciar Membros"
@@ -305,10 +303,10 @@ const MyProSidebar = () => {
                   setSelected={setSelected}
                 />
               </MenuItem>
-            </SubMenu>
+            </SubMenu> */}
             {/* Fim Sub Menu */}
             {/* Inicio Sub Menu */}
-            <SubMenu component={<Link className="link texto-menu" />} icon={<EmojiPeopleOutlinedIcon className="tamanho" />} label="Ministério de Dança" >
+            {/* <SubMenu component={<Link className="link texto-menu" />} icon={<EmojiPeopleOutlinedIcon className="tamanho" />} label="Ministério de Dança" >
               <MenuItem>
                 <Item
                   title="Gerenciar Membros"
@@ -325,10 +323,10 @@ const MyProSidebar = () => {
                   setSelected={setSelected}
                 />
               </MenuItem>
-            </SubMenu>
+            </SubMenu> */}
             {/* Fim Sub Menu */}
             {/* Inicio Sub Menu */}
-            <SubMenu component={<Link className="link texto-menu" />} icon={<AddHomeWorkOutlinedIcon className="tamanho" />} label="Comissão de Patrimônio" >
+            {/* <SubMenu component={<Link className="link texto-menu" />} icon={<AddHomeWorkOutlinedIcon className="tamanho" />} label="Comissão de Patrimônio" >
               <MenuItem>
                 <Item
                   title="Gerenciar Membros"
@@ -345,7 +343,7 @@ const MyProSidebar = () => {
                   setSelected={setSelected}
                 />
               </MenuItem>
-            </SubMenu>
+            </SubMenu> */}
             {/* Fim Sub Menu */}
 
             <Typography
@@ -353,31 +351,67 @@ const MyProSidebar = () => {
               color={colors.grey[300]}
               sx={{ m: "15px 20px 5px 20px" }}
             >
-              Charts
+              Finanças
             </Typography>
             <Item
-              title="Bar Chart"
-              to="/bar"
+              title="Visão Geral"
+              to="/dashboard"
               icon={<BarChartOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Pie Chart"
-              to="/pie"
+              title="Transações"
+              to="/transacoes"
               icon={<PieChartOutlineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
+            {/* Inicio Sub Menu */}
+            <SubMenu component={<Link className="link texto-menu" />} icon={<SettingsOutlinedIcon className="tamanho" />} label="Configurações" >
+              <MenuItem>
+                <Item
+                  title="Gerenciar Contas"
+                  to="/contas"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+              <MenuItem>
+                <Item
+                  title="Centros de Custo"
+                  to="/centrocusto"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+              <MenuItem>
+                <Item
+                  title="Tipos de lançamentos"
+                  to="/lancamentos"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+              <MenuItem>
+                <Item
+                  title="Fornecedores"
+                  to="/fornecedores"
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </MenuItem>
+            </SubMenu>
+            {/* Fim Sub Menu */}
             <Item
-              title="Line Chart"
+              title="Centros de Custo"
               to="/line"
               icon={<TimelineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="Geography Chart"
+              title="Contas"
               to="/geography"
               icon={<MapOutlinedIcon />}
               selected={selected}

@@ -1,4 +1,5 @@
 import { tokens } from "../theme";
+import GetDados from "./getquantidades";
 
 export const mockDataTeam = [
   {
@@ -491,7 +492,7 @@ export const mockLineData = [
     data: [
       {
         x: "plane",
-        y: 212
+        y: 101
       },
       {
         x: "helicopter",
@@ -594,6 +595,124 @@ export const mockLineData = [
     ]
   }
 ];
+
+export const mockMembros = () =>{
+
+  const data = [
+    {
+      id: "Ativos",
+      color: tokens("dark").greenAccent[500],
+      data: [
+        {
+          x: "Janeiro",
+          y: 10
+        },
+        {
+          x: "Fevereiro",
+          y: 75
+        },
+        {
+          x: "Março",
+          y: 36
+        },
+        {
+          x: "Abril",
+          y: 216
+        },
+        {
+          x: "Maio",
+          y: 35
+        },
+        {
+          x: "Junho",
+          y: 236
+        },
+        {
+          x: "Julho",
+          y: 88
+        },
+        {
+          x: "Agosto",
+          y: 232
+        },
+        {
+          x: "Setembro",
+          y: 281
+        },
+        {
+          x: "Outubro",
+          y: 1
+        },
+        {
+          x: "Novembro",
+          y: 35
+        },
+        {
+          x: "Dezembro",
+          y: 14
+        }
+      ]
+    },
+    {
+      id: "Inativos",
+      color: tokens("dark").blueAccent[300],
+      data: [
+        {
+          x: "Janeiro",
+          y: 101
+        },
+        {
+          x: "Fevereiro",
+          y: 190
+        },
+        {
+          x: "Março",
+          y: 270
+        },
+        {
+          x: "Abril",
+          y: 9
+        },
+        {
+          x: "Maio",
+          y: 75
+        },
+        {
+          x: "Junho",
+          y: 175
+        },
+        {
+          x: "Julho",
+          y: 33
+        },
+        {
+          x: "Agosto",
+          y: 189
+        },
+        {
+          x: "Setembro",
+          y: 97
+        },
+        {
+          x: "Outubro",
+          y: 87
+        },
+        {
+          x: "Novembro",
+          y: 299
+        },
+        {
+          x: "Dezembro",
+          y: 251
+        }
+      ]
+    },
+  ];
+  
+  return(
+    data
+  )
+};
 
 export const mockGeographyData = [
   {

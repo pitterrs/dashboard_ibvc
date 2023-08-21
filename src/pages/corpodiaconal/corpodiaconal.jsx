@@ -4,17 +4,22 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Button from '@mui/material/Button';
+import ChangeDiaconos from "./modificardiacono";
+import { toast, ToastContainer } from "react-toastify";
 
 import Header from "../../components/Header";
 
 const CorpoDiaconal = () => {
-  
-  const [membros, setMembros] = useState([]);
 
-  const getMembros = async () => {
+  const [diaconos, setDiaconos] = useState([]);
+  const [show, setShow] = useState(false);
+  const [diacono, setDiacono] = useState(null);
+
+  const getDiaconos = async () => {
     try {
-      const res = await axios.get(`http://localhost:8800/`);
-      setMembros(res.data)
+      const res = await axios.get(`http://localhost:8800/getdiaconos`);
+      setDiaconos(res.data)
     } catch (error) {
       console.log('erro desconhecido');
     }
@@ -23,7 +28,11 @@ const CorpoDiaconal = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const columns = [
-    { field: "id", headerName: "Id", width: 100 },
+    {
+      field: "icone", headerName: "", renderCell: ({ row: { id } }) => {
+        return <Button onClick={() => handleEdit(diaconos, id)} variant="contained">Modificar</Button>;
+      }, width: 100
+    },
     {
       field: "nome",
       headerName: "Name",
@@ -35,9 +44,16 @@ const CorpoDiaconal = () => {
     { field: "cargo", headerName: "Cargo", width: 250 },
   ];
 
+  const handleEdit = (diaconos, id) => {
+    const id2 = [id];
+    const selectedRowsData = id2.map((id) => diaconos.find((row) => row.id === id));
+    setDiacono(selectedRowsData);
+    setShow(true);
+  }
+
   useEffect(() => {
-    getMembros();
-  },[setMembros]);
+    getDiaconos();
+  }, [setDiaconos]);
 
   return (
     <Box m="20px">
@@ -78,10 +94,14 @@ const CorpoDiaconal = () => {
         }}
       >
         <DataGrid
-          rows={membros}
+          rows={diaconos}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
         />
+        {show && (
+          <ChangeDiaconos show={show} setShow={setShow} diacono={diacono} setDiacono={setDiacono} getDiaconos={getDiaconos} />
+        )}
+        <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
       </Box>
     </Box>
   );
