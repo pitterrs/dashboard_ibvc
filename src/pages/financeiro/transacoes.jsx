@@ -170,65 +170,66 @@ const Transacoes = () => {
             </Box>
 
             <AllStatBox />
-            <Box className="periodo" backgroundColor={colors.primary[400]}  >
+            <Grid m='20px 0 0 0' p='10px' xs={12} backgroundColor={colors.primary[400]} >
+                <Box className="periodo" backgroundColor={colors.primary[400]}  >
                     <Typography variant="h4" sx={{ color: colors.greenAccent[500] }}>
-                        Alterar período padrão
+                        Período
                     </Typography>
-                    <RangePicker locale={locale} format={dateFormat} presets={rangePresets} 
-                    onChange={(values) =>{
-                        const inicial = moment(values[0].format('DD-MM-YYYY'))
-                        console.log(inicial._i)
-                        const final = moment(values[1].format('DD-MM-YYYY'))
-                        console.log(final._i)
-                    }}
+                    <RangePicker locale={locale} format={dateFormat} presets={rangePresets}
+                        onChange={(values) => {
+                            const inicial = moment(values[0].format('DD-MM-YYYY'))
+                            console.log(inicial._i)
+                            const final = moment(values[1].format('DD-MM-YYYY'))
+                            console.log(final._i)
+                        }}
                     />
                     {' '}<Button size="sm" variant="success">Adicionar Receita</Button>{' '}
                     <Button size="sm" variant="danger">Adicionar Despesa</Button>{' '}
                     <Button className="mb" size="sm" variant="light">Fazer Transferência</Button>{' '}
                 </Box>
-            <Box
-                m="8px 0 0 0"
-                width="100%"
-                height="70vh"
-                sx={{
-                    "& .MuiDataGrid-root": {
-                        border: "none",
-                    },
-                    "& .MuiDataGrid-cell": {
-                        borderBottom: "none",
-                    },
-                    "& .name-column--cell": {
-                        color: colors.greenAccent[300],
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                        backgroundColor: colors.blueAccent[700],
-                        borderBottom: "none",
-                    },
-                    "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.primary[400],
-                    },
-                    "& .MuiDataGrid-footerContainer": {
-                        borderTop: "none",
-                        backgroundColor: colors.blueAccent[700],
-                    },
-                    "& .MuiCheckbox-root": {
-                        color: `${colors.greenAccent[200]} !important`,
-                    },
-                    "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-                        color: `${colors.grey[100]} !important`,
-                    },
-                }}
-            >
-                <DataGrid
-                    rows={financas}
-                    columns={columns}
-                    components={{ Toolbar: GridToolbar }}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    rowsPerPageOptions={[5, 10, 20]}
-                />
-            </Box>
-
+                <Box
+                    m="8px 0 0 0"
+                    width="100%"
+                    height="70vh"
+                    sx={{
+                        "& .MuiDataGrid-root": {
+                            border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[700],
+                            borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[700],
+                        },
+                        "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+                            color: `${colors.grey[100]} !important`,
+                        },
+                    }}
+                >
+                    <DataGrid
+                        rows={financas}
+                        columns={columns}
+                        components={{ Toolbar: GridToolbar }}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                        rowsPerPageOptions={[5, 10, 20]}
+                    />
+                </Box>
+            </Grid>
         </Box>
     )
 }

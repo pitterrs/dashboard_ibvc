@@ -387,7 +387,7 @@ const MyProSidebar = () => {
               </MenuItem>
               <MenuItem>
                 <Item
-                  title="Tipos de lançamentos"
+                  title="Plano de Contas"
                   to="/lancamentos"
                   selected={selected}
                   setSelected={setSelected}
@@ -395,7 +395,7 @@ const MyProSidebar = () => {
               </MenuItem>
               <MenuItem>
                 <Item
-                  title="Fornecedores"
+                  title="Pessoas/Fornecedores"
                   to="/fornecedores"
                   selected={selected}
                   setSelected={setSelected}

@@ -1,24 +1,30 @@
-.pointer{
+.pointer {
     cursor: pointer;
     background: none;
     margin-right: 3px;
     font-size: 23px;
 }
 
-.edit{
-color: #FFF
+.edit {
+    color: #FFF
 }
 
-.aprovar{
+.aprovar {
     color: rgb(8, 161, 2);
 }
 
-.lixo{
- color: rgb(228, 26, 26);
+.lixo {
+    color: rgb(228, 26, 26);
 }
 
-.periodo{
+.periodo {
     font-family: Source Sans Pro;
-    margin-top: 10px;
-    padding: 15px;
+    /* margin-top: 10px; */
+    /* padding: 15px; */
+}
+
+.borda {
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+    border-color: rgb(116, 116, 116);
 }
