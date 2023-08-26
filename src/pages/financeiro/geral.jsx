@@ -24,73 +24,115 @@ import { React, useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import LineChart from "../../components/LineChart";
+import LineChart from "./LineChart";
+import "./style.css"
 const VisaoGeral = () => {
 
     const theme = useTheme();
     const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
     const colors = tokens(theme.palette.mode);
-    const [financas, setFinancas] = useState([]);
-    const [pageSize, setPageSize] = useState(10);
+    const [contas, setContas] = useState([]);
+    const [saldoTotal, setSaldoTotal] = useState(0);
+    const [recebimentos, setRecebimentos] = useState(0);
+    const [pagamentos, setPagamentos] = useState(0);
+    const [rows, setRows] = useState([]);
+    let recebimentos_aux = 0;
+    let pagamentos_aux = 0;
 
-    const getFinancas = async () => {
+    const getContas = async () => {
         try {
-            const res = await axios.get(`http://localhost:8800/getfinancas`);
-            setFinancas(res.data)
-        } catch (error) {
+            const res = await axios.get(`http://localhost:8800/getcontas`);
+            const contas_aux = res.data;
+            let total = 0;
+            for (var conta of contas_aux) {
+                const res = await axios.get(`http://localhost:8800/checkconta/` + conta.id);
+                Object.defineProperty(conta, 'saldo', {
+                    value: (res.data[0].valor ? res.data[0].valor : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                })
+                total = total + (res.data[0].valor ? res.data[0].valor : 0);
+            }
+            setContas(contas_aux)
+            setSaldoTotal(total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+        } catch {
             console.log('erro desconhecido');
         }
     }
 
+    const getRecebimentos = async () => {
+
+        const d = new Date();
+        const date = (d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + d.getUTCDate())
+
+        try {
+            const res = await axios.get(`http://localhost:8800/getrecebimentos/` + date);
+            setRecebimentos(res.data[0].valor == null ? 'R$0,00' : res.data[0].valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+        } catch {
+            console.log('erro desconhecido');
+        }
+    }
+
+    const getPagamentos = async () => {
+
+        const d = new Date();
+        const date = (d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + d.getUTCDate())
+
+        try {
+            const res = await axios.get(`http://localhost:8800/getpagamentos/` + date);
+            setPagamentos(res.data[0].valor == null ? 'R$0,00' : res.data[0].valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
+        } catch {
+            console.log('erro desconhecido');
+        }
+    }
+
+    const getlancamentos = async () => {
+        const d = new Date();
+        const init = (d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + '01')
+        const end = (d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + (new Date(d.getUTCFullYear(), d.getUTCMonth() + 1, 0).getUTCDate()));
+        try {
+            const res = await axios.get(`http://localhost:8800/getlastlancamentos/` + init + '/' + end);
+            setRows(ChangeData(res.data));
+        } catch {
+            console.log('erro desconhecido');
+        }
+    }
+
+    const ChangeData = (data) => {
+        for (var linha of data) {
+
+            if (linha.data) {
+                const newdate = new Date(linha.data);
+                // const dia = (newdate.getDate() + 1) < 10 ? `0${(newdate.getDate() + 1)}` : (newdate.getDate() + 1);;
+                const dia = (newdate.getUTCDate()) < 10 ? `0${(newdate.getUTCDate())}` : (newdate.getUTCDate());;
+                // const mes = (newdate.getMonth() + 1) < 10 ? `0${(newdate.getMonth() + 1)}` : (newdate.getMonth() + 1);
+                const mes = (newdate.getUTCMonth() + 1) < 10 ? `0${(newdate.getUTCMonth() + 1)}` : (newdate.getUTCMonth() + 1);
+                const ano = newdate.getUTCFullYear();
+                const formatDate = dia + '/' + mes + '/' + ano;
+                Object.defineProperty(linha, 'data', {
+                    value: formatDate,
+                })
+            }
+
+            if (linha.valor) {
+                Object.defineProperty(linha, 'valor', {
+                    value: (linha.valor ? linha.valor : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                })
+            } else {
+                Object.defineProperty(linha, 'valor', {
+                    value: (linha.valor ? linha.valor : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                })
+            }
+        }
+        return (
+            data
+        )
+    }
+
     useEffect(() => {
-        getFinancas();
-    }, [setFinancas]);
-
-    const rows = [
-        createData('Banco do Brasil', 'R$11.351,57'),
-        createData('Banco Santander', 'R$2.598,20'),
-        createData('Itaú', '500,25'),
-        createData('Bradesco', '850,00'),
-        createData('Caixa Fisico', '758,54'),
-        createData(),
-    ];
-
-    const rows2 = [
-        createData2('21/08/2023', 'Transferência entre contas Bradesco x Santander', 'IBVC', 'R$11.351,57', 'Departamento Financeiro', 'Contabilidade'),
-        createData2('21/08/2023', 'Transferência entre contas', 'IBVC', 'R$11.351,57', 'Departamento Financeiro', 'Contabilidade'),
-        createData2('21/08/2023', 'Transferência entre contas', 'IBVC', 'R$11.351,57', 'Departamento Financeiro', 'Contabilidade'),
-        createData2('21/08/2023', 'Transferência entre contas', 'IBVC', 'R$11.351,57', 'Departamento Financeiro', 'Contabilidade'),
-        createData2('21/08/2023', 'Transferência entre contas', 'IBVC', 'R$11.351,57', 'Departamento Financeiro', 'Contabilidade'),
-        createData2('21/08/2023', 'Transferência entre contas', 'IBVC', 'R$11.351,57', 'Departamento Financeiro', 'Contabilidade'),
-        createData2()
-    ];
-
-    function createData(name, calories, fat, carbs, protein) {
-        return { name, calories, fat, carbs, protein };
-    }
-
-    function createData2(data, descricao, pessoa, valor, centrocusto, plano) {
-        return { data, descricao, pessoa, valor, centrocusto, plano };
-    }
-
-    const columns = [
-        // {
-        //     field: "icone", headerName: "Ações", renderCell: ({ row: { id } }) => {
-        //         return <> < ModeEditIcon className="pointer edit" onClick={() => handleEdit(financas, id)} /> < CheckCircleIcon className="pointer aprovar" onClick={() => handleApprov(financas, id)} />  < DeleteForeverIcon className="pointer lixo" onClick={() => handleDelete(financas, id)} /></>;
-        //     }, width: 100
-        // },
-        {
-            field: "nome",
-            headerName: "Data da Transação",
-            cellClassName: "name-column--cell",
-            width: 200,
-        },
-        { field: "celular", headerName: "Descrição", width: 100 },
-        { field: "email", headerName: "Membro/fornecedor", width: 200 },
-        { field: "cargo", headerName: "Valor da Transação", width: 250 },
-        { field: "Teste", headerName: "Centro de Custo", width: 250 },
-        { field: "Teste2", headerName: "Plano de Contas", width: 250 },
-    ];
+        getContas();
+        getRecebimentos();
+        getPagamentos();
+        getlancamentos();
+    }, [setContas, setRecebimentos]);
 
     return (
         <Box m="20px">
@@ -101,7 +143,7 @@ const VisaoGeral = () => {
                 alignItems={smScreen ? "center" : "start"}
                 m="10px 0"
             >
-                <Header title="Dashboard Financeiro" subtitle="Bem-vindo ao Dashboard Financeiro " />
+                <Header title="Painel Financeiro" subtitle="Bem-vindo ao Painel Financeiro " />
             </Box>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 <Grid
@@ -114,65 +156,67 @@ const VisaoGeral = () => {
                     columnSpacing={{ xs: 1, sm: 2, md: 2 }}
                 >
                     <Grid xs={12} sm={12} md={4} >
-                        <Box backgroundColor={colors.primary[400]} p="30px" >
+                        <Box className="borda2" backgroundColor={colors.primary[400]} p="30px" >
                             <Typography variant="h3" fontWeight="600">
                                 Contas de Movimentação
                             </Typography>
                             {/* <TableContainer component={Paper}> */}
-                            <Table size="small" aria-label="a dense table">
+                            <Table size="small" aria-label="a dense table" className="borda">
                                 <TableBody>
-                                    {rows.map((row) => (
+                                    {contas.map((row) => (
                                         <TableRow
-                                            key={row.name}
+                                            key={row.id}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
                                             <TableCell component="th" scope="row">
-                                                {row.name}
+                                                {row.nome}
                                             </TableCell>
-                                            <TableCell align="right">{row.calories}</TableCell>
+                                            <TableCell align="right" >
+                                                <b>{row.saldo}</b>
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
                             {/* </TableContainer> */}
-                            <Box display="flex"
+                            <Box m="5px 0 0px 0" display="flex"
                                 justifyContent="space-between">
-                                <Box>Saldo total:</Box>
-                                <Box>R$2.135,31</Box>
+                                <Box className="total">Saldo total:</Box>
+                                <Box className="total">{saldoTotal}</Box>
                             </Box>
                         </Box>
                     </Grid>
                     <Grid xs={12} sm={12} md={4}>
-                        <Box backgroundColor={colors.primary[400]} p="30px">
+                        <Box className="borda3" backgroundColor={colors.primary[400]} p="30px">
                             <Box display="flex" justifyContent="center">
-                                <Box><AttachMoneyOutlinedIcon sx={{ fontSize: "30px" }} /></Box>
-                                <Box><h4>Recebimentos em atraso</h4></Box>
+                                <Box><AttachMoneyOutlinedIcon className="icone1" sx={{ fontSize: "30px" }} /></Box>
+                                <Box><h4 className="box2">Recebimentos em atraso</h4></Box>
                             </Box>
                             <Box display="flex" justifyContent="center">
-                                <Box>R$123.456,32</Box>
+                                <Box className="recebimento">{recebimentos}</Box>
                             </Box>
                             <Box display="flex" justifyContent="center">
-                                <Link>Visualizar Recebimentos</Link>
+                                <Link to="/transacoes" className="link">Ir para Transações</Link>
                             </Box>
                         </Box>
                     </Grid>
                     <Grid xs={12} sm={12} md={4}>
-                        <Box backgroundColor={colors.primary[400]} p="30px">
+                        <Box className="borda4" backgroundColor={colors.primary[400]} p="30px">
                             <Box display="flex" justifyContent="center">
-                                <Box><AttachMoneyOutlinedIcon sx={{ fontSize: "30px" }} /></Box>
-                                <Box><h4>Pagamentos em atraso</h4></Box>
+                                <Box><AttachMoneyOutlinedIcon className="icone2" sx={{ fontSize: "30px" }} /></Box>
+                                <Box><h4 className="box3">Pagamentos em atraso</h4></Box>
                             </Box>
                             <Box display="flex" justifyContent="center">
-                                <Box>R$123.456,32</Box>
+                                <Box className="pagamentos">{pagamentos}</Box>
                             </Box>
                             <Box display="flex" justifyContent="center">
-                                <Link>Visualizar Recebimentos</Link>
+                                <Link to="/transacoes" className="link2">Ir para Transações</Link>
                             </Box>
                         </Box>
                     </Grid>
                 </Grid>
             </Grid>
-            
+
             <Box>
                 <Grid
                     xs={12}
@@ -184,44 +228,44 @@ const VisaoGeral = () => {
 
                 >
                     <Grid m='20px 0 0 0' p='10px' xs={12} backgroundColor={colors.primary[400]}>
-                        <Typography variant="h3" fontWeight="600">
-                            10 ÚLTIMAS TRANSAÇÕES
+                        <Typography variant="h4" fontWeight="600">
+                            Últimos Lançamentos
                         </Typography>
                         <TableContainer>
-                            <Table size="small" aria-label="a dense table">
+                            <Table className="borda" size="small" aria-label="a dense table">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell width='150'>Data da Transação</TableCell>
-                                        <TableCell width='350'>Descrição</TableCell>
-                                        <TableCell>Membro/Fornecedor</TableCell>
-                                        <TableCell>Valor da Transação</TableCell>
-                                        <TableCell>Centro de Custo</TableCell>
-                                        <TableCell>Plano de Contas</TableCell>
+                                        <TableCell className="cabecalho" >Data da Transação</TableCell>
+                                        <TableCell className="cabecalho" >Descrição</TableCell>
+                                        <TableCell className="cabecalho">Membro/Fornecedor</TableCell>
+                                        <TableCell className="cabecalho">Valor da Transação</TableCell>
+                                        <TableCell className="cabecalho">Centro de Custo</TableCell>
+                                        <TableCell className="cabecalho">Plano de Contas</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rows2.map((row) => (
+                                    {rows.map((row) => (
                                         <TableRow
                                             key={row.name}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
-                                            <TableCell component="th" scope="row">
+                                            <TableCell className='bolder' component="th" scope="row">
                                                 {row.data}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className='bolder' >
                                                 {row.descricao}
                                             </TableCell>
-                                            <TableCell>
-                                                {row.pessoa}
+                                            <TableCell className='bolder' >
+                                                {row.nome_pessoa_fornecedor}
                                             </TableCell>
-                                            <TableCell>
+                                            <TableCell className={row.categoria == 'Receita' ? 'positivo' : 'negativo'}>
                                                 {row.valor}
                                             </TableCell>
-                                            <TableCell>
-                                                {row.centrocusto}
+                                            <TableCell className='bolder' >
+                                                {row.nome_centro_custo}
                                             </TableCell>
-                                            <TableCell>
-                                                {row.plano}
+                                            <TableCell className='bolder' >
+                                                {row.nome_plano_contas}
                                             </TableCell>
                                         </TableRow>
                                     ))}

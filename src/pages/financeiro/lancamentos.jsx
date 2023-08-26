@@ -18,20 +18,42 @@ import Button from 'react-bootstrap/Button';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import "./style.css"
 import Alert from '@mui/material/Alert';
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import EditLanchamento from "./changelancamento";
+import AddLancamento from "./addlancamento";
 
 const Lancamentos = () => {
     const theme = useTheme();
     const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
     const colors = tokens(theme.palette.mode);
-    const rows2 = [
-        createData2('Dízimo', 'Receita', <EditTwoToneIcon />),
-        createData2('Ofertas', 'Receita', <EditTwoToneIcon />),
-        createData2('Luz', 'Despesa', <EditTwoToneIcon />),
-        createData2('Folha de Pagamento', 'Despesa', <EditTwoToneIcon />),
-        createData2()
-    ];
-    function createData2(nome, tipo, edit) {
-        return { nome, tipo, edit };
+
+    const [rows, setRows] = useState([]);
+    const [onEdit, setOnEdit] = useState();
+    const [show, setShow] = useState(false);
+    const [show2, setShow2] = useState(false);
+
+    const getLancamentos = async () => {
+        try {
+            const res = await axios.get(`http://localhost:8800/getplanos`);
+            setRows(res.data)
+        } catch {
+            console.log('erro desconhecido');
+        }
+    }
+
+    useEffect(() => {
+        getLancamentos();
+    }, [setRows]);
+
+    const handleEdit = (row) => {
+        setOnEdit(row);
+        setShow(true);
+    }
+
+    const handleCreate = () => {
+        setShow2(true);
     }
     return (
         <Box m="20px">
@@ -58,21 +80,24 @@ const Lancamentos = () => {
                     <Grid m='20px 0 0 0' p='10px' xs={12} backgroundColor={colors.primary[400]} >
                         <Box m="0 0 5px 0">
                             <Alert variant="outlined" severity="error">
-                                Atenção! O Plano de conta que possuir registro de lançamento cadastrado em lançamento ou programação não poderão ser excluído.
+                                Atenção! Alterações não terão efeito para os lançamento que já foram cadastrados para o plano de contas antigo. É necessário alterar o lançamento manualmente para refletir a alteração.
                             </Alert>
+                            <Typography m='10px 0px 10px 0px' variant="h3" fontWeight="600">
+                                Lista de Planos de Contas
+                            </Typography>
                         </Box>
-                        <Box m="0 0 5px 0"><Button size="sm" variant="secondary">Adicionar Plano de conta</Button></Box>
+                        <Box m="0 0 5px 0"><Button onClick={() => handleCreate()} size="sm" variant="secondary">Adicionar Plano de conta</Button></Box>
                         <TableContainer >
                             <Table size="small" aria-label="a dense table" className="borda">
                                 <TableHead >
                                     <TableRow>
                                         <TableCell>Plano de Conta</TableCell>
                                         <TableCell>Tipo</TableCell>
-                                        <TableCell></TableCell>
+                                        <TableCell>Ações</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rows2.map((row) => (
+                                    {rows.map((row) => (
                                         <TableRow
                                             key={row.name}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -84,7 +109,7 @@ const Lancamentos = () => {
                                                 {row.tipo}
                                             </TableCell>
                                             <TableCell>
-                                                {row.edit}
+                                            <EditTwoToneIcon onClick={() => handleEdit(row)} className="pointer" />
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -94,6 +119,13 @@ const Lancamentos = () => {
                     </Grid>
                 </Grid>
             </Box>
+            {show && (
+                <EditLanchamento show={show} setShow={setShow} onEdit={onEdit} setOnEdit={setOnEdit} getLancamentos={getLancamentos} />
+            )}
+            {show2 && (
+                <AddLancamento show2={show2} setShow2={setShow2} getLancamentos={getLancamentos} />
+            )}
+            <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
         </Box>
     )
 }

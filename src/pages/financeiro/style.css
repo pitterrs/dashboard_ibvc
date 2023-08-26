@@ -2,7 +2,7 @@
     cursor: pointer;
     background: none;
     margin-right: 3px;
-    font-size: 23px;
+    font-size: 25px;
 }
 
 .edit {
@@ -27,4 +27,141 @@
     border-top: 2px solid;
     border-bottom: 2px solid;
     border-color: rgb(116, 116, 116);
+}
+
+.css-1uao5xu-MuiTableCell-root{
+    font-size: 0.94rem !important;
+}
+
+.total{
+    color: #2081b9;
+    font-weight: bold;
+    font-size: 0.99rem !important;
+}
+
+.cabecalho{
+    font-size: 0.99rem !important;
+    font-weight: bold !important;
+    color: rgb(66, 120, 219) !important;
+}
+
+.borda2 {
+    border-top: 3px solid;
+    /* border-bottom: 2px solid; */
+    border-color: #2081b9;
+}
+
+.borda3 {
+    border-top: 3px solid;
+    /* border-bottom: 2px solid; */
+    border-color: #1ab347;
+}
+
+.borda4 {
+    border-top: 3px solid;
+    /* border-bottom: 2px solid; */
+    border-color: #e24118;
+}
+
+.icone1 {
+    color: #1ab347;
+}
+
+.icone2 {
+    color: #e24118;
+}
+
+.box2{
+    font-family: Source Sans Pro,sans-serif !important;
+    font-size: 24px !important;
+    line-height: 1.167;
+    font-weight: 600;
+}
+
+.box3{
+    font-family: Source Sans Pro,sans-serif !important;
+    font-size: 24px !important;
+    line-height: 1.167;
+    font-weight: 600;
+}
+
+.recebimento{
+    font-family: Source Sans Pro,sans-serif !important;
+    line-height: 1.167;
+    font-weight: 600;
+    font-size: 2.00rem !important;
+    color: #1ab347;
+    margin-top: 15px;
+}
+
+.pagamentos{
+    font-family: Source Sans Pro,sans-serif !important;
+    line-height: 1.167;
+    font-weight: 600;
+    font-size: 2.00rem !important;
+    color: #e24118;
+    margin-top: 15px;
+}
+
+.link{
+    text-decoration: none;
+    color: #1ab347;
+    font-family: Source Sans Pro,sans-serif !important;
+    font-size: 18px !important;
+    margin-top: 13px;
+}
+
+.link2{
+    text-decoration: none;
+    color: #e24118;
+    font-family: Source Sans Pro,sans-serif !important;
+    font-size: 18px !important;
+    margin-top: 13px;
+}
+
+.fundo{
+    background-color: #2081b9;
+}
+
+.hiden{
+    display: none;
+}
+
+.negativo{
+    color: #e24118 !important;
+    font-weight: bold !important;
+}
+
+.positivo{
+    color: #1ab347 !important;
+    font-weight: bold !important;
+}
+
+.bolder{
+    font-weight: bold !important;
+}
+
+.vermelho{
+    color: #e24118 !important;
+}
+
+.verde{
+    color: #1ab347 !important;
+}
+
+.MuiDataGrid-columnHeaders{
+    font-size: 1.00rem;
+    font-family: Source Sans Pro,sans-serif !important;
+}
+
+.MuiDataGrid-row{
+    font-size: 0.90rem;
+}
+
+.box-margin{
+    margin-bottom: 10px !important;
+}
+
+.picker-margin{
+    margin-bottom: 5px;
 }

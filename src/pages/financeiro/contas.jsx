@@ -35,7 +35,15 @@ const Contas = () => {
     const getContas = async () => {
         try {
             const res = await axios.get(`http://localhost:8800/getcontas`);
-            setContas(res.data)
+            const contas_aux = res.data;
+            for (var conta of contas_aux){
+                const res = await axios.get(`http://localhost:8800/checkconta/` + conta.id);
+                Object.defineProperty(conta, 'saldo', {
+                    value: (res.data[0].valor ? res.data[0].valor : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                  })
+            }
+            setContas(contas_aux)
+            // setContas(res.data)
         } catch {
             console.log('erro desconhecido');
         }
@@ -78,10 +86,13 @@ const Contas = () => {
                             <Alert variant="outlined" severity="error">
                                 Atenção! As contas que possuírem valores cadastrados em lançamentos ou programação não poderão ser excluídas.
                             </Alert>
+                            <Typography m='10px 0px 10px 0px' variant="h3" fontWeight="600">
+                                Lista de Contas Cadastradas
+                            </Typography>
                         </Box>
                         <Box m="0 0 5px 0"><Button onClick={() => handleCreate()} size="sm" variant="secondary">Adicionar Conta</Button></Box>
-                        <TableContainer >
-                            <Table size="small" aria-label="a dense table" className="borda">
+                        <TableContainer>
+                            <Table className="borda" size="small" aria-label="a dense table">
                                 <TableHead >
                                     <TableRow>
                                         <TableCell >Nome do Banco</TableCell>
@@ -89,7 +100,7 @@ const Contas = () => {
                                         <TableCell>Nº da Conta</TableCell>
                                         <TableCell>Tipo</TableCell>
                                         <TableCell>Saldo</TableCell>
-                                        <TableCell></TableCell>
+                                        <TableCell>Ações</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>

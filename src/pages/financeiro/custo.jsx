@@ -18,21 +18,44 @@ import Button from 'react-bootstrap/Button';
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import "./style.css"
 import Alert from '@mui/material/Alert';
+import { useState, useEffect } from "react";
+import AddCusto from "./addcusto";
+import axios from "axios";
+import EditCusto from "./changecusto";
+import { toast, ToastContainer } from "react-toastify";
 
-const CentroCusto = () =>{
+const CentroCusto = () => {
     const theme = useTheme();
     const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
     const colors = tokens(theme.palette.mode);
-    const rows2 = [
-        createData2('Departamento financeiro', <EditTwoToneIcon />),
-        createData2('Departamento de eventos', <EditTwoToneIcon />),
-        createData2('Departamento de jovens', <EditTwoToneIcon />),
-        createData2()
-    ];
-    function createData2(nome, edit) {
-        return { nome, edit };
+    const [rows, setRows] = useState([]);
+    const [onEdit, setOnEdit] = useState();
+    const [show, setShow] = useState(false);
+    const [show2, setShow2] = useState(false);
+
+    const getCustos = async () => {
+        try {
+            const res = await axios.get(`http://localhost:8800/getcustos`);
+            setRows(res.data)
+        } catch {
+            console.log('erro desconhecido');
+        }
     }
-    return(
+
+    useEffect(() => {
+        getCustos();
+    }, [setRows]);
+
+    const handleEdit = (row) => {
+        setOnEdit(row);
+        setShow(true);
+    }
+
+    const handleCreate = () => {
+        setShow2(true);
+    }
+
+    return (
         <Box m="20px">
             <Box
                 display={smScreen ? "flex" : "block"}
@@ -55,21 +78,24 @@ const CentroCusto = () =>{
                 >
                     <Grid m='20px 0 0 0' p='10px' xs={12} backgroundColor={colors.primary[400]} >
                         <Box m="0 0 5px 0">
-                            <Alert variant="outlined" severity="error">
-                            Atenção! os centros de custo que possuírem valores cadastrados em lançamentos ou programação não poderão ser excluídos.
-                            </Alert>
+                            {/* <Alert variant="outlined" severity="error">
+                                Atenção! os centros de custo que possuírem valores cadastrados em lançamentos ou programação não poderão ser excluídos.
+                            </Alert> */}
+                            <Typography m='0 0 10px 0' variant="h3" fontWeight="600">
+                                Lista de Centros de Custo
+                            </Typography>
                         </Box>
-                        <Box m="0 0 5px 0"><Button size="sm" variant="secondary">Adicionar Centro de Custo</Button></Box>
+                        <Box m="0 0 5px 0"><Button onClick={() => handleCreate()} size="sm" variant="secondary">Adicionar Centro de Custo</Button></Box>
                         <TableContainer >
                             <Table size="small" aria-label="a dense table" className="borda">
                                 <TableHead >
                                     <TableRow>
                                         <TableCell>Centro de Custo</TableCell>
-                                        <TableCell></TableCell>
+                                        <TableCell>Ações</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {rows2.map((row) => (
+                                    {rows.map((row) => (
                                         <TableRow
                                             key={row.name}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -77,8 +103,8 @@ const CentroCusto = () =>{
                                             <TableCell component="th" scope="row">
                                                 {row.nome}
                                             </TableCell>
-                                            <TableCell align="right">
-                                                {row.edit}
+                                            <TableCell>
+                                                <EditTwoToneIcon onClick={() => handleEdit(row)} className="pointer" />
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -88,6 +114,13 @@ const CentroCusto = () =>{
                     </Grid>
                 </Grid>
             </Box>
+            {show && (
+                <EditCusto show={show} setShow={setShow} onEdit={onEdit} setOnEdit={setOnEdit} getCustos={getCustos} />
+            )}
+            {show2 && (
+                <AddCusto show2={show2} setShow2={setShow2} getCustos={getCustos} />
+            )}
+            <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
         </Box>
     )
 }

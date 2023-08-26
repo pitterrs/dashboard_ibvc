@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getContas }) => {
+const DeleteLancamento = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getLancamentos }) => {
 
     const handleClose = () => {
         setConfirm(false);
@@ -12,26 +12,15 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
 
     const deletar = async (e) => {
 
-        let conta = [];
-
-        try {
-            const res = await axios.get("http://localhost:8800/checkconta/" + onEdit.id);
-            conta = res.data
-        } catch {
-            console.log('erro desconhecido');
-        }
-
-        if (conta[0].valor != null) { return toast.error("Conta Bancária possui lançamentos ou programações e não pode ser deletada."); }
-
         await axios
-            .delete("http://localhost:8800/deleteconta/" + onEdit.id)
+            .delete("http://localhost:8800/deleteplano/" + onEdit.id)
             .then(({ data }) => {
                 toast.success(data);
             })
             .catch(({ data }) => toast.error(data));
 
         setConfirm(false);
-        getContas();
+        getLancamentos();
         setOnEdit(null);
         setShow(false);
     };
@@ -46,7 +35,7 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="example-modal-sizes-title-sm">
-                        Deseja deletar o cadastro da Conta Bancária?
+                        Deseja deletar o cadastro do Plano de Contas?
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body><p>Esta ação não poderá ser desfeita uma vez confirmada. </p></Modal.Body>
@@ -63,4 +52,4 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
     )
 }
 
-export default DeleteConta;
+export default DeleteLancamento;

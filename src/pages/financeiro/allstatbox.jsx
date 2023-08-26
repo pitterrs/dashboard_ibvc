@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { tokens } from "../../theme";
 
-const AllStatBox = () => {
+const AllStatBox = ({TotalReceitas, TotalDespesas, ReceitaxDespesa, TotalReceitasPrev, TotalDespesasPrev, ReceitaxDespesaPrev, ClassReceitas, ClassReceitasPrev, ClassDespesas, ClassDespesasPrev, ClassReceitaxDespesa, ClassReceitaxDespesaPrev}) => {
 
     const theme = useTheme();
     const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
@@ -21,17 +21,18 @@ const AllStatBox = () => {
 
     return (
         <>
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
+            <Grid className='box-margin' container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                <Grid xs={12} sm={12} md={6} lg={3} xl={4}>
                     <Box
                         width="100%"
                         backgroundColor={colors.primary[400]}
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
+                        className="borda3"
                     >
                         <StatBox
-                            title='R$19.998,00'
+                            title={TotalReceitas}
                             subtitle='Total de receitas no período'
                             progress=''
                             increase=''
@@ -41,20 +42,22 @@ const AllStatBox = () => {
                             //     />
                             // }
                             icon2={<AttachMoneyOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "40px" }} />}
+                            classvalue={ClassReceitas}
                         />
                     </Box>
                 </Grid>
 
-                <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
+                <Grid xs={12} sm={12} md={6} lg={3} xl={4}>
                     <Box
                         width="100%"
                         backgroundColor={colors.primary[400]}
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
+                        className="borda4"
                     >
                         <StatBox
-                            title='R$-2.000,00'
+                            title={TotalDespesas}
                             subtitle='Total de despesas no período'
                             progress=''
                             increase=''
@@ -64,20 +67,22 @@ const AllStatBox = () => {
                             //     />
                             // }
                             icon2={<AttachMoneyOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "40px" }} />}
+                            classvalue={ClassDespesas}
                         />
                     </Box>
                 </Grid>
 
-                <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
+                <Grid xs={12} sm={12} md={6} lg={3} xl={4}>
                     <Box
                         width="100%"
                         backgroundColor={colors.primary[400]}
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
+                        className={ClassReceitaxDespesa == 'vermelho' ? 'borda4' : 'borda3'}
                     >
                         <StatBox
-                            title='R$8.000,00'
+                            title={ReceitaxDespesa}
                             subtitle='Receitas x Despesas no período'
                             progress=''
                             increase=''
@@ -87,45 +92,24 @@ const AllStatBox = () => {
                             //     />
                             // }
                             icon2={<CurrencyExchangeOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "40px" }} />}
-                        />
-                    </Box>
-                </Grid>
-
-                <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
-                    <Box
-                        width="100%"
-                        backgroundColor={colors.primary[400]}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                    >
-                        <StatBox
-                            title='R$24.998,00'
-                            subtitle='Total em total as contas'
-                            progress=''
-                            increase=''
-                            // icon={
-                            //     <Diversity3OutlinedIcon
-                            //         sx={{ color: colors.greenAccent[600], fontSize: "35px" }}
-                            //     />
-                            // }
-                            icon2={<AccountBalanceOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "40px" }} />}
+                            classvalue={ClassReceitaxDespesa}
                         />
                     </Box>
                 </Grid>
             </Grid>
 
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
+                <Grid xs={12} sm={12} md={6} lg={3} xl={4}>
                     <Box
                         width="100%"
                         backgroundColor={colors.primary[400]}
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
+                        className="borda3"
                     >
                         <StatBox
-                            title='R$22.218,00'
+                            title={TotalReceitasPrev}
                             subtitle='Total de receitas previstas no período'
                             progress=''
                             increase=''
@@ -135,20 +119,22 @@ const AllStatBox = () => {
                             //     />
                             // }
                             icon2={<AttachMoneyOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "40px" }} />}
+                            classvalue={ClassReceitasPrev}
                         />
                     </Box>
                 </Grid>
 
-                <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
+                <Grid xs={12} sm={12} md={6} lg={3} xl={4}>
                     <Box
                         width="100%"
                         backgroundColor={colors.primary[400]}
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
+                        className="borda4"
                     >
                         <StatBox
-                            title='R$-20.187,00'
+                            title={TotalDespesasPrev}
                             subtitle='Total de despesas previstas no período'
                             progress=''
                             increase=''
@@ -158,20 +144,22 @@ const AllStatBox = () => {
                             //     />
                             // }
                             icon2={<AttachMoneyOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "40px" }} />}
+                            classvalue={ClassDespesasPrev}
                         />
                     </Box>
                 </Grid>
 
-                <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
+                <Grid xs={12} sm={12} md={6} lg={3} xl={4}>
                     <Box
                         width="100%"
                         backgroundColor={colors.primary[400]}
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
+                        className={ClassReceitaxDespesaPrev == 'vermelho' ? 'borda4' : 'borda3'}
                     >
                         <StatBox
-                            title='R$2.031,00'
+                            title={ReceitaxDespesaPrev}
                             subtitle='Receitas x Despesas previstas no período'
                             progress=''
                             increase=''
@@ -181,34 +169,10 @@ const AllStatBox = () => {
                             //     />
                             // }
                             icon2={<CurrencyExchangeOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "40px" }} />}
+                            classvalue={ClassReceitaxDespesaPrev}
                         />
                     </Box>
                 </Grid>
-
-                <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
-                    <Box
-                        width="100%"
-                        backgroundColor={colors.primary[400]}
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
-                    >
-                        <StatBox
-                            title='R$24.998,00'
-                            subtitle='Total em total as contas'
-                            progress=''
-                            increase=''
-                            // icon={
-                            //     <Diversity3OutlinedIcon
-                            //         sx={{ color: colors.greenAccent[600], fontSize: "35px" }}
-                            //     />
-                            // }
-                            icon2={<AccountBalanceOutlinedIcon sx={{ color: colors.greenAccent[600], fontSize: "40px" }} />}
-                        />
-                    </Box>
-                </Grid>
-
-                
             </Grid>
 
         </>

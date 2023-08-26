@@ -15,18 +15,26 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import AddFornecedor from "./addfornecedor";
+import EditFornecedor from "./changefornecedor";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
+import DeleteFornecedor from "./deletefornecedor";
 
 const Fornecedores = () => {
     const [pageSize, setPageSize] = useState(10);
     const theme = useTheme();
     const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
     const colors = tokens(theme.palette.mode);
-    const [financas, setFinancas] = useState([]);
-    const [financa, setFinanca] = useState(null);
+    const [show, setShow] = useState(false);
+    const [show2, setShow2] = useState(false);
+    const [rows, setRows] = useState([]);
+    const [onEdit, setOnEdit] = useState([]);
+    const [confirm, setConfirm] = useState(false);
     const columns = [
         {
             field: "icone", headerName: "Ações", renderCell: ({ row: { id } }) => {
-                return <> < ModeEditIcon className="pointer edit" onClick={() => handleEdit(financas, id)} /> < CheckCircleIcon className="pointer aprovar" onClick={() => handleApprov(financas, id)} />  < DeleteForeverIcon className="pointer lixo" onClick={() => handleDelete(financas, id)} /></>;
+                return <> < ModeEditIcon className="pointer edit" onClick={() => handleEdit(rows, id)} /> < DeleteForeverIcon className="pointer lixo" onClick={() => handleDelete(rows, id)} /></>;
             }, width: 100
         },
         {
@@ -35,30 +43,40 @@ const Fornecedores = () => {
             cellClassName: "name-column--cell",
             width: 200,
         },
-        { field: "doc", headerName: "CPF/CNPJ", width: 100 },
-        { field: "contato", headerName: "Contato", width: 200 },
+        { field: "cpf_cnpj", headerName: "CPF/CNPJ", width: 150 },
+        { field: "contato", headerName: "Contato", width: 120 },
     ];
 
-    const handleEdit = (financas, id) => {
-        console.log('editar');
-        const id2 = [id];
-        const selectedRowsData = id2.map((id) => financas.find((row) => row.id === id));
-        setFinanca(selectedRowsData);
-        // setShow(true);
+    const getFornecedores = async () => {
+        try {
+            const res = await axios.get(`http://localhost:8800/getfornecedores`);
+            setRows(res.data)
+        } catch {
+            console.log('erro desconhecido');
+        }
     }
-    const handleApprov = (financas, id) => {
-        console.log('aprovar');
+
+    useEffect(() => {
+        getFornecedores();
+    }, [setRows]);
+
+    const handleEdit = (rows, id) => {
+        // console.log('editar');
         const id2 = [id];
-        const selectedRowsData = id2.map((id) => financas.find((row) => row.id === id));
-        setFinanca(selectedRowsData);
-        // setShow(true);
+        const selectedRowsData = id2.map((id) => rows.find((row) => row.id === id));
+        setOnEdit(selectedRowsData);
+        setShow(true);
     }
-    const handleDelete = (financas, id) => {
-        console.log('deletar');
+    
+    const handleDelete = (rows, id) => {
+        // console.log('deletar');
         const id2 = [id];
-        const selectedRowsData = id2.map((id) => financas.find((row) => row.id === id));
-        setFinanca(selectedRowsData);
-        // setShow(true);
+        const selectedRowsData = id2.map((id) => rows.find((row) => row.id === id));
+        setOnEdit(selectedRowsData);
+        setConfirm(true);;
+    }
+    const handleCreate = () => {
+        setShow2(true);
     }
     return (
         <Box m="20px">
@@ -82,7 +100,7 @@ const Fornecedores = () => {
 
                 >
                     <Grid m='20px 0 0 0' p='10px' xs={12} backgroundColor={colors.primary[400]} >
-                        <Box m="0 0 5px 0"><Button size="sm" variant="secondary">Adicionar Pessoa/Fornecedor</Button></Box>
+                        <Box m="0 0 5px 0"><Button onClick={() => handleCreate()} size="sm" variant="secondary">Adicionar Pessoa/Fornecedor</Button></Box>
                         <Box
                             m="8px 0 0 0"
                             width="100%"
@@ -117,7 +135,7 @@ const Fornecedores = () => {
                             }}
                         >
                             <DataGrid
-                                rows={financas}
+                                rows={rows}
                                 columns={columns}
                                 components={{ Toolbar: GridToolbar }}
                                 pageSize={pageSize}
@@ -128,6 +146,16 @@ const Fornecedores = () => {
                     </Grid>
                 </Grid>
             </Box>
+            {show && (
+                <EditFornecedor show={show} setShow={setShow} onEdit={onEdit} setOnEdit={setOnEdit} getFornecedores={getFornecedores} />
+            )}
+            {show2 && (
+                <AddFornecedor show2={show2} setShow2={setShow2} getFornecedores={getFornecedores} />
+            )}
+            {confirm && (
+                <DeleteFornecedor confirm={confirm} setConfirm={setConfirm} onEdit={onEdit} setOnEdit={setOnEdit} getFornecedores={getFornecedores} />
+            )}
+            <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
         </Box>
     )
 }
