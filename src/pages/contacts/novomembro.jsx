@@ -34,12 +34,13 @@ const Novomembro = () => {
     const [numero, setNumero] = useState("");
     const [complemento, setComplemento] = useState("");
     const [admissao, setAdmissao] = useState("");
-    const [obs_admissao, setObsAdmissao] = useState("");
+    const [data_admissao, setDataAdmissao] = useState();
     const [situacao, setSituacao] = useState("");
     const [conversao, setConversao] = useState();
     const [batismo, setBatismo] = useState();
     const [chamado, setChamado] = useState("");
     const [outrasinfos, setOutrasInfos] = useState("");
+    const [data_casamento, setDataCasamento] = useState();
     // const [qntmembrosatual, setQntMembrosAtual] = useState();
     // const [totalmembrosativos, setTotalMembrosAtivos] = useState();
     let totalmembrosativos = 0;
@@ -50,10 +51,6 @@ const Novomembro = () => {
     const handleCreate = async (e) => {
 
         if (!nome) { return toast.warn("Campo 'Nome' é obrigatório"); }
-
-        if (admissao != 'Aclamação') {
-            setObsAdmissao("");
-        };
 
         await axios
             .post("http://localhost:8800/addmembro", {
@@ -69,12 +66,13 @@ const Novomembro = () => {
                 numero: numero,
                 complemento: complemento,
                 admissao: admissao,
-                obs_admissao: obs_admissao,
+                data_admissao: data_admissao,
                 situacao: situacao,
                 conversao: conversao,
                 batismo: batismo,
                 chamado: chamado,
-                outrasinfos: outrasinfos
+                outrasinfos: outrasinfos,
+                data_casamento: data_casamento
             })
             .then(
                 ({ data }) => {
@@ -88,13 +86,14 @@ const Novomembro = () => {
                         setTelefone('')
                         setGenero('')
                         setNascimento()
-                        setCivil('')
+                        setCivil('Selecionar')
+                        setDataCasamento()
                         setCep('')
                         setEndereco('')
                         setNumero('')
                         setComplemento('')
                         setAdmissao('')
-                        setObsAdmissao('')
+                        setDataAdmissao()
                         setSituacao('')
                         setConversao()
                         setBatismo()
@@ -124,8 +123,8 @@ const Novomembro = () => {
         //Atualiza/Cria o registro na tabela de quantidades total de membros ativos para o mês atual
         if (qntmembrosatual.length == 0) {
             const dataAtual = new Date();
-            const ano = dataAtual.getFullYear();
-            let mes = dataAtual.getMonth() + 1;
+            const ano = dataAtual.getUTCFullYear();
+            let mes = dataAtual.getUTCMonth() + 1;
             if (mes < 10) {
                 mes = '0' + mes;
             }
@@ -168,8 +167,8 @@ const Novomembro = () => {
         //Atualiza/Cria o registro na tabela de quantidades total de membros ativos para o mês atual
         if (qntmembrosatual2.length == 0) {
             const dataAtual = new Date();
-            const ano = dataAtual.getFullYear();
-            let mes = dataAtual.getMonth() + 1;
+            const ano = dataAtual.getUTCFullYear();
+            let mes = dataAtual.getUTCMonth() + 1;
             if (mes < 10) {
                 mes = '0' + mes;
             }
@@ -265,6 +264,12 @@ const Novomembro = () => {
                                 </Form.Select>
                             </div>
                         </Row>
+                        <Row className={civil == 'Casado(a)' ? 'mb-3' : 'casamento mb-3'}>
+                            <Form.Group as={Col}>
+                                <Form.Label>Data de Casamento</Form.Label>
+                                <Form.Control value={data_casamento} onChange={(e) => setDataCasamento(e.target.value)} size="sm" type="date" />
+                            </Form.Group>
+                        </Row>
                     </div>
                 </Col>
 
@@ -327,8 +332,8 @@ const Novomembro = () => {
                                         />
                                     </div>
                                 ))}
-                                <Form.Label>Observação:</Form.Label>
-                                <Form.Control disabled={admissao == 'Aclamação' ? '' : 'true'} value={obs_admissao} onChange={(e) => setObsAdmissao(e.target.value)} size="sm" as="textarea" type="textarea" placeholder="Observação" />
+                                <Form.Label>Data de Admissão:</Form.Label>
+                                <Form.Control value={data_admissao} onChange={(e) => setDataAdmissao(e.target.value)} size="sm" type="date" />
                             </Form.Group>
                         </Row>
                         <Row className="mb-2">

@@ -214,7 +214,7 @@ const AddDespesa = ({ show2, setShow2, getTransacoes }) => {
                     pagamento: pagamento,
                     valor: valorformatado,
                     status: 'Não Pago',
-                    idr: lastidr
+                    // idr: lastidr
                 })
                 .then(
                     ({ data }) => {
@@ -354,7 +354,7 @@ const AddDespesa = ({ show2, setShow2, getTransacoes }) => {
                                 </Row>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
-                                        <Form.Label>Nome do Banco</Form.Label>
+                                        <Form.Label>Origem do Pagamento</Form.Label>
                                         <Form.Select size="sm" aria-label="Default select example" onChange={(e) => fillbanco(e.target.value)}>
                                             <option value="">Selecione...</option>
                                             {
@@ -406,7 +406,7 @@ const AddDespesa = ({ show2, setShow2, getTransacoes }) => {
                                 </Row>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
-                                        <Form.Label>Plano de Contas</Form.Label>
+                                        <Form.Label>Tipo de Despesa</Form.Label>
                                         <Form.Select onChange={(e) => fillplano(e.target.value)} size="sm" aria-label="Default select example">
                                             <option value="">Selecione...</option>
                                             {

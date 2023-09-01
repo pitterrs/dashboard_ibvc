@@ -60,7 +60,7 @@
 .borda4 {
     border-top: 3px solid;
     /* border-bottom: 2px solid; */
-    border-color: #e24118;
+    border-color: rgb(228, 26, 26);
 }
 
 .icone1 {
@@ -68,7 +68,7 @@
 }
 
 .icone2 {
-    color: #e24118;
+    color: rgb(228, 26, 26);
 }
 
 .box2{
@@ -99,7 +99,7 @@
     line-height: 1.167;
     font-weight: 600;
     font-size: 2.00rem !important;
-    color: #e24118;
+    color: rgb(228, 26, 26);
     margin-top: 15px;
 }
 
@@ -113,7 +113,7 @@
 
 .link2{
     text-decoration: none;
-    color: #e24118;
+    color: rgb(228, 26, 26);
     font-family: Source Sans Pro,sans-serif !important;
     font-size: 18px !important;
     margin-top: 13px;
@@ -128,7 +128,7 @@
 }
 
 .negativo{
-    color: #e24118 !important;
+    color: rgb(228, 26, 26) !important;
     font-weight: bold !important;
 }
 
@@ -142,7 +142,7 @@
 }
 
 .vermelho{
-    color: #e24118 !important;
+    color: rgb(228, 26, 26) !important;
 }
 
 .verde{

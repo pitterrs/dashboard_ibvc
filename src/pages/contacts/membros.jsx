@@ -52,20 +52,42 @@ const Membros = () => {
 
       if (linha.nascimento) {
         const newdate = new Date(linha.nascimento);
-        const dia = (newdate.getDate() + 1) < 10 ? `0${(newdate.getDate() + 1)}` : (newdate.getDate() + 1);;
-        const mes = (newdate.getMonth() + 1) < 10 ? `0${(newdate.getMonth() + 1)}` : (newdate.getMonth() + 1);
-        const ano = newdate.getFullYear();
+        const dia = (newdate.getUTCDate()) < 10 ? `0${(newdate.getUTCDate())}` : (newdate.getUTCDate());;
+        const mes = (newdate.getUTCMonth() + 1) < 10 ? `0${(newdate.getUTCMonth() + 1)}` : (newdate.getUTCMonth() + 1);
+        const ano = newdate.getUTCFullYear();
         const formatDate = dia + '/' + mes + '/' + ano;
         Object.defineProperty(linha, 'nascimento', {
           value: formatDate,
         })
       }
 
+      if (linha.data_admissao) {
+        const newdate = new Date(linha.data_admissao);
+        const dia = (newdate.getUTCDate()) < 10 ? `0${(newdate.getUTCDate())}` : (newdate.getUTCDate());;
+        const mes = (newdate.getUTCMonth() + 1) < 10 ? `0${(newdate.getUTCMonth() + 1)}` : (newdate.getUTCMonth() + 1);
+        const ano = newdate.getUTCFullYear();
+        const formatDate = dia + '/' + mes + '/' + ano;
+        Object.defineProperty(linha, 'data_admissao', {
+          value: formatDate,
+        })
+      }
+
+      if (linha.data_casamento) {
+        const newdate = new Date(linha.data_casamento);
+        const dia = (newdate.getUTCDate()) < 10 ? `0${(newdate.getUTCDate())}` : (newdate.getUTCDate());;
+        const mes = (newdate.getUTCMonth() + 1) < 10 ? `0${(newdate.getUTCMonth() + 1)}` : (newdate.getUTCMonth() + 1);
+        const ano = newdate.getUTCFullYear();
+        const formatDate = dia + '/' + mes + '/' + ano;
+        Object.defineProperty(linha, 'data_casamento', {
+          value: formatDate,
+        })
+      }
+
       if (linha.conversao) {
         const newdate = new Date(linha.conversao);
-        const dia = (newdate.getDate() + 1) < 10 ? `0${(newdate.getDate() + 1)}` : (newdate.getDate() + 1);;
-        const mes = (newdate.getMonth() + 1) < 10 ? `0${(newdate.getMonth() + 1)}` : (newdate.getMonth() + 1);
-        const ano = newdate.getFullYear();
+        const dia = (newdate.getUTCDate()) < 10 ? `0${(newdate.getUTCDate())}` : (newdate.getUTCDate());;
+        const mes = (newdate.getUTCMonth() + 1) < 10 ? `0${(newdate.getUTCMonth() + 1)}` : (newdate.getUTCMonth() + 1);
+        const ano = newdate.getUTCFullYear();
         const formatDate = dia + '/' + mes + '/' + ano;
         Object.defineProperty(linha, 'conversao', {
           value: formatDate,
@@ -74,9 +96,9 @@ const Membros = () => {
 
       if (linha.batismo) {
         const newdate = new Date(linha.batismo);
-        const dia = (newdate.getDate() + 1) < 10 ? `0${(newdate.getDate() + 1)}` : (newdate.getDate() + 1);;
-        const mes = (newdate.getMonth() + 1) < 10 ? `0${(newdate.getMonth() + 1)}` : (newdate.getMonth() + 1);
-        const ano = newdate.getFullYear();
+        const dia = (newdate.getUTCDate()) < 10 ? `0${(newdate.getUTCDate())}` : (newdate.getUTCDate());;
+        const mes = (newdate.getUTCMonth() + 1) < 10 ? `0${(newdate.getUTCMonth() + 1)}` : (newdate.getUTCMonth() + 1);
+        const ano = newdate.getUTCFullYear();
         const formatDate = dia + '/' + mes + '/' + ano;
         Object.defineProperty(linha, 'batismo', {
           value: formatDate,
@@ -106,15 +128,16 @@ const Membros = () => {
       }, width: 100
     },
     { field: "nome", headerName: "Name", cellClassName: "name-column--cell", width: 200 },
-    { field: "idade", headerName: "Idade", type: "number", headerAlign: "left", align: "left", width: 100 },
+    { field: "idade", headerName: "Idade", type: "number", headerAlign: "left", align: "left", width: 55 },
     { field: "celular", headerName: "Celular", width: 100 },
     { field: "telefone", headerName: "Telefone", width: 100 },
     { field: "email", headerName: "Email", width: 200 },
     { field: "genero", headerName: "Genero", width: 100 },
     { field: "nascimento", type: 'date', headerName: "Data de Nascimento", width: 120 },
     { field: "civil", headerName: "Estado Civil", width: 120 },
+    { field: "data_casamento", headerName: "Data de Casamento", width: 120 },
     { field: "admissao", headerName: "Admissão", width: 100 },
-    { field: "obs_admissao", headerName: "Obs Admissão", width: 100 },
+    { field: "data_admissao", headerName: "Data de Admissão", width: 120 },
     { field: "situacao", headerName: "Situação", width: 100 },
     { field: "conversao", headerName: "Conversão", width: 100 },
     { field: "batismo", headerName: "Batismo", width: 100 },

@@ -45,11 +45,12 @@ const VisaoGeral = () => {
             const contas_aux = res.data;
             let total = 0;
             for (var conta of contas_aux) {
-                const res = await axios.get(`http://localhost:8800/checkconta/` + conta.id);
+                const res = await axios.get(`http://localhost:8800/checkcontareceita/` + conta.id);
+                const res2 = await axios.get(`http://localhost:8800/checkcontadespesa/` + conta.id);
                 Object.defineProperty(conta, 'saldo', {
-                    value: (res.data[0].valor ? res.data[0].valor : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                    value: (res.data[0].valor - res2.data[0].valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
                 })
-                total = total + (res.data[0].valor ? res.data[0].valor : 0);
+                total = total + (res.data[0].valor - res2.data[0].valor);
             }
             setContas(contas_aux)
             setSaldoTotal(total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
@@ -288,7 +289,7 @@ const VisaoGeral = () => {
                                         fontWeight="600"
                                         color={colors.grey[100]}
                                     >
-                                        FLUXO DE CAIXA MÊS ATUAL
+                                        FLUXO DE CAIXA MENSAL ANO ATUAL
                                     </Typography>
                                     <Typography
                                         variant="h5"
@@ -302,6 +303,9 @@ const VisaoGeral = () => {
                             <Box height="250px" m="-20px 0 0 0">
                                 <LineChart isDashboard={true} />
                             </Box>
+                            {/* <Box height="250px" m="-20px 0 0 0">
+                                <LineChart2 isDashboard={true} />
+                            </Box> */}
                         </Box>
                     </Grid>
                 </Grid>

@@ -1,0 +1,81 @@
+import { React, useState, useEffect } from 'react';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import axios from "axios";
+import Header from "../../components/Header";
+import { Box, Typography } from "@mui/material";
+import { toast } from "react-toastify";
+const AddEquipe = ({ show, setShow, getEquipes }) => {
+    const [nome, setNome] = useState()
+    const handleClose = () => {
+        setShow(false);
+    }
+    const handleCreate = async () => {
+        let new_id_equipe = 0;
+        if (!nome) { return toast.warn("Preencha o campo 'Nome'"); }
+
+        try {
+            const res = await axios.get(`http://localhost:8800/getlastequipe`);
+            new_id_equipe = res.data[0].id_equipe ? res.data[0].id_equipe : 0;
+            new_id_equipe = new_id_equipe + 1;
+        } catch (error) {
+            console.log('erro desconhecido');
+        }
+
+        await axios
+            .post("http://localhost:8800/addequipe", {
+                nome: nome,
+                id_equipe: new_id_equipe
+            })
+            .then(
+                ({ data }) => {
+                    if (data.code) {
+                        toast.error('Erro ao adicionar registro no BD. Entre em contato com o administrador')
+                    } else {
+                        toast.success(data)
+                    }
+                }
+            )
+            .catch(({ data }) => toast.error(data));
+        setShow(false);
+        getEquipes();
+
+    }
+
+    return (
+        <Modal size="xl" show={show} onHide={handleClose}>
+            <Modal.Body >
+                <Box m="20px" >
+                    <Header title="Criar Equipe" subtitle="Você está uma nova Equipe." />
+                    <Row>
+                        <Col xs lg="9">
+                            <div className='fundo'>
+                                <Row className="mb-3">
+                                    <Col xs lg="6">
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Nome da Equipe</Form.Label>
+                                            <Form.Control maxLength={45} value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                            </div>
+                        </Col>
+                    </Row>
+                </Box>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="outline-primary" size="sm" onClick={handleCreate}>
+                    Criar Equipe
+                </Button>
+                <Button variant="outline-success" size="sm" onClick={handleClose}>
+                    Fechar
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    )
+}
+
+export default AddEquipe;

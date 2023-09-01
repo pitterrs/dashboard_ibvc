@@ -92,7 +92,7 @@ const LineChart = ({ isDashboard = false }) => {
         stacked: false,
         reverse: false,
       }}
-      yFormat=" >-.2f"
+      yFormat=" >-.2"
       axisTop={null}
       axisRight={null}
       axisBottom={{

@@ -10,32 +10,79 @@ const LineChart = ({ isDashboard = false }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [dataChart, setDataChart] = useState([]);
-
-  const chartData = async () =>{
-    //Captura a quantidade de membros ativos atualmente
+  const mes = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+  const dados = mockMembros();
+  const chartData = async () => {
     try {
-        const res = await axios.get(`http://localhost:8800/getallinativos`);
-        const res2 = await axios.get(`http://localhost:8800/getallativos`);
-        const dados = mockMembros();
-        let n = 0;
-        while(n < 12){
-          Object.defineProperty(dados[0].data[n], 'y', {
-            value: res2.data[n].quantidade,
-          })
-          n++;
+      const d = new Date();
+      const init = d.getFullYear() + '-' + '01' + '-' + '01';
+      const end = d.getFullYear() + '-' + '12' + '-' + '31';
+      const res = await axios.get(`http://localhost:8800/getreceitasano/` + init + '/' + end);
+      const res2 = await axios.get(`http://localhost:8800/getdespesasano/` + init + '/' + end);
+      const novoarray = [
+        {
+          id: "Receitas",
+          color: "#1ab347",
+          data: [
+          ]
+        },
+        {
+          id: "Despesas",
+          color: "rgb(228, 26, 26)",
+          data: [
+          ]
+        }
+      ]
+
+      for (var i = 1; i <= 12; i++) {
+        const receitasMes = res.data.filter(filterdata);
+        let totalmes = 0;
+        const n = i - 1;
+
+        for(var receita of receitasMes){
+          totalmes = totalmes + receita.valor;
         }
 
-        n = 0;
-        while(n < 12){
-          Object.defineProperty(dados[1].data[n], 'y', {
-            value: res.data[n].quantidade,
-          })
-          n++;
+        novoarray[0].data.push(
+          {
+            x: mes[n],
+            y: totalmes
+          }
+        )
+      }
+
+      for (var i = 1; i <= 12; i++) {
+        const despesasMes = res2.data.filter(filterdata);
+        let totalmes = 0;
+        const n = i - 1;
+
+        for(var despesa of despesasMes){
+          totalmes = totalmes + despesa.valor;
         }
 
-        setDataChart(dados);
+        novoarray[1].data.push(
+          {
+            x: mes[n],
+            y: totalmes
+          }
+        )
+      }
+
+      setDataChart(novoarray);
+
+
+      function filterdata(data) {
+        const d = new Date();
+        const mes = i;
+        const firstday = (d.getUTCFullYear() + '-' + (mes <= 9 ? '0' + mes : mes) + '-' + '01');
+        const lastday = (d.getUTCFullYear() + '-' + (mes <= 9 ? '0' + mes : mes) + '-' + (new Date(d.getUTCFullYear(), d.getUTCMonth() + 1, 0).getUTCDate()));
+        if (data.data >= firstday && data.data <= lastday)
+        return data;
+      }
+
+      // setDataChart(dados);
     } catch (error) {
-        console.log('erro desconhecido');
+      console.log('erro desconhecido');
     }
   }
 
@@ -81,7 +128,6 @@ const LineChart = ({ isDashboard = false }) => {
       }}
       curve="catmullRom"
       data={dataChart}
-      // data={dataChart}
       colors={isDashboard ? { datum: "color" } : { scheme: "nivo" }}
       margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
       xScale={{ type: "point" }}
@@ -92,7 +138,7 @@ const LineChart = ({ isDashboard = false }) => {
         stacked: false,
         reverse: false,
       }}
-      yFormat=" >-.2f"
+      yFormat=" >-$.2f"
       axisTop={null}
       axisRight={null}
       axisBottom={{

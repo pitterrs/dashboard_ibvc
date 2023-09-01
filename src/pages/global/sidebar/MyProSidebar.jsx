@@ -198,18 +198,18 @@ const MyProSidebar = () => {
             />
             <Item
               title="Aniversariantes"
-              to="/teste"
+              to="/aniversario"
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
-            {/* <Item
-              title="Contacts Information"
-              to="/contacts"
+            <Item
+              title="Aniversário de Casamento"
+              to="/casamento"
               icon={<ContactsOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            /> */}
+            />
             {/* <Item
               title="Invoices Balances"
               to="/invoices"
@@ -226,6 +226,13 @@ const MyProSidebar = () => {
               Equipes/Ministerios
             </Typography>
             {/* Inicio Sub Menu */}
+            <Item
+              title="Equipes"
+              to="/equipes"
+              selected={selected}
+              setSelected={setSelected}
+              icon={<ContactsOutlinedIcon />}
+            />
             <SubMenu component={<Link className="link texto-menu" />} icon={<CurrencyExchangeOutlinedIcon className="tamanho" />} label="Comissão de Finanças" >
               <MenuItem>
                 <Item

@@ -228,7 +228,7 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
                                 </Row>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
-                                        <Form.Label>Nome do Banco</Form.Label>
+                                        <Form.Label>Origem do Pagamento</Form.Label>
                                         <Form.Select size="sm" aria-label="Default select example" onChange={(e) => fillbanco(e.target.value)}>
                                             <option value="">Selecione...</option>
                                             {
@@ -280,7 +280,7 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
                                 </Row>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
-                                        <Form.Label>Plano de Contas</Form.Label>
+                                        <Form.Label>Tipo de Despesa</Form.Label>
                                         <Form.Select onChange={(e) => fillplano(e.target.value)} size="sm" aria-label="Default select example">
                                             <option value="">Selecione...</option>
                                             {

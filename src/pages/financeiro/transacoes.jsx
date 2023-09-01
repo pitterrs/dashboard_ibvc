@@ -84,8 +84,8 @@ const Transacoes = () => {
 
         if (init == '' || end == '') {
             const d = new Date();
-            init = (d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + '01')
-            end = (d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + (new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate()));
+            init = (d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + '01')
+            end = (d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + (new Date(d.getUTCFullYear(), d.getUTCMonth() + 1, 0).getUTCDate()));
             setDataInicial('');
             setDataFinal('');
         }

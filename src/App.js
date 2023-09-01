@@ -16,7 +16,7 @@ import Membros from "./pages/contacts/membros";
 import Novomembro from "./pages/contacts/novomembro";
 import Mensageiras from "./pages/mensageiras/mensageiras";
 import AddMensageira from "./pages/mensageiras/addmensageira";
-import FormFloatingLayoutExample from "./pages/contacts/teste";
+import Aniversario from "./pages/contacts/aniversario";
 import Transacoes from "./pages/financeiro/transacoes";
 import VisaoGeral from "./pages/financeiro/geral";
 import Contas from "./pages/financeiro/contas";
@@ -30,6 +30,8 @@ import Line from "./pages/line";
 import Pie from "./pages/pie";
 import FAQ from "./pages/faq";
 import Geography from "./pages/geography";
+import Casamento from "./pages/contacts/casamento";
+import Equipes from "./pages/contacts/equipes";
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -58,9 +60,9 @@ const App = () => {
                 <Route path="/centrocusto" element={<CentroCusto />} />
                 <Route path="/lancamentos" element={<Lancamentos />} />
                 <Route path="/fornecedores" element={<Fornecedores />} />
-                <Route path="/teste" element={<FormFloatingLayoutExample />} />
-                <Route path="/invoices" element={<Invoices />} />
-                <Route path="/form" element={<Form />} />
+                <Route path="/aniversario" element={<Aniversario />} />
+                <Route path="/casamento" element={<Casamento />} />
+                <Route path="/equipes" element={<Equipes />} />
                 <Route path="/bar" element={<Bar />} />
                 <Route path="/pie" element={<Pie />} />
                 <Route path="/line" element={<Line />} />

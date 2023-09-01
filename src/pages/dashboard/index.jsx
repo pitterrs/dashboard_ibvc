@@ -371,7 +371,7 @@ const Dashboard = () => {
                     fontWeight="600"
                     color={colors.grey[100]}
                   >
-                    Grafico Anual de Membros
+                    Grafico mensal de novos membros
                   </Typography>
                   <Typography
                     variant="h5"

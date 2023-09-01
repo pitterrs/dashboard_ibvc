@@ -231,7 +231,7 @@ const ChangeReceita = ({ show3, setShow3, getTransacoes, onEdit, setOnEdit }) =>
                                 </Col>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
-                                        <Form.Label>Nome do Banco</Form.Label>
+                                        <Form.Label>Origem do Recebimento</Form.Label>
                                         <Form.Select size="sm" aria-label="Default select example" onChange={(e) => fillbanco(e.target.value)}>
                                             <option value="">Selecione...</option>
                                             {
@@ -243,7 +243,7 @@ const ChangeReceita = ({ show3, setShow3, getTransacoes, onEdit, setOnEdit }) =>
                                             }
                                         </Form.Select>
                                     </Form.Group>
-                                    <Form.Group as={Col} >
+                                    {/* <Form.Group as={Col} >
                                         <Form.Label>Centro de Custo</Form.Label>
                                         <Form.Select size="sm" aria-label="Default select example" onChange={(e) => fillcusto(e.target.value)}>
                                             <option value="">Selecione...</option>
@@ -255,7 +255,7 @@ const ChangeReceita = ({ show3, setShow3, getTransacoes, onEdit, setOnEdit }) =>
                                                 )
                                             }
                                         </Form.Select>
-                                    </Form.Group>
+                                    </Form.Group> */}
                                     <Form.Group as={Col} >
                                         <Form.Label>Categoria</Form.Label>
                                         <Form.Control disabled value='Receita' size="sm" type="text" placeholder="" />
@@ -284,7 +284,7 @@ const ChangeReceita = ({ show3, setShow3, getTransacoes, onEdit, setOnEdit }) =>
                                 </Row>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
-                                        <Form.Label>Plano de Contas</Form.Label>
+                                        <Form.Label>Tipo de Receita</Form.Label>
                                         <Form.Select onChange={(e) => fillplano(e.target.value)} size="sm" aria-label="Default select example">
                                             <option value="">Selecione...</option>
                                             {

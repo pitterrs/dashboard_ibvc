@@ -600,8 +600,8 @@ export const mockMembros = () =>{
 
   const data = [
     {
-      id: "Ativos",
-      color: tokens("dark").greenAccent[500],
+      id: "Receitas",
+      color: "#e24118",
       data: [
         {
           x: "Janeiro",
@@ -654,8 +654,8 @@ export const mockMembros = () =>{
       ]
     },
     {
-      id: "Inativos",
-      color: tokens("dark").blueAccent[300],
+      id: "Despesas",
+      color: "#1ab347",
       data: [
         {
           x: "Janeiro",
