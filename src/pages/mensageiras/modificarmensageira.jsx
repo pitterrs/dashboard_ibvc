@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -13,7 +13,7 @@ import "./mensageiras.css";
 
 const ChangeMensageiras = ({ show, setShow, mensageira, setMensageira, getMensageiras }) => {
 
-    const [nome, setNome] = useState(mensageira[0].nome); 
+    const [nome, setNome] = useState(mensageira[0].nome);
     const [email, setEmail] = useState(mensageira[0].email || '');
     const [celular, setCelular] = useState(mensageira[0].celular || '');
     const [id, setId] = useState(mensageira[0].id);
@@ -30,9 +30,38 @@ const ChangeMensageiras = ({ show, setShow, mensageira, setMensageira, getMensag
     const [nascimento, setNascimento] = useState(mensageira[0].nascimento);
     const [confirm, setConfirm] = useState(false);
 
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        console.log('Logado')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
+
+    useEffect(() => {
+        validations();
+    }, []);
+
     const handleClose = () => {
         setShow(false);
-        setMensageira(null); 
+        setMensageira(null);
     }
 
     const handleEdit = async (e) => {
@@ -74,107 +103,107 @@ const ChangeMensageiras = ({ show, setShow, mensageira, setMensageira, getMensag
     return (
         <Modal size="xl" show={show} onHide={handleClose}>
             <Modal.Body>
-            <Box m="20px" >
-                <Header title="Adicionar Nova Mensageira" subtitle="Você está cadastrando uma nova Mensageira do Rei" />
-                <Row>
-                    <Col xs lg="5">
-                        <div className="fundo">
-                            <h4>Informações Pessoais</h4>
-                            <Row className="mb-3">
-                                <Form.Group as={Col} >
-                                    <Form.Label>Nome da Mensageira</Form.Label>
-                                    <Form.Control value={nome} disabled size="sm" type="text" placeholder="" />
-                                </Form.Group>
-                            </Row>
-                            <Row className="mb-3">
-                                <Form.Group as={Col}>
-                                    <Form.Label>Email</Form.Label>
-                                    <Form.Control value={email} disabled size="sm" type="email" placeholder="email" />
-                                </Form.Group>
-                            </Row>
-                            <Row className="mb-3">
-                                <Form.Group as={Col}>
-                                    <Form.Label>Celular</Form.Label>
-                                    <Form.Control value={celular} disabled size="sm" type="text" placeholder="2299999-9999" />
-                                </Form.Group>
+                <Box m="20px" >
+                    <Header title="Adicionar Nova Mensageira" subtitle="Você está cadastrando uma nova Mensageira do Rei" />
+                    <Row>
+                        <Col xs lg="5">
+                            <div className="fundo">
+                                <h4>Informações Pessoais</h4>
+                                <Row className="mb-3">
+                                    <Form.Group as={Col} >
+                                        <Form.Label>Nome da Mensageira</Form.Label>
+                                        <Form.Control value={nome} disabled size="sm" type="text" placeholder="" />
+                                    </Form.Group>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control value={email} disabled size="sm" type="email" placeholder="email" />
+                                    </Form.Group>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Celular</Form.Label>
+                                        <Form.Control value={celular} disabled size="sm" type="text" placeholder="2299999-9999" />
+                                    </Form.Group>
 
-                                <Form.Group as={Col}>
-                                    <Form.Label>Função</Form.Label>
-                                    <Form.Control value={funcao} onChange={(e) => setFuncao(e.target.value)} size="sm" type="text" placeholder="Função" />
-                                </Form.Group>
-                            </Row>
-                            <Row className="mb-3">
-                                <Form.Group as={Col}>
-                                    <Form.Label>Etapa</Form.Label>
-                                    <Form.Control value={etapa} onChange={(e) => setEtapa(e.target.value)} size="sm" type="text" placeholder="Etapa" />
-                                </Form.Group>
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Função</Form.Label>
+                                        <Form.Control value={funcao} onChange={(e) => setFuncao(e.target.value)} size="sm" type="text" placeholder="Função" />
+                                    </Form.Group>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Etapa</Form.Label>
+                                        <Form.Control value={etapa} onChange={(e) => setEtapa(e.target.value)} size="sm" type="text" placeholder="Etapa" />
+                                    </Form.Group>
 
-                                <Form.Group as={Col}>
-                                    <Form.Label>Situaçao</Form.Label>
-                                    <Form.Select onChange={(e) => setSituacao(e.target.value)} size="sm" aria-label="Default select example">
-                                        <option>Selecionar</option>
-                                        <option selected={situacao == 'Frequenta' ? 'true' : ''} value="Frequenta">Frequenta</option>
-                                        <option selected={situacao == 'Média Frequência' ? 'true' : ''} value="Média Frequência">Média Frequência</option>
-                                        <option selected={situacao == 'Baixa Frequência' ? 'true' : ''} value="Baixa Frequência">Baixa Frequência</option>
-                                        <option selected={situacao == 'Não Frequenta' ? 'true' : ''} value="Não Frequenta">Não Frequenta</option>
-                                    </Form.Select>
-                                </Form.Group>
-                            </Row>
-                            <Row className="mb-3">
-                                <Form.Group as={Col}>
-                                    <Form.Label>Data de Nascimento</Form.Label>
-                                    <Form.Control disabled value={nascimento} size="sm" type="date" />
-                                </Form.Group>
-                            </Row>
-                            <Row className="mb-3">
-                                <Form.Group as={Col}>
-                                    <Form.Label>Outras informações:</Form.Label>
-                                    <Form.Control value={outrasinfos} onChange={(e) => setOutrasInfos(e.target.value)} as="textarea" size="sm" type="text" placeholder="" />
-                                </Form.Group>
-                            </Row>
-                        </div>
-                    </Col>
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Situaçao</Form.Label>
+                                        <Form.Select onChange={(e) => setSituacao(e.target.value)} size="sm" aria-label="Default select example">
+                                            <option>Selecionar</option>
+                                            <option selected={situacao == 'Frequenta' ? 'true' : ''} value="Frequenta">Frequenta</option>
+                                            <option selected={situacao == 'Média Frequência' ? 'true' : ''} value="Média Frequência">Média Frequência</option>
+                                            <option selected={situacao == 'Baixa Frequência' ? 'true' : ''} value="Baixa Frequência">Baixa Frequência</option>
+                                            <option selected={situacao == 'Não Frequenta' ? 'true' : ''} value="Não Frequenta">Não Frequenta</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Data de Nascimento</Form.Label>
+                                        <Form.Control disabled value={nascimento} size="sm" type="date" />
+                                    </Form.Group>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Outras informações:</Form.Label>
+                                        <Form.Control value={outrasinfos} onChange={(e) => setOutrasInfos(e.target.value)} as="textarea" size="sm" type="text" placeholder="" />
+                                    </Form.Group>
+                                </Row>
+                            </div>
+                        </Col>
 
-                    <Col xs lg="5" md={{ span: 4, offset: 0 }}>
-                        <div className="fundo">
-                            <h4>Informações dos Responsáveis</h4>
-                            <Row className="mb-3">
-                                <Form.Group as={Col}>
-                                    <Form.Label>Responsável Principal</Form.Label>
-                                    <Form.Control value={responsavel1} onChange={(e) => setResponsalve1(e.target.value)} size="sm" type="text" placeholder="Responsável" />
-                                </Form.Group>
-                            </Row>
-                            <Row className="mb-3">
-                                <Form.Group as={Col} controlId="formGridEmail">
-                                    <Form.Label>Email do Responsável Principal</Form.Label>
-                                    <Form.Control value={resp1email} onChange={(e) => setResp1email(e.target.value)} size="sm" type="text" placeholder="email" />
-                                </Form.Group>
-                                <Form.Group as={Col}>
-                                    <Form.Label>Contato do Responsável Principal</Form.Label>
-                                    <Form.Control value={resp1contato} onChange={(e) => setResp1contato(e.target.value)} size="sm" type="text" placeholder="Celular" />
-                                </Form.Group>
-                            </Row>
-                            <Row className="mb-3">
-                                <Form.Group as={Col}>
-                                    <Form.Label>Responsável Secundário</Form.Label>
-                                    <Form.Control value={responsavel2} onChange={(e) => setResponsalve2(e.target.value)} size="sm" type="text" placeholder="Secundário" />
-                                </Form.Group>
-                            </Row>
-                            <Row className="mb-3">
-                                <Form.Group as={Col} controlId="formGridEmail">
-                                    <Form.Label>Email do Responsável Secundário</Form.Label>
-                                    <Form.Control value={resp2email} onChange={(e) => setResp2email(e.target.value)} size="sm" type="text" placeholder="email" />
-                                </Form.Group>
-                                <Form.Group as={Col}>
-                                    <Form.Label>Contato do Responsável Secundário</Form.Label>
-                                    <Form.Control value={resp2contato} onChange={(e) => setResp2contato(e.target.value)} size="sm" type="text" placeholder="Celular" />
-                                </Form.Group>
-                            </Row>
-                        </div>
-                    </Col>
-                </Row>
-                <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
-            </Box>
+                        <Col xs lg="5" md={{ span: 4, offset: 0 }}>
+                            <div className="fundo">
+                                <h4>Informações dos Responsáveis</h4>
+                                <Row className="mb-3">
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Responsável Principal</Form.Label>
+                                        <Form.Control value={responsavel1} onChange={(e) => setResponsalve1(e.target.value)} size="sm" type="text" placeholder="Responsável" />
+                                    </Form.Group>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Form.Group as={Col} controlId="formGridEmail">
+                                        <Form.Label>Email do Responsável Principal</Form.Label>
+                                        <Form.Control value={resp1email} onChange={(e) => setResp1email(e.target.value)} size="sm" type="text" placeholder="email" />
+                                    </Form.Group>
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Contato do Responsável Principal</Form.Label>
+                                        <Form.Control value={resp1contato} onChange={(e) => setResp1contato(e.target.value)} size="sm" type="text" placeholder="Celular" />
+                                    </Form.Group>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Responsável Secundário</Form.Label>
+                                        <Form.Control value={responsavel2} onChange={(e) => setResponsalve2(e.target.value)} size="sm" type="text" placeholder="Secundário" />
+                                    </Form.Group>
+                                </Row>
+                                <Row className="mb-3">
+                                    <Form.Group as={Col} controlId="formGridEmail">
+                                        <Form.Label>Email do Responsável Secundário</Form.Label>
+                                        <Form.Control value={resp2email} onChange={(e) => setResp2email(e.target.value)} size="sm" type="text" placeholder="email" />
+                                    </Form.Group>
+                                    <Form.Group as={Col}>
+                                        <Form.Label>Contato do Responsável Secundário</Form.Label>
+                                        <Form.Control value={resp2contato} onChange={(e) => setResp2contato(e.target.value)} size="sm" type="text" placeholder="Celular" />
+                                    </Form.Group>
+                                </Row>
+                            </div>
+                        </Col>
+                    </Row>
+                    <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
+                </Box>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="outline-primary" size="sm" onClick={handleEdit}>

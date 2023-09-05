@@ -600,7 +600,7 @@ export const mockMembros = () =>{
 
   const data = [
     {
-      id: "Receitas",
+      id: "Ativos",
       color: "#e24118",
       data: [
         {
@@ -654,7 +654,7 @@ export const mockMembros = () =>{
       ]
     },
     {
-      id: "Despesas",
+      id: "Inativos",
       color: "#1ab347",
       data: [
         {

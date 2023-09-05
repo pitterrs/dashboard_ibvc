@@ -7,14 +7,47 @@ import axios from "axios";
 import { Box, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import "./style.css"
+import { useNavigate } from "react-router-dom";
 
 const ConfirmarDespesa = ({ show6, setShow6, getTransacoes, onEdit, setOnEdit }) => {
+    const navigate = useNavigate();
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        data.admin === 'true' ?
+                        console.log('Logado')
+                        : navigate('/unauthorized')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
+
+    useEffect(() => {
+        validations();
+    }, []);
+
     const status = (onEdit.status == 'Não Pago' ? 'Pago' : 'Não Pago');
     const handleClose = () => {
         setShow6(false);
         setOnEdit(null)
     }
-    const pago = async (e) => { 
+    const pago = async (e) => {
         await axios
             .put(`http://localhost:8800/changestatus/` + onEdit.id, {
                 status: status
@@ -22,7 +55,7 @@ const ConfirmarDespesa = ({ show6, setShow6, getTransacoes, onEdit, setOnEdit })
             .then(
                 ({ data }) => {
                     if (data.code) {
-                            toast.error('Erro ao alterar registro no BD. Entre em contato com o administrador')
+                        toast.error('Erro ao alterar registro no BD. Entre em contato com o administrador')
                     } else {
                         toast.success(data)
                     }

@@ -38,6 +38,31 @@ const AddMensageira = () => {
     const [resp2contato, setResp2contato] = useState('');
     const [nascimento, setNascimento] = useState();
 
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        console.log('Logado')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
+
     const getMembros = async () => {
         try {
             const res = await axios.get(`http://localhost:8800/getmembros`);
@@ -119,6 +144,7 @@ const AddMensageira = () => {
     };
 
     useEffect(() => {
+        validations();
         getMembros();
     }, [setMembros]);
 

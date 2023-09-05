@@ -15,6 +15,31 @@ const Membros = () => {
   const [show, setShow] = useState(false);
   const [membro, setMembro] = useState(null);
 
+  const validations = async () => {
+    const token = localStorage.getItem("IBVC_token");
+    const key = localStorage.getItem("IBVC_key");
+
+    await axios
+      .post("http://localhost:8800/validation", {
+        Authorization: token,
+        key,
+      })
+      .then(
+        ({ data }) => {
+          if (data.error === false) {
+            console.log('Logado')
+          }else{
+            window.location.replace('http://localhost:3000/login');
+          }
+        }
+      )
+      .catch(({ err }) => {
+        console.log(err)
+        toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+        window.location.replace('http://localhost:3000/login');
+      });
+  }
+
   const ChangeData = (data) => {
     let retorno = {};
     for (var linha of data) {
@@ -157,6 +182,7 @@ const Membros = () => {
   }
 
   useEffect(() => {
+    validations();
     getMembros();
   }, [setMembros]);
 

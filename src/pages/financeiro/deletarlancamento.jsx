@@ -5,32 +5,65 @@ import axios from "axios";
 import { Box, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import "./style.css"
+import { useNavigate } from "react-router-dom";
 
 const DeletarLancamento = ({ show7, setShow7, getTransacoes, onEdit, setOnEdit }) => {
+    const navigate = useNavigate();
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        data.admin === 'true' ?
+                        console.log('Logado')
+                        : navigate('/unauthorized')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
+
+    useEffect(() => {
+        validations();
+    }, []);
+
     const handleClose = () => {
         setShow7(false);
         setOnEdit(null)
     }
-    const pago = async (e) => { 
-        if (onEdit.id_recorrencia > 0){
+    const pago = async (e) => {
+        if (onEdit.id_recorrencia > 0) {
             await axios
                 .delete("http://localhost:8800/deletelancamento/" + onEdit.id + '/' + onEdit.id_recorrencia)
                 .then(({ data }) => {
                     toast.success(data);
                 })
                 .catch(({ data }) => toast.error(data));
-    
+
             setShow7(false);
             setOnEdit(null)
             getTransacoes();
-        } else{
+        } else {
             await axios
                 .delete("http://localhost:8800/deletelancamento/" + onEdit.id)
                 .then(({ data }) => {
                     toast.success(data);
                 })
                 .catch(({ data }) => toast.error(data));
-    
+
             setShow7(false);
             setOnEdit(null)
             getTransacoes();

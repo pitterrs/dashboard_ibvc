@@ -29,6 +29,7 @@ import ChangeDespesa from "./changedespesa";
 import ConfirmarReceita from "./confirmarreceita";
 import ConfirmarDespesa from "./confirmardespesa";
 import DeletarLancamento from "./deletarlancamento";
+import { useNavigate } from "react-router-dom";
 
 const Transacoes = () => {
     const theme = useTheme();
@@ -80,6 +81,34 @@ const Transacoes = () => {
         { field: "categoria", headerName: "Categoria", width: 90 },
         { field: "status", headerName: "Status", width: 80 },
     ];
+    const navigate = useNavigate();
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        data.admin === 'true' ?
+                        console.log('Logado')
+                        : navigate('/unauthorized')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
+
     const getTransacoes = async () => {
 
         if (init == '' || end == '') {
@@ -99,6 +128,7 @@ const Transacoes = () => {
     }
 
     useEffect(() => {
+        validations();
         getTransacoes();
     }, [setTransacoes]);
 

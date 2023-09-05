@@ -40,6 +40,31 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
         { field: "funcao", headerName: "Função", width: 150 },
     ];
 
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        console.log('Logado')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
+
     const getMembrosEquipe = async () => {
         try {
             const res = await axios.get(`http://localhost:8800/getmembrosequipe/` + equipe.id_equipe);
@@ -48,6 +73,7 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
     }
 
     useEffect(() => {
+        validations();
         getMembrosEquipe();
     }, [setMembrosEquipe]);
 
@@ -91,7 +117,7 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
                 <Box m="20px" >
                     <Header title="Gerenciar Equipe" subtitle="Aqui você pode gerenciar os membros da equipe." />
                     <Box p="5px" backgroundColor={colors.primary[400]} >
-                    <Button variant="outline-light" size="sm" onClick={handleAdd}>Adicionar Membro</Button>
+                        <Button variant="outline-light" size="sm" onClick={handleAdd}>Adicionar Membro</Button>
                     </Box>
                     <Box
                         backgroundColor={colors.primary[400]}

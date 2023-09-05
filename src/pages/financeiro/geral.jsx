@@ -25,9 +25,12 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import LineChart from "./LineChart";
-import "./style.css"
-const VisaoGeral = () => {
+import "./style.css";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
+const VisaoGeral = () => {
+    const navigate = useNavigate();
     const theme = useTheme();
     const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
     const colors = tokens(theme.palette.mode);
@@ -38,6 +41,33 @@ const VisaoGeral = () => {
     const [rows, setRows] = useState([]);
     let recebimentos_aux = 0;
     let pagamentos_aux = 0;
+
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        data.admin === 'true' ?
+                        console.log('Logado')
+                        : navigate('/unauthorized')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
 
     const getContas = async () => {
         try {
@@ -129,6 +159,7 @@ const VisaoGeral = () => {
     }
 
     useEffect(() => {
+        validations();
         getContas();
         getRecebimentos();
         getPagamentos();

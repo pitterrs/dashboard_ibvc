@@ -10,6 +10,7 @@ import { Box, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import "./style.css"
 import Select from 'react-select';
+import { useNavigate } from "react-router-dom";
 
 const AddReceita = ({ show, setShow, getTransacoes }) => {
     const [repetir, setRepetir] = useState();
@@ -38,6 +39,34 @@ const AddReceita = ({ show, setShow, getTransacoes }) => {
     const [isDisabled, setIsDisabled] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isRtl, setIsRtl] = useState(false);
+    const navigate = useNavigate();
+
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        data.admin === 'true' ?
+                        console.log('Logado')
+                        : navigate('/unauthorized')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
 
     const getBancos = async () => {
         try {
@@ -71,6 +100,7 @@ const AddReceita = ({ show, setShow, getTransacoes }) => {
     }
 
     useEffect(() => {
+        validations();
         getBancos();
     }, [setBancos]);
 

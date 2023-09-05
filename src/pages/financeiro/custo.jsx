@@ -23,6 +23,7 @@ import AddCusto from "./addcusto";
 import axios from "axios";
 import EditCusto from "./changecusto";
 import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const CentroCusto = () => {
     const theme = useTheme();
@@ -32,6 +33,34 @@ const CentroCusto = () => {
     const [onEdit, setOnEdit] = useState();
     const [show, setShow] = useState(false);
     const [show2, setShow2] = useState(false);
+    const navigate = useNavigate();
+
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        data.admin === 'true' ?
+                        console.log('Logado')
+                        : navigate('/unauthorized')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
 
     const getCustos = async () => {
         try {
@@ -43,6 +72,7 @@ const CentroCusto = () => {
     }
 
     useEffect(() => {
+        validations();
         getCustos();
     }, [setRows]);
 

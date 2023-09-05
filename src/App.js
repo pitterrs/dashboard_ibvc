@@ -1,13 +1,9 @@
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { Routes, Route} from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { MyProSidebarProvider } from "./pages/global/sidebar/sidebarContext";
-
 import Topbar from "./pages/global/Topbar";
-
 import Dashboard from "./pages/dashboard";
-import Team from "./pages/team";
-import Invoices from "./pages/invoices";
 import ComissaoFinancas from "./pages/comissaofinancas/comissaofinancas";
 import Addfinancas from "./pages/comissaofinancas/addfinancas";
 import CorpoDiaconal from "./pages/corpodiaconal/corpodiaconal";
@@ -23,15 +19,11 @@ import Contas from "./pages/financeiro/contas";
 import CentroCusto from "./pages/financeiro/custo";
 import Lancamentos from "./pages/financeiro/lancamentos";
 import Fornecedores from "./pages/financeiro/fornecedores";
-import Form from "./pages/form";
-import Calendar from "./pages/calendar";
-import Bar from "./pages/bar";
-import Line from "./pages/line";
-import Pie from "./pages/pie";
-import FAQ from "./pages/faq";
-import Geography from "./pages/geography";
 import Casamento from "./pages/contacts/casamento";
 import Equipes from "./pages/contacts/equipes";
+import Login from "./pages/login/login";
+import Unauthorized from "./pages/unauthorized/unauthorized";
+import Access from "./pages/access/access";
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -39,40 +31,36 @@ const App = () => {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <MyProSidebarProvider>
-          <div style={{ height: "100%", width: "100%" }}>
-            <main>
-              <Topbar />
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/team" element={<Team />} />
-                <Route path="/membros" element={<Membros />} />
-                <Route path="/novomembro" element={<Novomembro />} />
-                <Route path="/comissaofinancas" element={<ComissaoFinancas />} />
-                <Route path="/addfinancas" element={<Addfinancas />} />
-                <Route path="/corpodiaconal" element={<CorpoDiaconal />} />
-                <Route path="/adddiacono" element={<AddDiacono />} />
-                <Route path="/mensageiras" element={<Mensageiras />} />
-                <Route path="/addmensageira" element={<AddMensageira />} />
-                <Route path="/dashboard" element={<VisaoGeral />} />
-                <Route path="/transacoes" element={<Transacoes />} />
-                <Route path="/contas" element={<Contas />} />
-                <Route path="/centrocusto" element={<CentroCusto />} />
-                <Route path="/lancamentos" element={<Lancamentos />} />
-                <Route path="/fornecedores" element={<Fornecedores />} />
-                <Route path="/aniversario" element={<Aniversario />} />
-                <Route path="/casamento" element={<Casamento />} />
-                <Route path="/equipes" element={<Equipes />} />
-                <Route path="/bar" element={<Bar />} />
-                <Route path="/pie" element={<Pie />} />
-                <Route path="/line" element={<Line />} />
-                <Route path="/faq" element={<FAQ />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/geography" element={<Geography />} />
-              </Routes>
-            </main>
-          </div>
-        </MyProSidebarProvider>
+          <MyProSidebarProvider>
+            <div style={{ height: "100%", width: "100%" }}>
+              <main>
+                <Topbar />
+                <Routes>
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/unauthorized" element={<Unauthorized />} />
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/membros" element={<Membros />} />
+                  <Route path="/novomembro" element={<Novomembro />} />
+                  <Route path="/comissaofinancas" element={<ComissaoFinancas />} />
+                  <Route path="/addfinancas" element={<Addfinancas />} />
+                  <Route path="/corpodiaconal" element={<CorpoDiaconal />} />
+                  <Route path="/adddiacono" element={<AddDiacono />} />
+                  <Route path="/mensageiras" element={<Mensageiras />} />
+                  <Route path="/addmensageira" element={<AddMensageira />} />
+                  <Route path="/dashboard" element={<VisaoGeral />} />
+                  <Route path="/transacoes" element={<Transacoes />} />
+                  <Route path="/contas" element={<Contas />} />
+                  <Route path="/centrocusto" element={<CentroCusto />} />
+                  <Route path="/lancamentos" element={<Lancamentos />} />
+                  <Route path="/fornecedores" element={<Fornecedores />} />
+                  <Route path="/aniversario" element={<Aniversario />} />
+                  <Route path="/casamento" element={<Casamento />} />
+                  <Route path="/equipes" element={<Equipes />} />
+                  <Route path="/access" element={<Access />} />
+                </Routes>
+              </main>
+            </div>
+          </MyProSidebarProvider>
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

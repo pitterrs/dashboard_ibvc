@@ -3,10 +3,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useNavigate } from "react-router-dom";
 
-const DeleteLancamento = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getLancamentos }) => {
-    const navigate = useNavigate();
+const DeleteUser = ({ show3, setShow3, user, getUsers }) => {
+
+    const handleClose = () => {
+        setShow3(false);
+    };
+
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
         const key = localStorage.getItem("IBVC_key");
@@ -19,9 +22,7 @@ const DeleteLancamento = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, get
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' ?
                         console.log('Logado')
-                        : navigate('/unauthorized')
                     } else {
                         window.location.replace('http://localhost:3000/login');
                     }
@@ -38,36 +39,30 @@ const DeleteLancamento = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, get
         validations();
     }, []);
 
-    const handleClose = () => {
-        setConfirm(false);
-    };
-
     const deletar = async (e) => {
 
         await axios
-            .delete("http://localhost:8800/deleteplano/" + onEdit.id)
+            .delete("http://localhost:8800/deleteuser/" + user.id)
             .then(({ data }) => {
                 toast.success(data);
             })
             .catch(({ data }) => toast.error(data));
 
-        setConfirm(false);
-        getLancamentos();
-        setOnEdit(null);
-        setShow(false);
+        setShow3(false);
+        getUsers();
     };
 
     return (
         <div>
             <Modal
                 size="lg"
-                show={confirm}
+                show={show3}
                 onHide={handleClose}
                 aria-labelledby="example-modal-sizes-title-sm"
             >
                 <Modal.Header closeButton>
                     <Modal.Title id="example-modal-sizes-title-sm">
-                        Deseja deletar o cadastro do Plano de Contas?
+                        Deseja deletar o cadastro deste usuário?
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body><p>Esta ação não poderá ser desfeita uma vez confirmada. </p></Modal.Body>
@@ -84,4 +79,4 @@ const DeleteLancamento = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, get
     )
 }
 
-export default DeleteLancamento;
+export default DeleteUser;

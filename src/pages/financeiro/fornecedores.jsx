@@ -20,6 +20,7 @@ import EditFornecedor from "./changefornecedor";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import DeleteFornecedor from "./deletefornecedor";
+import { useNavigate } from "react-router-dom";
 
 const Fornecedores = () => {
     const [pageSize, setPageSize] = useState(10);
@@ -46,6 +47,34 @@ const Fornecedores = () => {
         { field: "cpf_cnpj", headerName: "CPF/CNPJ", width: 150 },
         { field: "contato", headerName: "Contato", width: 120 },
     ];
+    const navigate = useNavigate();
+
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        data.admin === 'true' ?
+                        console.log('Logado')
+                        : navigate('/unauthorized')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
 
     const getFornecedores = async () => {
         try {
@@ -57,6 +86,7 @@ const Fornecedores = () => {
     }
 
     useEffect(() => {
+        validations();
         getFornecedores();
     }, [setRows]);
 
@@ -67,7 +97,7 @@ const Fornecedores = () => {
         setOnEdit(selectedRowsData);
         setShow(true);
     }
-    
+
     const handleDelete = (rows, id) => {
         // console.log('deletar');
         const id2 = [id];

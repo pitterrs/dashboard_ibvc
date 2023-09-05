@@ -9,6 +9,33 @@ import Header from "../../components/Header";
 import { Box, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 const AddEquipe = ({ show, setShow, getEquipes }) => {
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        console.log('Logado')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
+    useEffect(() => {
+        validations();
+      }, []);
     const [nome, setNome] = useState()
     const handleClose = () => {
         setShow(false);

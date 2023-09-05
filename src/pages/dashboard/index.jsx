@@ -29,6 +29,8 @@ import Person3Icon from '@mui/icons-material/Person3';
 import Person2Icon from '@mui/icons-material/Person2';
 import Groups2Icon from '@mui/icons-material/Groups2';
 import GroupsIcon from '@mui/icons-material/Groups';
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -44,6 +46,32 @@ const Dashboard = () => {
   const [porcentagemMembrosAtivos, setPorcentagemMembrosAtivos] = useState();
   const [increase, setIncrease] = useState();
   const [qntmembrosinativos, setqntmembrosinativos] = useState();
+  const navigate = useNavigate();
+
+  const validations = async () => {
+    const token = localStorage.getItem("IBVC_token");
+    const key = localStorage.getItem("IBVC_key");
+
+    await axios
+      .post("http://localhost:8800/validation", {
+        Authorization: token,
+        key,
+      })
+      .then(
+        ({ data }) => {
+          if (data.error === false) {
+            console.log('Logado')
+          }else{
+            window.location.replace('http://localhost:3000/login');
+          }
+        }
+      )
+      .catch(({ err }) => {
+        console.log(err)
+        toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+        window.location.replace('http://localhost:3000/login');
+      });
+  }
 
   const getMembros = async () => {
     let totalMembrosativos = 0;
@@ -224,6 +252,7 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
+    validations()
     getMembros();
   }, []);
 

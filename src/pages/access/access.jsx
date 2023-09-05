@@ -3,38 +3,46 @@ import { tokens } from "../../theme";
 import Grid from "@mui/material/Unstable_Grid2";
 import Header from "../../components/Header";
 import { Box, useTheme, useMediaQuery } from "@mui/material";
-import "./novomembro.css"
+import "./access.css"
 import Button from 'react-bootstrap/Button';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { FaGlasses } from "react-icons/fa";
-import AddEquipe from './addequipe';
 import { toast, ToastContainer } from "react-toastify";
-import DeleteEquipe from './deleteequipe';
-import EditEquipe from './changeequipe';
-import ViewEquipe from './viewequipe';
+import { useNavigate } from "react-router-dom";
+import AddUser from './adduser';
+import ChangeUser from './changeuser';
+import DeleteUser from './deleteuser';
+import ChangePass from './changepass';
 
-const Equipes = () => {
+const Access = () => {
     const theme = useTheme();
     const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
     const colors = tokens(theme.palette.mode);
     const [pageSize, setPageSize] = useState(10);
-    const [equipes, setEquipes] = useState([]);
+    const [users, setUsers] = useState([]);
     const [equipe, setEquipe] = useState(null);
     const [show, setShow] = useState(false);
     const [show2, setShow2] = useState(false);
     const [show3, setShow3] = useState(false);
     const [show4, setShow4] = useState(false);
+    const [user, setUser] = useState(null);
     const columns = [
         {
             field: "icone", headerName: "Ações", renderCell: ({ row: { id } }) => {
-                return <> < ModeEditIcon className="pointer edit" onClick={() => handleEdit(equipes, id)} /> < DeleteForeverIcon className="pointer lixo" onClick={() => handleDelete(equipes, id)} /> <FaGlasses className="pointer aprovar" onClick={() => handleView(equipes, id)} /> </>;
-            }, width: 90
+                return <> < ModeEditIcon className="pointer edit" onClick={() => handleEdit(users, id)} /> < DeleteForeverIcon className="pointer lixo" onClick={() => handleDelete(users, id)} /> </>;
+            }, width: 80
         },
-        { field: "nome_equipe", headerName: "Nome da Equipe", width: 350 },
+        { field: "nome", headerName: "Nome do Usuário", width: 350 },
+        { field: "email", headerName: "E-mail", width: 250 },
+        {
+            field: "icone2", headerName: "Ações", renderCell: ({ row: { id } }) => {
+                return <> <Button onClick={() => handlePass(users, id)} size="sm" variant='outline-light' >Alterar Senha</Button></>;
+            }, width: 120
+        },
     ];
+    const navigate = useNavigate();
 
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
@@ -48,7 +56,9 @@ const Equipes = () => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
+                        data.admin === 'true' && data.super === 'true' ?
                         console.log('Logado')
+                        : navigate('/unauthorized')
                     } else {
                         window.location.replace('http://localhost:3000/login');
                     }
@@ -61,44 +71,44 @@ const Equipes = () => {
             });
     }
 
-    const getEquipes = async () => {
+    const getUsers = async () => {
         try {
-            const res = await axios.get(`http://localhost:8800/getequipes`);
-            setEquipes(res.data);
+            const res = await axios.get(`http://localhost:8800/getusers`);
+            setUsers(res.data);
         } catch { }
     }
 
     useEffect(() => {
         validations();
-        getEquipes();
-    }, [setEquipes]);
+        getUsers();
+    }, [setUsers]);
 
     const handleCreate = () => {
         setShow(true);
     }
-    const handleEdit = (equipes, id) => {
+    const handleEdit = (user, id) => {
         const id2 = [id];
-        const selectedRowsData = id2.map((id) => equipes.find((row) => row.id === id));
-        setEquipe(selectedRowsData[0]);
-        setShow3(true);
-    }
-
-    const handleView = (equipes, id) => {
-        const id2 = [id];
-        const selectedRowsData = id2.map((id) => equipes.find((row) => row.id === id));
-        setEquipe(selectedRowsData[0]);
-        setShow4(true);
-    }
-
-    const handleDelete = (equipes, id) => {
-        const id2 = [id];
-        const selectedRowsData = id2.map((id) => equipes.find((row) => row.id === id));
-        setEquipe(selectedRowsData[0]);
+        const selectedRowsData = id2.map((id) => user.find((row) => row.id === id));
+        setUser(selectedRowsData[0]);
         setShow2(true);
     }
 
-    return (
-        <Box m="20px">
+    const handlePass = (user, id) => {
+        const id2 = [id];
+        const selectedRowsData = id2.map((id) => user.find((row) => row.id === id));
+        setUser(selectedRowsData[0]);
+        setShow4(true);
+    }
+
+    const handleDelete = (user, id) => {
+        const id2 = [id];
+        const selectedRowsData = id2.map((id) => user.find((row) => row.id === id));
+        setUser(selectedRowsData[0]);
+        setShow3(true);
+    }
+
+return (
+    <Box m="20px">
 
             <Box
                 display={smScreen ? "flex" : "block"}
@@ -107,7 +117,7 @@ const Equipes = () => {
                 alignItems={smScreen ? "center" : "start"}
                 m="10px 0"
             >
-                <Header title="Equipes e Ministérios" subtitle="Gerencie e crie novas equipes ou Ministérios aqui." />
+                <Header title="Gerenciamento de acessos" subtitle="Estabeleça e administre os privilégios de acesso para todos os usuários." />
             </Box>
             <Grid p='10px' xs={12} backgroundColor={colors.primary[400]} >
                 <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='rigth'>
@@ -119,7 +129,7 @@ const Equipes = () => {
                             justifyContent="center"
                             className='border-radius'
                         >
-                            <Button onClick={() => handleCreate()} size="sm" variant='outline-light' >Criar Equipe</Button>
+                            <Button onClick={() => handleCreate()} size="sm" variant='outline-light' >Adicionar Usuário</Button>
                         </Box>
                     </Grid>
                 </Grid>
@@ -159,7 +169,7 @@ const Equipes = () => {
                 }}
             >
                 <DataGrid
-                    rows={equipes}
+                    rows={users}
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
                     pageSize={pageSize}
@@ -176,20 +186,20 @@ const Equipes = () => {
                 />
             </Box>
             {show && (
-                <AddEquipe show={show} setShow={setShow} getEquipes={getEquipes} />
+                <AddUser show={show} setShow={setShow} getUsers={getUsers} />
             )}
             {show2 && (
-                <DeleteEquipe show2={show2} setShow2={setShow2} equipe={equipe} setEquipe={setEquipe} getEquipes={getEquipes} />
+                <ChangeUser show2={show2} setShow2={setShow2} user={user} getUsers={getUsers} />
             )}
             {show3 && (
-                <EditEquipe show3={show3} setShow3={setShow3} equipe={equipe} setEquipe={setEquipe} getEquipes={getEquipes} />
+                <DeleteUser show3={show3} setShow3={setShow3} user={user} getUsers={getUsers} />
             )}
             {show4 && (
-                <ViewEquipe show4={show4} setShow4={setShow4} equipe={equipe} setEquipe={setEquipe} getEquipes={getEquipes} />
+                <ChangePass show4={show4} setShow4={setShow4} user={user} getUsers={getUsers} />
             )}
             <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
         </Box>
-    )
+)
 }
 
-export default Equipes;
+export default Access;

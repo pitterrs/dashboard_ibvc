@@ -1,7 +1,7 @@
 import { Box, useTheme } from "@mui/material";
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
 import Row from 'react-bootstrap/Row';
@@ -47,6 +47,35 @@ const Novomembro = () => {
     let qntmembrosatual = [];
     let totalmembrosinativos = 0;
     let qntmembrosatual2 = [];
+
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        console.log('Logado')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
+
+    useEffect(() => {
+        validations();
+    }, []);
 
     const handleCreate = async (e) => {
 

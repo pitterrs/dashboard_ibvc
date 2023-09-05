@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -9,11 +9,44 @@ import axios from "axios";
 import Header from "../../components/Header";
 import { Box, Typography } from "@mui/material";
 import DeleteCusto from './deletecusto';
-
+import { useNavigate } from "react-router-dom";
 
 const EditCusto = ({ show, setShow, onEdit, setOnEdit, getCustos }) => {
     const [nome, setNome] = useState(onEdit.nome);
     const [confirm, setConfirm] = useState(false);
+    const navigate = useNavigate();
+
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        data.admin === 'true' ?
+                        console.log('Logado')
+                        : navigate('/unauthorized')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
+
+    useEffect(() => {
+        validations();
+    }, []);
+
     const handleClose = () => {
         setShow(false);
         setOnEdit(null);

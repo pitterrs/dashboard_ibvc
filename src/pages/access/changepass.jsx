@@ -4,18 +4,15 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { toast } from "react-toastify";
 import axios from "axios";
 import Header from "../../components/Header";
 import { Box, Typography } from "@mui/material";
-
-const EditEquipe = ({ show3, setShow3, equipe, setEquipe, getEquipes }) => {
-    const [nome, setNome] = useState(equipe.nome_equipe);
-    const handleClose = () => {
-        setShow3(false);
-        setEquipe(null);
-    }
-
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+const ChangePass = ({ show4, setShow4, getUsers, user }) => {
+    const navigate = useNavigate();
+    const [id, setId] = useState(user.id);
+    const [senha, setSenha] = useState(null);
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
         const key = localStorage.getItem("IBVC_key");
@@ -28,7 +25,9 @@ const EditEquipe = ({ show3, setShow3, equipe, setEquipe, getEquipes }) => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        console.log('Logado')
+                        data.admin === 'true' && data.super === 'true' ?
+                            console.log('Logado')
+                            : navigate('/unauthorized')
                     } else {
                         window.location.replace('http://localhost:3000/login');
                     }
@@ -40,48 +39,51 @@ const EditEquipe = ({ show3, setShow3, equipe, setEquipe, getEquipes }) => {
                 window.location.replace('http://localhost:3000/login');
             });
     }
-
     useEffect(() => {
         validations();
     }, []);
 
-    const handleEdit = async (e) => {
-        if (!nome) { return toast.warn("Campo 'nome' é obrigatório"); }
+    const handleClose = () => {
+        setShow4(false);
+    }
+    const handleChange = async () => {
+
+        if (!senha) { return toast.warn("Preencha o campo 'Senha'"); }
 
         await axios
-            .put("http://localhost:8800/changeequipe/" + equipe.id_equipe, {
-                nome: nome,
-            }).then(
+            .put("http://localhost:8800/changpass", {
+                id,
+                senha
+            })
+            .then(
                 ({ data }) => {
-                    if (data.code) {
-                        toast.error('Erro ao modificar registro no BD. Entre em contato com o administrador')
+                    if (data.error === true) {
+                        toast.error(data.message)
                     } else {
                         toast.success(data)
+                        setShow4(false);
+                        getUsers();
                     }
                 }
             )
             .catch(({ data }) => toast.error(data));
-
-        setShow3(false);
-        getEquipes();
-        setEquipe(null);
     }
+
     return (
-        <Modal size="xl" show={show3} onHide={handleClose}>
-            <Modal.Body>
+        <Modal size="xl" show={show4} onHide={handleClose}>
+            <Modal.Body >
                 <Box m="20px" >
-                    <Header title="Alterar Dados da Equipe" subtitle="Você está modificando os dados da equipe." />
+                    <Header title="Criar Equipe" subtitle="Você está uma nova Equipe." />
                     <Row>
-                        <Col xs lg="5">
-                            <div className="fundo">
-                                <Typography m='0 0 10px 0' variant="h3" fontWeight="600">
-                                    Alterar Equipe
-                                </Typography>
+                        <Col xs lg="9">
+                            <div className='fundo'>
                                 <Row className="mb-3">
-                                    <Form.Group as={Col} >
-                                        <Form.Label>Nome da Equipe</Form.Label>
-                                        <Form.Control maxLength={45} value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="" />
-                                    </Form.Group>
+                                    <Col xs lg="6">
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Senha</Form.Label>
+                                            <Form.Control maxLength={10} value={senha} onChange={(e) => setSenha(e.target.value)} size="sm" type="password" placeholder="Digite a nova senha" />
+                                        </Form.Group>
+                                    </Col>
                                 </Row>
                             </div>
                         </Col>
@@ -89,8 +91,8 @@ const EditEquipe = ({ show3, setShow3, equipe, setEquipe, getEquipes }) => {
                 </Box>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-primary" size="sm" onClick={handleEdit}>
-                    Salvar alterações
+                <Button variant="outline-primary" size="sm" onClick={handleChange}>
+                    Salvar Alteração
                 </Button>
                 <Button variant="outline-success" size="sm" onClick={handleClose}>
                     Fechar
@@ -100,4 +102,4 @@ const EditEquipe = ({ show3, setShow3, equipe, setEquipe, getEquipes }) => {
     )
 }
 
-export default EditEquipe;
+export default ChangePass;

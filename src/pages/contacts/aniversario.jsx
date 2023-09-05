@@ -7,6 +7,7 @@ import "./novomembro.css"
 import Button from 'react-bootstrap/Button';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Aniversario = () => {
 
@@ -32,7 +33,33 @@ const Aniversario = () => {
     { field: "nome", headerName: "Nome", width: 180 },
   ];
 
+  const validations = async () => {
+    const token = localStorage.getItem("IBVC_token");
+    const key = localStorage.getItem("IBVC_key");
+
+    await axios
+      .post("http://localhost:8800/validation", {
+        Authorization: token,
+        key,
+      })
+      .then(
+        ({ data }) => {
+          if (data.error === false) {
+            console.log('Logado')
+          } else {
+            window.location.replace('http://localhost:3000/login');
+          }
+        }
+      )
+      .catch(({ err }) => {
+        console.log(err)
+        toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+        window.location.replace('http://localhost:3000/login');
+      });
+  }
+
   const getMembros = async () => {
+
     let aniversario_atual = [];
     let aniversariantes_aux = [];
     try {
@@ -63,10 +90,12 @@ const Aniversario = () => {
   }
 
   useEffect(() => {
+    validations();
     getMembros();
   }, [setMembros]);
 
   const handleFilter = (n) => {
+
     setNumero(n);
     let aniversario = [];
     for (var linha of membros) {

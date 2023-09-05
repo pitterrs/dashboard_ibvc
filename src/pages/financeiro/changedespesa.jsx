@@ -10,6 +10,7 @@ import { Box, Typography } from "@mui/material";
 import { toast } from "react-toastify";
 import "./style.css"
 import Select from 'react-select';
+import { useNavigate } from "react-router-dom";
 
 const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) => {
     const [repetir, setRepetir] = useState();
@@ -39,6 +40,34 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
     const [isLoading, setIsLoading] = useState(false);
     const [isRtl, setIsRtl] = useState(false);
     const [defaultfornecedor, setDefaultFornecedor] = useState([0])
+    const navigate = useNavigate();
+
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        data.admin === 'true' ?
+                        console.log('Logado')
+                        : navigate('/unauthorized')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
 
     const getBancos = async () => {
         try {
@@ -74,6 +103,7 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
     }
 
     useEffect(() => {
+        validations();
         getBancos();
     }, [setBancos]);
 

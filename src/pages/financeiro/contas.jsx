@@ -23,6 +23,7 @@ import EditConta from "./modalcontas";
 import { toast, ToastContainer } from "react-toastify";
 import AddConta from "./addconta";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Contas = () => {
     const theme = useTheme();
@@ -32,6 +33,35 @@ const Contas = () => {
     const [show2, setShow2] = useState(false);
     const [onEdit, setOnEdit] = useState();
     const [contas, setContas] = useState([]);
+    const navigate = useNavigate();
+
+    const validations = async () => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        await axios
+            .post("http://localhost:8800/validation", {
+                Authorization: token,
+                key,
+            })
+            .then(
+                ({ data }) => {
+                    if (data.error === false) {
+                        data.admin === 'true' ?
+                        console.log('Logado')
+                        : navigate('/unauthorized')
+                    } else {
+                        window.location.replace('http://localhost:3000/login');
+                    }
+                }
+            )
+            .catch(({ err }) => {
+                console.log(err)
+                toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
+                window.location.replace('http://localhost:3000/login');
+            });
+    }
+
     const getContas = async () => {
         try {
             const res = await axios.get(`http://localhost:8800/getcontas`);
@@ -49,6 +79,7 @@ const Contas = () => {
         }
     }
     useEffect(() => {
+        validations();
         getContas();
     }, [setContas]);
 
@@ -84,7 +115,7 @@ const Contas = () => {
                     <Grid m='20px 0 0 0' p='10px' xs={12} backgroundColor={colors.primary[400]} >
                         <Box m="0 0 5px 0">
                             <Alert variant="outlined" severity="error">
-                                Atenção! As contas que possuírem valores cadastrados em lançamentos ou programação não poderão ser excluídas.
+                                Atenção! As contas que possuírem valores cadastrados em lançamentos não poderão ser excluídas.
                             </Alert>
                             <Typography m='10px 0px 10px 0px' variant="h3" fontWeight="600">
                                 Lista de Contas Cadastradas
