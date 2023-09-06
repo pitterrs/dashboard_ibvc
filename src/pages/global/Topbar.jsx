@@ -9,6 +9,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
+import SearchIcon from "@mui/icons-material/Search";
 
 const Topbar = () => {
   const theme = useTheme();
@@ -62,25 +63,46 @@ const Topbar = () => {
 
   return (
     logado ?
-    <Box display="flex" justifyContent="space-between" p={2}>
-      <Box display="flex">
-        <IconButton>
-          <SettingsOutlinedIcon onClick={() => handleConfig()} />
-        </IconButton>
-        <IconButton>
-          <LogoutIcon onClick={() => handleLogout()} />
-        </IconButton>
-        {broken && rtl && (
-          <IconButton
-            sx={{ margin: "0 6 0 2" }}
-            onClick={() => toggleSidebar()}
+      <Box display="flex" justifyContent="space-between" p={2}>
+        <Box display="flex">
+          {broken && !rtl && (
+            <IconButton
+              sx={{ margin: "0 6 0 2" }}
+              onClick={() => toggleSidebar()}
+            >
+              <MenuOutlinedIcon />
+            </IconButton>
+          )}
+          {/* <Box
+            display="flex"
+            backgroundColor={colors.primary[400]}
+            p={0.2}
+            borderRadius={1}
           >
-            <MenuOutlinedIcon />
+            <InputBase sx={{ ml: 1, flex: 1 }} placeholder="Search" />
+            <IconButton type="button">
+              <SearchIcon />
+            </IconButton>
+          </Box> */}
+        </Box>
+        <Box display="flex">
+          <IconButton>
+            <SettingsOutlinedIcon onClick={() => handleConfig()} />
           </IconButton>
-        )}
+          <IconButton>
+            <LogoutIcon onClick={() => handleLogout()} />
+          </IconButton>
+          {broken && rtl && (
+            <IconButton
+              sx={{ margin: "0 6 0 2" }}
+              onClick={() => toggleSidebar()}
+            >
+              <MenuOutlinedIcon />
+            </IconButton>
+          )}
+        </Box>
       </Box>
-    </Box>
-    : ''
+      : ''
   );
 };
 

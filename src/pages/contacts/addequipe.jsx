@@ -8,6 +8,7 @@ import axios from "axios";
 import Header from "../../components/Header";
 import { Box, Typography } from "@mui/material";
 import { toast } from "react-toastify";
+import './novomembro'
 const AddEquipe = ({ show, setShow, getEquipes }) => {
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
@@ -35,7 +36,7 @@ const AddEquipe = ({ show, setShow, getEquipes }) => {
     }
     useEffect(() => {
         validations();
-      }, []);
+    }, []);
     const [nome, setNome] = useState()
     const handleClose = () => {
         setShow(false);
@@ -73,35 +74,35 @@ const AddEquipe = ({ show, setShow, getEquipes }) => {
     }
 
     return (
-        <Modal size="xl" show={show} onHide={handleClose}>
-            <Modal.Body >
-                <Box m="20px" >
-                    <Header title="Criar Equipe" subtitle="Você está uma nova Equipe." />
-                    <Row>
-                        <Col xs lg="9">
-                            <div className='fundo'>
-                                <Row className="mb-3">
-                                    <Col xs lg="6">
-                                        <Form.Group as={Col} >
-                                            <Form.Label>Nome da Equipe</Form.Label>
-                                            <Form.Control maxLength={45} value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                            </div>
-                        </Col>
-                    </Row>
-                </Box>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="outline-primary" size="sm" onClick={handleCreate}>
-                    Criar Equipe
-                </Button>
-                <Button variant="outline-success" size="sm" onClick={handleClose}>
-                    Fechar
-                </Button>
-            </Modal.Footer>
-        </Modal>
+            <Modal className='zindex' size="xl" show={show} onHide={handleClose}>
+                <Modal.Body >
+                    <Box m="20px" >
+                        <Header title="Criar Equipe" subtitle="Você está uma nova Equipe." />
+                        <Row>
+                            <Col xs lg="9">
+                                <div className='fundo'>
+                                    <Row className="mb-3">
+                                        <Col xs lg="6">
+                                            <Form.Group as={Col} >
+                                                <Form.Label>Nome da Equipe</Form.Label>
+                                                <Form.Control maxLength={45} value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Box>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-primary" size="sm" onClick={handleCreate}>
+                        Criar Equipe
+                    </Button>
+                    <Button variant="outline-success" size="sm" onClick={handleClose}>
+                        Fechar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
     )
 }
 
