@@ -14,7 +14,7 @@ const DeletarLancamento = ({ show7, setShow7, getTransacoes, onEdit, setOnEdit }
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -25,14 +25,14 @@ const DeletarLancamento = ({ show7, setShow7, getTransacoes, onEdit, setOnEdit }
                         console.log('Logado')
                         : navigate('/unauthorized')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
@@ -47,7 +47,7 @@ const DeletarLancamento = ({ show7, setShow7, getTransacoes, onEdit, setOnEdit }
     const pago = async (e) => {
         if (onEdit.id_recorrencia > 0) {
             await axios
-                .delete("http://localhost:8800/deletelancamento/" + onEdit.id + '/' + onEdit.id_recorrencia)
+                .delete(`${process.env.REACT_APP_API_URL}deletelancamento/` + onEdit.id + '/' + onEdit.id_recorrencia)
                 .then(({ data }) => {
                     toast.success(data);
                 })
@@ -58,7 +58,7 @@ const DeletarLancamento = ({ show7, setShow7, getTransacoes, onEdit, setOnEdit }
             getTransacoes();
         } else {
             await axios
-                .delete("http://localhost:8800/deletelancamento/" + onEdit.id)
+                .delete(`${process.env.REACT_APP_API_URL}deletelancamento/` + onEdit.id)
                 .then(({ data }) => {
                     toast.success(data);
                 })

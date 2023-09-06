@@ -24,7 +24,7 @@ const Topbar = () => {
     const key = localStorage.getItem("IBVC_key");
 
     await axios
-      .post("http://localhost:8800/validation", {
+      .post(`${process.env.REACT_APP_API_URL}validation`, {
         Authorization: token,
         key,
       })
@@ -54,11 +54,11 @@ const Topbar = () => {
     localStorage.removeItem("IBVC_email");
     localStorage.removeItem("IBVC_key");
     localStorage.removeItem("IBVC_token");
-    window.location.replace('http://localhost:3000/login');
+    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
   };
 
   const handleConfig = () => {
-    window.location.replace('http://localhost:3000/access');
+    window.location.replace(`${process.env.REACT_APP_API_URL}access`);
   };
 
   return (

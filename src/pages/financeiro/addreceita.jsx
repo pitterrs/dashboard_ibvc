@@ -46,7 +46,7 @@ const AddReceita = ({ show, setShow, getTransacoes }) => {
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -57,41 +57,41 @@ const AddReceita = ({ show, setShow, getTransacoes }) => {
                         console.log('Logado')
                         : navigate('/unauthorized')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
     const getBancos = async () => {
         try {
-            const res = await axios.get(`http://localhost:8800/getcontas`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getcontas`);
             setBancos(res.data)
         } catch (error) {
             console.log('erro desconhecido');
         }
 
         try {
-            const res = await axios.get(`http://localhost:8800/getcustos`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getcustos`);
             setCustos(res.data)
         } catch (error) {
             console.log('erro desconhecido');
         }
 
         try {
-            const res = await axios.get(`http://localhost:8800/getplanosreceita`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getplanosreceita`);
             setPlanos(res.data)
         } catch (error) {
             console.log('erro desconhecido');
         }
 
         try {
-            const res = await axios.get(`http://localhost:8800/getfornecedores`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getfornecedores`);
             setFornecedores(changeData(res.data))
         } catch (error) {
             console.log('erro desconhecido');
@@ -130,7 +130,7 @@ const AddReceita = ({ show, setShow, getTransacoes }) => {
             if (frequencia == 'Selecione...' || !frequencia) { return toast.warn("Selecione uma opção no campo 'Frequência'.") }
 
             try {
-                const res = await axios.get(`http://localhost:8800/getlastidr`);
+                const res = await axios.get(`${process.env.REACT_APP_API_URL}getlastidr`);
                 lastidr = res.data[0].idr;
                 lastidr = lastidr + 1;
                 dataatual = data;
@@ -228,7 +228,7 @@ const AddReceita = ({ show, setShow, getTransacoes }) => {
         }
         if (datas.length == 0) {
             await axios
-                .post("http://localhost:8800/addtransacao", {
+                .post(`${process.env.REACT_APP_API_URL}addtransacao`, {
                     data: data,
                     descricao: descricao,
                     idbanco: idbanco,
@@ -260,7 +260,7 @@ const AddReceita = ({ show, setShow, getTransacoes }) => {
         } else {
             for (var novadata of datas) {
                 await axios
-                    .post("http://localhost:8800/addtransacao", {
+                    .post(`${process.env.REACT_APP_API_URL}addtransacao`, {
                         data: novadata,
                         descricao: descricao,
                         idbanco: idbanco,

@@ -53,7 +53,7 @@ const Dashboard = () => {
     const key = localStorage.getItem("IBVC_key");
 
     await axios
-      .post("http://localhost:8800/validation", {
+      .post(`${process.env.REACT_APP_API_URL}validation`, {
         Authorization: token,
         key,
       })
@@ -62,14 +62,14 @@ const Dashboard = () => {
           if (data.error === false) {
             console.log('Logado')
           }else{
-            window.location.replace('http://localhost:3000/login');
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
           }
         }
       )
       .catch(({ err }) => {
         console.log(err)
         toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-        window.location.replace('http://localhost:3000/login');
+        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
       });
   }
 
@@ -78,14 +78,14 @@ const Dashboard = () => {
     let qntMembrosatual = [];
 
     try {
-      const res = await axios.get(`http://localhost:8800/getallhomens`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}getallhomens`);
       setHomens(res.data[0].genero)
     } catch (error) {
       console.log('erro desconhecido');
     }
 
     try {
-      const res = await axios.get(`http://localhost:8800/getallmulheres`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}getallmulheres`);
       setMulheres(res.data[0].genero)
     } catch (error) {
       console.log('erro desconhecido');
@@ -95,7 +95,7 @@ const Dashboard = () => {
 
     //Captura a quantidade de membros ativos atualmente
     try {
-      const res = await axios.get(`http://localhost:8800/totalmembrosativos`);
+      const res = await axios.get(`h${process.env.REACT_APP_API_URL}totalmembrosativos`);
       totalMembrosativos = res.data[0].quantidade
     } catch (error) {
       console.log('erro desconhecido');
@@ -103,7 +103,7 @@ const Dashboard = () => {
 
     //Verifica se já existe um registro de quantidades para o mês atual
     try {
-      const res = await axios.get(`http://localhost:8800/qntmembrosatual`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}qntmembrosatual`);
       qntMembrosatual = res.data
     } catch (error) {
       console.log('erro desconhecido');
@@ -119,7 +119,7 @@ const Dashboard = () => {
         mes = '0' + mes;
       }
       await axios
-        .post("http://localhost:8800/addqntmembros", {
+        .post(`${process.env.REACT_APP_API_URL}addqntmembros`, {
           ano: ano,
           mes: mes,
           quantidade: totalMembrosativos,
@@ -129,7 +129,7 @@ const Dashboard = () => {
 
     } else {
       await axios
-        .put("http://localhost:8800/changeqntmembros", {
+        .put(`${process.env.REACT_APP_API_URL}changeqntmembros`, {
           ano: qntMembrosatual[0].ano,
           mes: qntMembrosatual[0].mes,
           quantidade: totalMembrosativos,
@@ -141,7 +141,7 @@ const Dashboard = () => {
 
     //Captura a quantidade de membros ativos atualmente
     try {
-      const res = await axios.get(`http://localhost:8800/totalmembrosativos`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}totalmembrosativos`);
       settotalmembrosativos(res.data[0].quantidade)
     } catch (error) {
       console.log('erro desconhecido');
@@ -149,7 +149,7 @@ const Dashboard = () => {
 
     //Recupera quantidade de membros ativos do mês atual
     try {
-      const res = await axios.get(`http://localhost:8800/qntmembrosatual`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}qntmembrosatual`);
       qntmembrosatual = res.data
     } catch (error) {
       console.log('erro desconhecido');
@@ -157,7 +157,7 @@ const Dashboard = () => {
 
     //Recupera quantidade de membros ativos do mês passado
     try {
-      const res = await axios.get(`http://localhost:8800/qntmembrosanterior`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}qntmembrosanterior`);
       qntmembrosanterior = res.data
     } catch (error) {
       console.log('erro desconhecido');
@@ -197,7 +197,7 @@ const Dashboard = () => {
 
     //Captura a quantidade de membros inativos atualmente
     try {
-      const res = await axios.get(`http://localhost:8800/totalmembrosinativos`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}totalmembrosinativos`);
       totalmembrosinativos = res.data[0].quantidade
     } catch (error) {
       console.log('erro desconhecido');
@@ -207,7 +207,7 @@ const Dashboard = () => {
 
     //Verifica se já existe um registro de quantidades de inativos para o mês atual
     try {
-      const res = await axios.get(`http://localhost:8800/qntmembrosatual2`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}qntmembrosatual2`);
       qntmembrosatual2 = res.data
     } catch (error) {
       console.log('erro desconhecido');
@@ -222,7 +222,7 @@ const Dashboard = () => {
         mes = '0' + mes;
       }
       await axios
-        .post("http://localhost:8800/addqntmembros2", {
+        .post(`${process.env.REACT_APP_API_URL}addqntmembros2`, {
           ano: ano,
           mes: mes,
           quantidade: totalmembrosinativos,
@@ -231,7 +231,7 @@ const Dashboard = () => {
         .catch(({ data }) => console.log(data));
     } else {
       await axios
-        .put("http://localhost:8800/changeqntmembros2", {
+        .put(`${process.env.REACT_APP_API_URL}changeqntmembros2`, {
           ano: qntmembrosatual2[0].ano,
           mes: qntmembrosatual2[0].mes,
           quantidade: totalmembrosinativos,

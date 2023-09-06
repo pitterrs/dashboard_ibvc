@@ -20,7 +20,7 @@ const AddLancamento = ({ show2, setShow2, getLancamentos }) => {
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -31,14 +31,14 @@ const AddLancamento = ({ show2, setShow2, getLancamentos }) => {
                         console.log('Logado')
                         : navigate('/unauthorized')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
@@ -54,7 +54,7 @@ const AddLancamento = ({ show2, setShow2, getLancamentos }) => {
         if (!tipo) { return toast.warn("Campo 'Categoria' é obrigatório"); }
 
         await axios
-            .post("http://localhost:8800/addplano", {
+            .post(`${process.env.REACT_APP_API_URL}addplano`, {
                 nome: nome,
                 tipo: tipo
             })

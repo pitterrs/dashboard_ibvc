@@ -38,7 +38,7 @@ const Aniversario = () => {
     const key = localStorage.getItem("IBVC_key");
 
     await axios
-      .post("http://localhost:8800/validation", {
+      .post(`${process.env.REACT_APP_API_URL}validation`, {
         Authorization: token,
         key,
       })
@@ -47,14 +47,14 @@ const Aniversario = () => {
           if (data.error === false) {
             console.log('Logado')
           } else {
-            window.location.replace('http://localhost:3000/login');
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
           }
         }
       )
       .catch(({ err }) => {
         console.log(err)
         toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-        window.location.replace('http://localhost:3000/login');
+        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
       });
   }
 
@@ -63,7 +63,7 @@ const Aniversario = () => {
     let aniversario_atual = [];
     let aniversariantes_aux = [];
     try {
-      const res = await axios.get(`http://localhost:8800/getmembros`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembros`);
       setMembros(res.data);
       aniversariantes_aux = res.data;
     } catch { }

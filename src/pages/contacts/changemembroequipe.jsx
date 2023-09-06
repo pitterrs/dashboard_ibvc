@@ -28,7 +28,7 @@ const ChangeMembroEquipe = ({ show3, setShow3, membro, getMembrosEquipe }) => {
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -37,21 +37,21 @@ const ChangeMembroEquipe = ({ show3, setShow3, membro, getMembrosEquipe }) => {
                     if (data.error === false) {
                         console.log('Logado')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
     const getMembros = async () => {
 
         try {
-            const res = await axios.get(`http://localhost:8800/getmembros`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembros`);
             setMembros(changeData(res.data))
         } catch (error) {
             console.log('erro desconhecido');
@@ -84,7 +84,7 @@ const ChangeMembroEquipe = ({ show3, setShow3, membro, getMembrosEquipe }) => {
         if (!nome_membro) { return toast.warn("Preencha o campo 'Nome'"); }
 
         await axios
-            .put("http://localhost:8800/changemembroequipe/" + membro.id_membro, {
+            .put(`${process.env.REACT_APP_API_URL}changemembroequipe/` + membro.id_membro, {
                 funcao: funcao,
             })
             .then(

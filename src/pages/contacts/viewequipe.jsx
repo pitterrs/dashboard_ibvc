@@ -45,7 +45,7 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -54,20 +54,20 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
                     if (data.error === false) {
                         console.log('Logado')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
     const getMembrosEquipe = async () => {
         try {
-            const res = await axios.get(`http://localhost:8800/getmembrosequipe/` + equipe.id_equipe);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembrosequipe/` + equipe.id_equipe);
             setMembrosEquipe(res.data);
         } catch { }
     }
@@ -81,7 +81,7 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
         const id2 = [id];
         const selectedRowsData = id2.map((id) => MembrosEquipe.find((row) => row.id_membro === id));
         try {
-            const res = await axios.get(`http://localhost:8800/getmembroequipe/` + selectedRowsData[0].id_membro);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembroequipe/` + selectedRowsData[0].id_membro);
             setMembro(res.data[0] ? res.data[0] : []);
             setShow2(true);
         } catch { }

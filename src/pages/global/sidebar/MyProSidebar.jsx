@@ -56,7 +56,7 @@ const MyProSidebar = () => {
     const key = localStorage.getItem("IBVC_key");
 
     await axios
-      .post("http://localhost:8800/validation", {
+      .post(`${process.env.REACT_APP_API_URL}validation`, {
         Authorization: token,
         key,
       })

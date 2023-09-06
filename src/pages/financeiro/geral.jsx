@@ -47,7 +47,7 @@ const VisaoGeral = () => {
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -58,25 +58,25 @@ const VisaoGeral = () => {
                         console.log('Logado')
                         : navigate('/unauthorized')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
     const getContas = async () => {
         try {
-            const res = await axios.get(`http://localhost:8800/getcontas`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getcontas`);
             const contas_aux = res.data;
             let total = 0;
             for (var conta of contas_aux) {
-                const res = await axios.get(`http://localhost:8800/checkcontareceita/` + conta.id);
-                const res2 = await axios.get(`http://localhost:8800/checkcontadespesa/` + conta.id);
+                const res = await axios.get(`${process.env.REACT_APP_API_URL}checkcontareceita/` + conta.id);
+                const res2 = await axios.get(`${process.env.REACT_APP_API_URL}checkcontadespesa/` + conta.id);
                 Object.defineProperty(conta, 'saldo', {
                     value: (res.data[0].valor - res2.data[0].valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
                 })
@@ -95,7 +95,7 @@ const VisaoGeral = () => {
         const date = (d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + d.getUTCDate())
 
         try {
-            const res = await axios.get(`http://localhost:8800/getrecebimentos/` + date);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getrecebimentos/` + date);
             setRecebimentos(res.data[0].valor == null ? 'R$0,00' : res.data[0].valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
         } catch {
             console.log('erro desconhecido');
@@ -108,7 +108,7 @@ const VisaoGeral = () => {
         const date = (d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + d.getUTCDate())
 
         try {
-            const res = await axios.get(`http://localhost:8800/getpagamentos/` + date);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getpagamentos/` + date);
             setPagamentos(res.data[0].valor == null ? 'R$0,00' : res.data[0].valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
         } catch {
             console.log('erro desconhecido');
@@ -120,7 +120,7 @@ const VisaoGeral = () => {
         const init = (d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + '01')
         const end = (d.getUTCFullYear() + '-' + (d.getUTCMonth() + 1) + '-' + (new Date(d.getUTCFullYear(), d.getUTCMonth() + 1, 0).getUTCDate()));
         try {
-            const res = await axios.get(`http://localhost:8800/getlastlancamentos/` + init + '/' + end);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getlastlancamentos/` + init + '/' + end);
             setRows(ChangeData(res.data));
         } catch {
             console.log('erro desconhecido');

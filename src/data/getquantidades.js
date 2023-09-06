@@ -4,7 +4,7 @@ const GetDados = async () => {
     let dados = 0;
     //Captura a quantidade de membros ativos atualmente
     try {
-        const res = await axios.get(`http://localhost:8800/getallinativos`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}getallinativos`);
         dados = res.data[0].quantidade
     } catch (error) {
         console.log('erro desconhecido');

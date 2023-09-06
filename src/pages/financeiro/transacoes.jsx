@@ -87,7 +87,7 @@ const Transacoes = () => {
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -98,14 +98,14 @@ const Transacoes = () => {
                         console.log('Logado')
                         : navigate('/unauthorized')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
@@ -120,7 +120,7 @@ const Transacoes = () => {
         }
 
         try {
-            const res = await axios.get(`http://localhost:8800/gettransacoes/` + init + '/' + end);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}gettransacoes/` + init + '/' + end);
             setTransacoes(ChangeData(res.data))
         } catch (error) {
             console.log('erro desconhecido');

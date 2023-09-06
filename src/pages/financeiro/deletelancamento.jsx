@@ -12,7 +12,7 @@ const DeleteLancamento = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, get
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -23,14 +23,14 @@ const DeleteLancamento = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, get
                         console.log('Logado')
                         : navigate('/unauthorized')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
@@ -45,7 +45,7 @@ const DeleteLancamento = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, get
     const deletar = async (e) => {
 
         await axios
-            .delete("http://localhost:8800/deleteplano/" + onEdit.id)
+            .delete(`${process.env.REACT_APP_API_URL}deleteplano/` + onEdit.id)
             .then(({ data }) => {
                 toast.success(data);
             })

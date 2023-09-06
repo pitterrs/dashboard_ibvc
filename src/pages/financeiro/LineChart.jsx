@@ -17,8 +17,8 @@ const LineChart = ({ isDashboard = false }) => {
       const d = new Date();
       const init = d.getFullYear() + '-' + '01' + '-' + '01';
       const end = d.getFullYear() + '-' + '12' + '-' + '31';
-      const res = await axios.get(`http://localhost:8800/getreceitasano/` + init + '/' + end);
-      const res2 = await axios.get(`http://localhost:8800/getdespesasano/` + init + '/' + end);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}getreceitasano/` + init + '/' + end);
+      const res2 = await axios.get(`${process.env.REACT_APP_API_URL}getdespesasano/` + init + '/' + end);
       const novoarray = [
         {
           id: "Receitas",

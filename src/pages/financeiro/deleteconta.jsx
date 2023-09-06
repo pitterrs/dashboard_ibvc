@@ -12,7 +12,7 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -23,14 +23,14 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
                         console.log('Logado')
                         : navigate('/unauthorized')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
@@ -47,7 +47,7 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
         let conta = [];
 
         try {
-            const res = await axios.get("http://localhost:8800/checkconta/" + onEdit.id);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}checkconta/` + onEdit.id);
             conta = res.data
         } catch {
             console.log('erro desconhecido');
@@ -56,7 +56,7 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
         if (conta[0].valor != null) { return toast.error("Conta Bancária possui lançamentos ou programações e não pode ser deletada."); }
 
         await axios
-            .delete("http://localhost:8800/deleteconta/" + onEdit.id)
+            .delete(`${process.env.REACT_APP_API_URL}deleteconta/` + onEdit.id)
             .then(({ data }) => {
                 toast.success(data);
             })

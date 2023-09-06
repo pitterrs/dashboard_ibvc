@@ -14,8 +14,8 @@ const LineChart = ({ isDashboard = false }) => {
   const chartData = async () =>{
     //Captura a quantidade de membros ativos atualmente
     try {
-        const res = await axios.get(`http://localhost:8800/getallinativos`);
-        const res2 = await axios.get(`http://localhost:8800/getallativos`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}getallinativos`);
+        const res2 = await axios.get(`${process.env.REACT_APP_API_URL}getallativos`);
         const dados = mockMembros();
         let n = 0;
         while(n < 12){

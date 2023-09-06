@@ -18,7 +18,7 @@ const ChangePass = ({ show4, setShow4, getUsers, user }) => {
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -29,14 +29,14 @@ const ChangePass = ({ show4, setShow4, getUsers, user }) => {
                             console.log('Logado')
                             : navigate('/unauthorized')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
     useEffect(() => {
@@ -51,7 +51,7 @@ const ChangePass = ({ show4, setShow4, getUsers, user }) => {
         if (!senha) { return toast.warn("Preencha o campo 'Senha'"); }
 
         await axios
-            .put("http://localhost:8800/changpass", {
+            .put(`${process.env.REACT_APP_API_URL}changpass`, {
                 id,
                 senha
             })

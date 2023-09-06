@@ -15,7 +15,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -24,14 +24,14 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
                     if (data.error === false) {
                         console.log('Logado')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
@@ -45,7 +45,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
         let qntmembrosatual = [];
         let qntmembrosatual2 = [];
         await axios
-            .delete("http://localhost:8800/deletemembro/" + membro)
+            .delete(`${process.env.REACT_APP_API_URL}deletemembro/` + membro)
             .then(({ data }) => {
                 toast.success(data);
             })
@@ -53,7 +53,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
 
         //Captura a quantidade de membros ativos atualmente
         try {
-            const res = await axios.get(`http://localhost:8800/totalmembrosativos`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}totalmembrosativos`);
             totalmembrosativos = res.data[0].quantidade
         } catch (error) {
             console.log('erro desconhecido');
@@ -61,7 +61,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
 
         //Verifica se já existe um registro de quantidades para o mês atual
         try {
-            const res = await axios.get(`http://localhost:8800/qntmembrosatual`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}qntmembrosatual`);
             qntmembrosatual = res.data
         } catch (error) {
             console.log('erro desconhecido');
@@ -76,7 +76,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
                 mes = '0' + mes;
             }
             await axios
-                .post("http://localhost:8800/addqntmembros", {
+                .post(`${process.env.REACT_APP_API_URL}addqntmembros`, {
                     ano: ano,
                     mes: mes,
                     quantidade: totalmembrosativos,
@@ -85,7 +85,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
                 .catch(({ data }) => console.log(data));
         } else {
             await axios
-                .put("http://localhost:8800/changeqntmembros", {
+                .put(`${process.env.REACT_APP_API_URL}changeqntmembros`, {
                     ano: qntmembrosatual[0].ano,
                     mes: qntmembrosatual[0].mes,
                     quantidade: totalmembrosativos,
@@ -97,7 +97,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
 
         //Captura a quantidade de membros inativos atualmente
         try {
-            const res = await axios.get(`http://localhost:8800/totalmembrosinativos`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}totalmembrosinativos`);
             totalmembrosinativos = res.data[0].quantidade
         } catch (error) {
             console.log('erro desconhecido');
@@ -105,7 +105,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
 
         //Verifica se já existe um registro de quantidades de inativos para o mês atual
         try {
-            const res = await axios.get(`http://localhost:8800/qntmembrosatual2`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}qntmembrosatual2`);
             qntmembrosatual2 = res.data
         } catch (error) {
             console.log('erro desconhecido');
@@ -120,7 +120,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
                 mes = '0' + mes;
             }
             await axios
-                .post("http://localhost:8800/addqntmembros2", {
+                .post(`${process.env.REACT_APP_API_URL}addqntmembros2`, {
                     ano: ano,
                     mes: mes,
                     quantidade: totalmembrosinativos,
@@ -129,7 +129,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
                 .catch(({ data }) => console.log(data));
         } else {
             await axios
-                .put("http://localhost:8800/changeqntmembros2", {
+                .put(`${process.env.REACT_APP_API_URL}changeqntmembros2`, {
                     ano: qntmembrosatual2[0].ano,
                     mes: qntmembrosatual2[0].mes,
                     quantidade: totalmembrosinativos,

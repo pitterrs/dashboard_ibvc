@@ -15,7 +15,7 @@ const AddEquipe = ({ show, setShow, getEquipes }) => {
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -24,14 +24,14 @@ const AddEquipe = ({ show, setShow, getEquipes }) => {
                     if (data.error === false) {
                         console.log('Logado')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
     useEffect(() => {
@@ -46,7 +46,7 @@ const AddEquipe = ({ show, setShow, getEquipes }) => {
         if (!nome) { return toast.warn("Preencha o campo 'Nome'"); }
 
         try {
-            const res = await axios.get(`http://localhost:8800/getlastequipe`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getlastequipe`);
             new_id_equipe = res.data[0].id_equipe ? res.data[0].id_equipe : 0;
             new_id_equipe = new_id_equipe + 1;
         } catch (error) {
@@ -54,7 +54,7 @@ const AddEquipe = ({ show, setShow, getEquipes }) => {
         }
 
         await axios
-            .post("http://localhost:8800/addequipe", {
+            .post(`${process.env.REACT_APP_API_URL}addequipe`, {
                 nome: nome,
                 id_equipe: new_id_equipe
             })

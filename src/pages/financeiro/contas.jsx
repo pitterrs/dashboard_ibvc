@@ -40,7 +40,7 @@ const Contas = () => {
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -48,29 +48,30 @@ const Contas = () => {
                 ({ data }) => {
                     if (data.error === false) {
                         data.admin === 'true' ?
-                        console.log('Logado')
-                        : navigate('/unauthorized')
+                            console.log('Logado')
+                            : navigate('/unauthorized')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
     const getContas = async () => {
         try {
-            const res = await axios.get(`http://localhost:8800/getcontas`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getcontas`);
             const contas_aux = res.data;
-            for (var conta of contas_aux){
-                const res = await axios.get(`http://localhost:8800/checkconta/` + conta.id);
+            for (var conta of contas_aux) {
+                const res = await axios.get(`${process.env.REACT_APP_API_URL}checkcontareceita/` + conta.id);
+                const res2 = await axios.get(`${process.env.REACT_APP_API_URL}checkcontadespesa/` + conta.id);
                 Object.defineProperty(conta, 'saldo', {
-                    value: (res.data[0].valor ? res.data[0].valor : 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-                  })
+                    value: (res.data[0].valor - res2.data[0].valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+                })
             }
             setContas(contas_aux)
             // setContas(res.data)

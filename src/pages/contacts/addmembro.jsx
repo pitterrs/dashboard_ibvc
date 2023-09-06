@@ -28,7 +28,7 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
         const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .post("http://localhost:8800/validation", {
+            .post(`${process.env.REACT_APP_API_URL}validation`, {
                 Authorization: token,
                 key,
             })
@@ -37,21 +37,21 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
                     if (data.error === false) {
                         console.log('Logado')
                     } else {
-                        window.location.replace('http://localhost:3000/login');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
                 console.log(err)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
-                window.location.replace('http://localhost:3000/login');
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
     }
 
     const getMembros = async () => {
 
         try {
-            const res = await axios.get(`http://localhost:8800/getmembros`);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembros`);
             setMembros(changeData(res.data))
         } catch (error) {
             console.log('erro desconhecido');
@@ -84,7 +84,7 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
         if (!nome_membro) { return toast.warn("Preencha o campo 'Nome'"); }
 
         try {
-            const res = await axios.get(`http://localhost:8800/checkmembroequipe/` + id_membro + '/' + id_equipe);
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}checkmembroequipe/` + id_membro + '/' + id_equipe);
             if (res.data[0].nome_membro); {
                 return toast.warn("Membro já faz parte da equipe! Selecione um membro diferente");
             }
@@ -93,7 +93,7 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
         }
 
         await axios
-            .post("http://localhost:8800/addmembroequipe", {
+            .post(`${process.env.REACT_APP_API_URL}addmembroequipe`, {
                 id_equipe: id_equipe,
                 nome_equipe: nome_equipe,
                 id_membro: id_membro,

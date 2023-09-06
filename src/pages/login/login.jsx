@@ -21,7 +21,7 @@ const Login = () => {
     const [message, setMessage] = useState();
     const handleSend = async () => {
         await axios
-            .post("http://localhost:8800/login", {
+            .post(`${process.env.REACT_APP_API_URL}login`, {
                 email,
                 senha,
             })
@@ -34,7 +34,7 @@ const Login = () => {
                         localStorage.setItem("IBVC_key", data.key);
                         localStorage.setItem("IBVC_token", data.token);
                         setMessage();
-                        window.location.replace('http://localhost:3000/');
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}`);
                     }
                     setMessage(data.message);
                 }
