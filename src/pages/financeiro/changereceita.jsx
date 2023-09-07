@@ -41,6 +41,7 @@ const ChangeReceita = ({ show3, setShow3, getTransacoes, onEdit, setOnEdit }) =>
     const [isRtl, setIsRtl] = useState(false);
     const [defaultfornecedor, setDefaultFornecedor] = useState([0])
     const navigate = useNavigate();
+    const [logado, setLogado] = useState(false);
 
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
@@ -54,16 +55,17 @@ const ChangeReceita = ({ show3, setShow3, getTransacoes, onEdit, setOnEdit }) =>
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' ?
-                        console.log('Logado')
-                        : navigate('/unauthorized')
+                        data.createfinancas === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -236,6 +238,7 @@ const ChangeReceita = ({ show3, setShow3, getTransacoes, onEdit, setOnEdit }) =>
     }
 
     return (
+        logado ?
         <Modal size="xl" show={show3} onHide={handleClose}>
             <Modal.Body className='borda3' >
                 <Box m="20px" >
@@ -390,6 +393,7 @@ const ChangeReceita = ({ show3, setShow3, getTransacoes, onEdit, setOnEdit }) =>
                 </Button>
             </Modal.Footer>
         </Modal>
+        : ''
     )
 }
 

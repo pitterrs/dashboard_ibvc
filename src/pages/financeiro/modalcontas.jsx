@@ -18,6 +18,7 @@ const EditConta = ({ show, setShow, onEdit, setOnEdit, getContas }) => {
     const [conta, setConta] = useState(onEdit.conta);
     const [confirm, setConfirm] = useState(false);
     const navigate = useNavigate();
+    const [logado, setLogado] = useState(false);
 
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
@@ -31,16 +32,17 @@ const EditConta = ({ show, setShow, onEdit, setOnEdit, getContas }) => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' ?
-                        console.log('Logado')
-                        : navigate('/unauthorized')
+                        data.createfinancas === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -82,6 +84,7 @@ const EditConta = ({ show, setShow, onEdit, setOnEdit, getContas }) => {
         setConfirm(true);
     };
     return (
+        logado ?
         <Modal size="xl" show={show} onHide={handleClose}>
             <Modal.Body>
                 <Box m="20px" >
@@ -139,6 +142,7 @@ const EditConta = ({ show, setShow, onEdit, setOnEdit, getContas }) => {
                 <DeleteConta confirm={confirm} setConfirm={setConfirm} setShow={setShow} onEdit={onEdit} setOnEdit={setOnEdit} getContas={getContas} />
             )}
         </Modal>
+        : ''
     )
 }
 

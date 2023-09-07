@@ -41,6 +41,7 @@ const VisaoGeral = () => {
     const [rows, setRows] = useState([]);
     let recebimentos_aux = 0;
     let pagamentos_aux = 0;
+    const [logado, setLogado] = useState(false);
 
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
@@ -54,16 +55,17 @@ const VisaoGeral = () => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' ?
-                        console.log('Logado')
-                        : navigate('/unauthorized')
+                        data.viewfinancas === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -167,6 +169,7 @@ const VisaoGeral = () => {
     }, [setContas, setRecebimentos]);
 
     return (
+        logado ?
         <Box m="20px">
             <Box
                 display={smScreen ? "flex" : "block"}
@@ -342,6 +345,7 @@ const VisaoGeral = () => {
                 </Grid>
             </Box>
         </Box>
+        : ''
     )
 }
 

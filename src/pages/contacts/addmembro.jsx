@@ -22,6 +22,7 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
     const [isDisabled, setIsDisabled] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isRtl, setIsRtl] = useState(false);
+    const [logado, setLogado] = useState(false);
 
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
@@ -35,14 +36,17 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        console.log('Logado')
+                        data.createequipes === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -127,6 +131,7 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
 
 
     return (
+        logado ?
         <Modal size="xl" show={show} onHide={handleClose}>
             <Modal.Body >
                 <Box m="20px" >
@@ -177,6 +182,7 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
                 </Button>
             </Modal.Footer>
         </Modal>
+        : ''
     )
 }
 

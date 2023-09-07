@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Button from 'react-bootstrap/Button';
@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getContas }) => {
     const navigate = useNavigate();
+    const [logado, setLogado] = useState(false);
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
         const key = localStorage.getItem("IBVC_key");
@@ -19,16 +20,17 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' ?
-                        console.log('Logado')
-                        : navigate('/unauthorized')
+                        data.createfinancas === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -69,6 +71,7 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
     };
 
     return (
+        logado ?
         <div>
             <Modal
                 size="lg"
@@ -92,6 +95,7 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
                 </Modal.Footer>
             </Modal>
         </div>
+        : ''
     )
 }
 

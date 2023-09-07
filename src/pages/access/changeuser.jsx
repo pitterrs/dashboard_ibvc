@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import axios from "axios";
 import Header from "../../components/Header";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
@@ -14,13 +14,13 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
     const [id, setId] = useState(user.id)
     const [nome, setNome] = useState(user.nome);
     const [email, setEmail] = useState(user.email);
-    const [admin, setAdmin] = useState(user.admin == 'true' ? 'true' : 'false');
     const [superAdmin, setSuperAdmin] = useState(user.super);
     const [changemembros, setChangeMembros] = useState(user.changemembros);
     const [viewequipes, setViewEquipes] = useState(user.viewequipes);
-    const [createequipes, setChangeEquipes] = useState(user.createequipes);
+    const [createequipes, setCreateEquipes] = useState(user.createequipes);
     const [viewfinancas, setViewFinancas] = useState(user.viewfinancas);
-    const [createfinancas, setChangeFinancas] = useState(user.createfinancas);
+    const [createfinancas, setCreateFinancas] = useState(user.createfinancas);
+    const [logado, setLogado] = useState(false);
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
         const key = localStorage.getItem("IBVC_key");
@@ -33,16 +33,18 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' && data.super === 'true' ?
-                            console.log('Logado')
-                            : navigate('/unauthorized')
+                        data.super === 'true' ?
+                            setLogado(true)
+                            :
+                            navigate('/unauthorized')
                     } else {
+                        setLogado(false)
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -63,7 +65,6 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
             .put(`${process.env.REACT_APP_API_URL}changeuser/` + id, {
                 nome,
                 email,
-                admin,
                 super: superAdmin,
                 changemembros,
                 viewequipes,
@@ -85,47 +86,39 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
             .catch(({ data }) => toast.error(data));
     }
 
-    const setAdminFunction = (e) => {
-        if (e == true) {
-            setAdmin('true');
-        } else {
-            setAdmin('false');
-        }
-    }
-
     const setChangeMembrosFunction = (e) => {
         if (e == true) {
-            setAdmin('true');
+            setChangeMembros('true');
         } else {
-            setAdmin('false');
+            setChangeMembros('false');
         }
     }
     const setViewEquipesFunction = (e) => {
         if (e == true) {
-            setAdmin('true');
+            setViewEquipes('true');
         } else {
-            setAdmin('false');
+            setViewEquipes('false');
         }
     }
     const setCreateEquipesFunction = (e) => {
         if (e == true) {
-            setAdmin('true');
+            setCreateEquipes('true');
         } else {
-            setAdmin('false');
+            setCreateEquipes('false');
         }
     }
     const setViewFinancasFunction = (e) => {
         if (e == true) {
-            setAdmin('true');
+            setViewFinancas('true');
         } else {
-            setAdmin('false');
+            setViewFinancas('false');
         }
     }
     const setCreateFinancasFunction = (e) => {
         if (e == true) {
-            setAdmin('true');
+            setCreateFinancas('true');
         } else {
-            setAdmin('false');
+            setCreateFinancas('false');
         }
     }
 
@@ -138,15 +131,16 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
     }
 
     return (
+        logado ?
         <Modal size="xl" show={show2} onHide={handleClose}>
             <Modal.Body >
                 <Box m="20px" >
                     <Header title="Alterar Usuário" subtitle="Você está alterando as informaçõs do usuário." />
                     <Row>
-                        <Col xs lg="9">
+                        <Col xs lg="12">
                             <div className='fundo'>
                                 <Row className="mb-3">
-                                    <Col xs lg="6">
+                                    <Col xs lg="5">
                                         <Form.Group as={Col} >
                                             <Form.Label>Nome do Usuário</Form.Label>
                                             <Form.Control maxLength={45} value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
@@ -154,7 +148,7 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
                                     </Col>
                                 </Row>
                                 <Row className="mb-3">
-                                    <Col xs lg="6">
+                                    <Col xs lg="5">
                                         <Form.Group as={Col} >
                                             <Form.Label>E-mail</Form.Label>
                                             <Form.Control disabled maxLength={45} value={email} onChange={(e) => setEmail(e.target.value)} size="sm" type="email" placeholder="Email" />
@@ -166,62 +160,53 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
                                     <Col xs lg="6">
                                         <Form.Check
                                             inline
-                                            label="Finanças"
-                                            name="group1"
-                                            type="checkbox"
-                                            onChange={(e) => setAdminFunction(e.target.checked)}
-                                            checked={admin == 'true' ? 'true' : false}
-
-                                        />
-                                        <Form.Check
-                                            inline
                                             label="Modificar Membros"
-                                            name="group1"
+                                            name="group2"
                                             type="checkbox"
-                                            onChange={(e) => setAdminFunction(e.target.checked)}
-                                            checked={admin == 'true' ? 'true' : false}
+                                            onChange={(e) => setChangeMembrosFunction(e.target.checked)}
+                                            checked={changemembros == 'true' ? 'true' : false}
 
                                         />
                                         <Form.Check
                                             inline
                                             label="Visualizar Equipes"
-                                            name="group1"
+                                            name="group3"
                                             type="checkbox"
-                                            onChange={(e) => setAdminFunction(e.target.checked)}
-                                            checked={admin == 'true' ? 'true' : false}
+                                            onChange={(e) => setViewEquipesFunction(e.target.checked)}
+                                            checked={viewequipes == 'true' ? 'true' : false}
 
                                         />
                                         <Form.Check
                                             inline
                                             label="Criar/Modificar Equipes"
-                                            name="group1"
+                                            name="group4"
                                             type="checkbox"
-                                            onChange={(e) => setAdminFunction(e.target.checked)}
-                                            checked={admin == 'true' ? 'true' : false}
+                                            onChange={(e) => setCreateEquipesFunction(e.target.checked)}
+                                            checked={createequipes == 'true' ? 'true' : false}
 
                                         />
                                         <Form.Check
                                             inline
                                             label="Visualizar Finanças"
-                                            name="group1"
+                                            name="group5"
                                             type="checkbox"
-                                            onChange={(e) => setAdminFunction(e.target.checked)}
-                                            checked={admin == 'true' ? 'true' : false}
+                                            onChange={(e) => setViewFinancasFunction(e.target.checked)}
+                                            checked={viewfinancas == 'true' ? 'true' : false}
 
                                         />
                                         <Form.Check
                                             inline
                                             label="Criar/Modificar Finanças"
-                                            name="group1"
+                                            name="group6"
                                             type="checkbox"
-                                            onChange={(e) => setAdminFunction(e.target.checked)}
-                                            checked={admin == 'true' ? 'true' : false}
+                                            onChange={(e) => setCreateFinancasFunction(e.target.checked)}
+                                            checked={createfinancas == 'true' ? 'true' : false}
 
                                         />
                                         <Form.Check
                                             inline
                                             label="Controle de Usuários"
-                                            name="group2"
+                                            name="group7"
                                             type="checkbox"
                                             onChange={(e) => setSuperAdminFunction(e.target.checked)}
                                             checked={superAdmin == 'true' ? 'true' : false}
@@ -242,6 +227,8 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
                 </Button>
             </Modal.Footer>
         </Modal>
+        :
+        ''
     )
 }
 

@@ -28,6 +28,7 @@ const Equipes = () => {
     const [show3, setShow3] = useState(false);
     const [show4, setShow4] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [logado, setLogado] = useState(false);
     const columns = [
         {
             field: "icone", headerName: "Ações", renderCell: ({ row: { id } }) => {
@@ -49,14 +50,17 @@ const Equipes = () => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        console.log('Logado')
+                        data.viewequipes === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -100,6 +104,7 @@ const Equipes = () => {
     }
 
     return (
+        logado ?
         <Box m="20px">
 
             <Box
@@ -195,6 +200,7 @@ const Equipes = () => {
             )}
             <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
         </Box>
+        : ''
     )
 }
 

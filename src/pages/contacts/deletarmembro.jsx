@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMembros }) => {
-
+    const [logado, setLogado] = useState(false);
     const handleClose = () => {
         setConfirm(false);
     };
@@ -22,14 +22,17 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        console.log('Logado')
+                        data.changemembros === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -144,6 +147,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
     };
 
     return (
+        logado ?
         <div>
             <Modal
                 size="lg"
@@ -167,6 +171,7 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
                 </Modal.Footer>
             </Modal>
         </div>
+        : ''
     )
 }
 

@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 
 const ConfirmarDespesa = ({ show6, setShow6, getTransacoes, onEdit, setOnEdit }) => {
     const navigate = useNavigate();
+    const [logado, setLogado] = useState(false);
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
         const key = localStorage.getItem("IBVC_key");
@@ -23,16 +24,17 @@ const ConfirmarDespesa = ({ show6, setShow6, getTransacoes, onEdit, setOnEdit })
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' ?
-                        console.log('Logado')
-                        : navigate('/unauthorized')
+                        data.createfinancas === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -68,6 +70,7 @@ const ConfirmarDespesa = ({ show6, setShow6, getTransacoes, onEdit, setOnEdit })
         getTransacoes();
     }
     return (
+        logado ?
         <Modal size="xl" show={show6} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title id="example-modal-sizes-title-sm">
@@ -91,6 +94,7 @@ const ConfirmarDespesa = ({ show6, setShow6, getTransacoes, onEdit, setOnEdit })
                 </Button>
             </Modal.Footer>
         </Modal>
+         : ''
     )
 }
 

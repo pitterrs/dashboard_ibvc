@@ -189,7 +189,7 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
             {show3 && (
                 <ChangeMembroEquipe show3={show3} setShow3={setShow3} membro={membro} getMembrosEquipe={getMembrosEquipe} />
             )}
-            {show4 && (
+            {show5 && (
                 <DeleteMembroEquipe show5={show5} setShow5={setShow5} membro={membro} setMembro={setMembro} getMembrosEquipe={getMembrosEquipe} />
             )}
             {show2 && (

@@ -34,6 +34,7 @@ const Contas = () => {
     const [onEdit, setOnEdit] = useState();
     const [contas, setContas] = useState([]);
     const navigate = useNavigate();
+    const [logado, setLogado] = useState(false);
 
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
@@ -47,16 +48,17 @@ const Contas = () => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' ?
-                            console.log('Logado')
-                            : navigate('/unauthorized')
+                        data.viewfinancas === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -93,6 +95,7 @@ const Contas = () => {
         console.log('teste');
     }
     return (
+        logado ?
         <Box m="20px">
             <Box
                 display={smScreen ? "flex" : "block"}
@@ -175,6 +178,7 @@ const Contas = () => {
             )}
             <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
         </Box>
+         : ''
     )
 }
 

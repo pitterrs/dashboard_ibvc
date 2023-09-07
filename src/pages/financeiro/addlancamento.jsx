@@ -14,6 +14,7 @@ const AddLancamento = ({ show2, setShow2, getLancamentos }) => {
     const [nome, setNome] = useState();
     const [tipo, setTipo] = useState();
     const navigate = useNavigate();
+    const [logado, setLogado] = useState(false);
 
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
@@ -27,16 +28,17 @@ const AddLancamento = ({ show2, setShow2, getLancamentos }) => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' ?
-                        console.log('Logado')
-                        : navigate('/unauthorized')
+                        data.createfinancas === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -74,6 +76,7 @@ const AddLancamento = ({ show2, setShow2, getLancamentos }) => {
         getLancamentos();
     }
     return (
+        logado ?
         <Modal size="xl" show={show2} onHide={handleClose}>
             <Modal.Body>
                 <Box m="20px" >
@@ -114,6 +117,7 @@ const AddLancamento = ({ show2, setShow2, getLancamentos }) => {
                 </Button>
             </Modal.Footer>
         </Modal>
+         : ''
     )
 }
 

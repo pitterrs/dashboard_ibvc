@@ -11,6 +11,7 @@ import { Box, Typography } from "@mui/material";
 
 const EditEquipe = ({ show3, setShow3, equipe, setEquipe, getEquipes }) => {
     const [nome, setNome] = useState(equipe.nome_equipe);
+    const [logado, setLogado] = useState(false);
     const handleClose = () => {
         setShow3(false);
         setEquipe(null);
@@ -28,14 +29,17 @@ const EditEquipe = ({ show3, setShow3, equipe, setEquipe, getEquipes }) => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        console.log('Logado')
+                        data.createequipes === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -67,6 +71,7 @@ const EditEquipe = ({ show3, setShow3, equipe, setEquipe, getEquipes }) => {
         setEquipe(null);
     }
     return (
+        logado ?
         <Modal size="xl" show={show3} onHide={handleClose}>
             <Modal.Body>
                 <Box m="20px" >
@@ -97,6 +102,7 @@ const EditEquipe = ({ show3, setShow3, equipe, setEquipe, getEquipes }) => {
                 </Button>
             </Modal.Footer>
         </Modal>
+        : ''
     )
 }
 

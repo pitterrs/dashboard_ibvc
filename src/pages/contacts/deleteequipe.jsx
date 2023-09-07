@@ -3,9 +3,10 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useState } from "react";
 
 const DeleteEquipe = ({ show2, setShow2, equipe, setEquipe, getEquipes }) => {
-
+    const [logado, setLogado] = useState(false);
     const handleClose = () => {
         setShow2(false);
     };
@@ -22,14 +23,17 @@ const DeleteEquipe = ({ show2, setShow2, equipe, setEquipe, getEquipes }) => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        console.log('Logado')
+                        data.createequipes === 'true' ?
+                            setLogado(true)
+                            : window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
+                        setLogado(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setLogado(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });
@@ -54,6 +58,7 @@ const DeleteEquipe = ({ show2, setShow2, equipe, setEquipe, getEquipes }) => {
     };
 
     return (
+        logado ?
         <div>
             <Modal
                 size="lg"
@@ -77,6 +82,7 @@ const DeleteEquipe = ({ show2, setShow2, equipe, setEquipe, getEquipes }) => {
                 </Modal.Footer>
             </Modal>
         </div>
+        : ''
     )
 }
 

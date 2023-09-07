@@ -59,8 +59,7 @@ const Access = () => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' && data.super === 'true' ?
-                            // console.log('Logado')
+                        data.super === 'true' ?
                             setValidation(true)
                             : navigate('/unauthorized')
                     } else {
@@ -70,7 +69,7 @@ const Access = () => {
                 }
             )
             .catch(({ err }) => {
-                console.log(err)
+                setValidation(false)
                 toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
             });

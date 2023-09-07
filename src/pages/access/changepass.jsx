@@ -25,7 +25,7 @@ const ChangePass = ({ show4, setShow4, getUsers, user }) => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' && data.super === 'true' ?
+                        data.super === 'true' ?
                             console.log('Logado')
                             : navigate('/unauthorized')
                     } else {
