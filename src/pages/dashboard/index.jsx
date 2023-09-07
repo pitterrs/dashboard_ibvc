@@ -46,6 +46,7 @@ const Dashboard = () => {
   const [porcentagemMembrosAtivos, setPorcentagemMembrosAtivos] = useState();
   const [increase, setIncrease] = useState();
   const [qntmembrosinativos, setqntmembrosinativos] = useState();
+  const [validation, setValidation] = useState(false);
   const navigate = useNavigate();
 
   const validations = async () => {
@@ -60,14 +61,15 @@ const Dashboard = () => {
       .then(
         ({ data }) => {
           if (data.error === false) {
-            console.log('Logado')
+            setValidation(true)
           }else{
+            setValidation(false)
             window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
           }
         }
       )
       .catch(({ err }) => {
-        console.log(err)
+        setValidation(false)
         toast.error('Ocorreu um erro ao tentar validar seu acesso. Faça login novamente ou entre em contato com o administrador.')
         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
       });
@@ -257,6 +259,7 @@ const Dashboard = () => {
   }, []);
 
   return (
+    validation ?
     <Box m="20px">
       {/* HEADER */}
 
@@ -267,7 +270,7 @@ const Dashboard = () => {
         alignItems={smScreen ? "center" : "start"}
         m="10px 0"
       >
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Header title="Bem-Vindo" subtitle="" />
 
         <Box>
           <Button
@@ -537,6 +540,8 @@ const Dashboard = () => {
         </Grid>
       </Grid>
     </Box>
+    : 
+    ''
   );
 };
 

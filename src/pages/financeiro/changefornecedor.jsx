@@ -90,17 +90,17 @@ const EditFornecedor = ({ show, setShow, onEdit, setOnEdit, getFornecedores }) =
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>Nome da Pessoa ou Fornecedor</Form.Label>
-                                        <Form.Control value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
+                                        <Form.Control value={nome} maxLength={45} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>CPF ou CNPJ</Form.Label>
-                                        <Form.Control value={documento} onChange={(e) => setDocumento(e.target.value)} size="sm" type="text" placeholder="Documento" />
+                                        <Form.Control value={documento} maxLength={18} onChange={(e) => setDocumento(e.target.value)} size="sm" type="text" placeholder="Documento" />
                                     </Form.Group>
                                     <Form.Group as={Col} >
                                         <Form.Label>Contato</Form.Label>
-                                        <Form.Control value={contato} onChange={(e) => setContato(e.target.value)} size="sm" type="text" placeholder="Telefone/Celular de Contato" />
+                                        <Form.Control value={contato} maxLength={11} onChange={(e) => setContato(e.target.value)} size="sm" type="text" placeholder="Telefone/Celular de Contato" />
                                     </Form.Group>
                                 </Row>
                             </div>

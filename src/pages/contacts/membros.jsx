@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, useTheme, Typography } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import { toast, ToastContainer } from "react-toastify";
@@ -14,6 +14,7 @@ const Membros = () => {
   const [membros, setMembros] = useState([]);
   const [show, setShow] = useState(false);
   const [membro, setMembro] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const validations = async () => {
     const token = localStorage.getItem("IBVC_token");
@@ -139,6 +140,7 @@ const Membros = () => {
     try {
       const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembros`);
       setMembros(ChangeData(res.data))
+      setLoading(false);
     } catch (error) {
       console.log('erro desconhecido');
     }
@@ -152,25 +154,25 @@ const Membros = () => {
         return <Button onClick={() => handleEdit(membros, id)} variant="contained">Modificar</Button>;
       }, width: 100
     },
-    { field: "nome", headerName: "Name", cellClassName: "name-column--cell", width: 200 },
+    { field: "nome", headerName: "Name", cellClassName: "name-column--cell", width: 350 },
     { field: "idade", headerName: "Idade", type: "number", headerAlign: "left", align: "left", width: 55 },
     { field: "celular", headerName: "Celular", width: 100 },
     { field: "telefone", headerName: "Telefone", width: 100 },
-    { field: "email", headerName: "Email", width: 200 },
-    { field: "genero", headerName: "Genero", width: 100 },
-    { field: "nascimento", type: 'date', headerName: "Data de Nascimento", width: 120 },
-    { field: "civil", headerName: "Estado Civil", width: 120 },
-    { field: "data_casamento", headerName: "Data de Casamento", width: 120 },
-    { field: "admissao", headerName: "Admissão", width: 100 },
-    { field: "data_admissao", headerName: "Data de Admissão", width: 120 },
-    { field: "situacao", headerName: "Situação", width: 100 },
+    { field: "email", headerName: "Email", width: 230 },
+    { field: "genero", headerName: "Genero", width: 90 },
+    { field: "nascimento", type: 'date', headerName: "Nascimento", width: 100 },
+    { field: "civil", headerName: "Estado Civil", width: 110 },
+    { field: "data_casamento", headerName: "Dt. Casamento", width: 120 },
+    { field: "admissao", headerName: "Admissão", width: 110 },
+    { field: "data_admissao", headerName: "Dt. Admissão", width: 105 },
+    { field: "situacao", headerName: "Situação", width: 110 },
     { field: "conversao", headerName: "Conversão", width: 100 },
     { field: "batismo", headerName: "Batismo", width: 100 },
-    { field: "chamado", headerName: "Chamado", width: 100 },
-    { field: "cep", headerName: "CEP", width: 100 },
-    { field: "endereco", headerName: "Endereço", width: 250 },
-    { field: "numero", headerName: "Número", width: 100 },
-    { field: "complemento", headerName: "Complemento", width: 100 },
+    { field: "chamado", headerName: "Chamado", width: 195 },
+    { field: "cep", headerName: "CEP", width: 90 },
+    { field: "endereco", headerName: "Endereço", width: 340 },
+    { field: "numero", headerName: "Número", width: 75 },
+    { field: "complemento", headerName: "Complemento", width: 130 },
     { field: "outrasinfos", headerName: "Outras Informações", width: 250 },
   ];
 
@@ -228,6 +230,10 @@ const Membros = () => {
           rows={membros}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
+          getRowClassName={(params) =>
+            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+          }
+          loading={loading}
         />
       </Box>
       {show && (

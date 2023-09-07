@@ -253,7 +253,7 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>Descrição</Form.Label>
-                                        <Form.Control value={descricao} onChange={(e) => setDescricao(e.target.value)} size="sm" type="text" placeholder="Descrição" />
+                                        <Form.Control value={descricao} maxLength={45} onChange={(e) => setDescricao(e.target.value)} size="sm" type="text" placeholder="Descrição" />
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3">
@@ -341,8 +341,8 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
                                 <Col xs lg="3">
                                     <Row className="mb-3">
                                         <Form.Group as={Col} >
-                                            <Form.Label>valor</Form.Label>
-                                            <Form.Control value={valor} onChange={(e) => mascaraMoeda(e.target.value)} size="sm" type="text" placeholder="R$0,00" />
+                                            <Form.Label>Valor</Form.Label>
+                                            <Form.Control value={valor} maxLength={22} onChange={(e) => mascaraMoeda(e.target.value)} size="sm" type="text" placeholder="R$0,00" />
                                         </Form.Group>
                                     </Row>
                                 </Col>

@@ -84,7 +84,7 @@ const AddConta = ({ show2, setShow2, getContas }) => {
                 <Box m="20px" >
                     <Header title="Criar Conta Bancária" subtitle="Você está criando uma nova Conta Bancária." />
                     <Row>
-                        <Col xs lg="5">
+                        <Col lg="5">
                             <div>
                                 <Typography m='0 0 10px 0' variant="h3" fontWeight="600">
                                     Contas de Movimentação
@@ -92,17 +92,17 @@ const AddConta = ({ show2, setShow2, getContas }) => {
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>Nome do Banco</Form.Label>
-                                        <Form.Control value={nome} onChange={(e) => setBanco(e.target.value)} size="sm" type="text" placeholder="Nome" />
+                                        <Form.Control maxLength={45} value={nome} onChange={(e) => setBanco(e.target.value)} size="sm" type="text" placeholder="Nome" />
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>Agência</Form.Label>
-                                        <Form.Control value={agencia} onChange={(e) => setAgencia(e.target.value)} size="sm" type="text" placeholder="Agência" />
+                                        <Form.Control value={agencia} maxLength={8} onChange={(e) => setAgencia(e.target.value)} size="sm" type="text" placeholder="Agência" />
                                     </Form.Group>
                                     <Form.Group as={Col} >
                                         <Form.Label>Nº da Conta</Form.Label>
-                                        <Form.Control value={conta} onChange={(e) => setConta(e.target.value)} size="sm" type="text" placeholder="Conta" />
+                                        <Form.Control value={conta} maxLength={20} onChange={(e) => setConta(e.target.value)} size="sm" type="text" placeholder="Conta" />
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3">

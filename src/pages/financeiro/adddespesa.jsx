@@ -468,7 +468,7 @@ const AddDespesa = ({ show2, setShow2, getTransacoes }) => {
                                     <Row className="mb-3">
                                         <Form.Group as={Col} >
                                             <Form.Label>valor</Form.Label>
-                                            <Form.Control value={valor} onChange={(e) => mascaraMoeda(e.target.value)} size="sm" type="text" placeholder="R$0,00" />
+                                            <Form.Control value={valor} maxLength={22} onChange={(e) => mascaraMoeda(e.target.value)} size="sm" type="text" placeholder="R$0,00" />
                                         </Form.Group>
                                     </Row>
                                 </Col>

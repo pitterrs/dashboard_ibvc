@@ -95,11 +95,11 @@ const AddFornecedor = ({ show2, setShow2, getFornecedores }) => {
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>CPF ou CNPJ</Form.Label>
-                                        <Form.Control value={documento} onChange={(e) => setDocumento(e.target.value)} size="sm" type="text" placeholder="Documento" />
+                                        <Form.Control value={documento} maxLength={18} onChange={(e) => setDocumento(e.target.value)} size="sm" type="text" placeholder="Documento" />
                                     </Form.Group>
                                     <Form.Group as={Col} >
                                         <Form.Label>Contato</Form.Label>
-                                        <Form.Control value={contato} onChange={(e) => setContato(e.target.value)} size="sm" type="text" placeholder="Telefone/Celular de Contato" />
+                                        <Form.Control value={contato} maxLength={11} onChange={(e) => setContato(e.target.value)} size="sm" type="text" placeholder="Telefone/Celular de Contato" />
                                     </Form.Group>
                                 </Row>
                             </div>

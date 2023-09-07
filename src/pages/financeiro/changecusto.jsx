@@ -89,7 +89,7 @@ const EditCusto = ({ show, setShow, onEdit, setOnEdit, getCustos }) => {
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>Nome do Banco</Form.Label>
-                                        <Form.Control value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="" />
+                                        <Form.Control value={nome} maxLength={45} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="" />
                                     </Form.Group>
                                 </Row>
                             </div>

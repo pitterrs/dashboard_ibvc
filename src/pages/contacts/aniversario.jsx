@@ -19,6 +19,7 @@ const Aniversario = () => {
   const [membros, setMembros] = useState([]);
   const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
   const [numero, setNumero] = useState();
+  const [loading, setLoading] = useState(true);
   const columns = [
     // {
     //   field: "icone", headerName: "Ações", renderCell: ({ row: { id } }) => {
@@ -87,6 +88,7 @@ const Aniversario = () => {
     }
     setNumero(month);
     setAniversariantes(aniversario_atual);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -317,6 +319,10 @@ const Aniversario = () => {
           pageSize={pageSize}
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           rowsPerPageOptions={[5, 10, 20]}
+          getRowClassName={(params) =>
+            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+          }
+          loading={loading}
         // getCellClassName={(params) => {
         //   if (params.field === 'valor' && params.row.categoria == 'Receita') {
         //     return 'positivo';

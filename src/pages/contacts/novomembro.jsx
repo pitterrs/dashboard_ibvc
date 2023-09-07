@@ -225,31 +225,31 @@ const Novomembro = () => {
         // <React.Fragment>
         <Box m="20px" >
             <Header title="Novo Membro" subtitle="Você está cadastrando um novo membro" />
-            <Row>
-                <Col xs lg="5">
+            <Row >
+                <Col  lg="5">
                     <div className="fundo">
                         <h4>Informações Pessoais</h4>
                         <Row className="mb-3">
                             <Form.Group as={Col} >
                                 <Form.Label>Nome</Form.Label>
-                                <Form.Control required value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome completo" />
+                                <Form.Control required value={nome} maxLength={45} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome completo" />
                             </Form.Group>
                         </Row>
                         <Row className="mb-3">
                             <Form.Group as={Col}>
                                 <Form.Label>Email</Form.Label>
-                                <Form.Control value={email} onChange={(e) => setEmail(e.target.value)} size="sm" type="email" placeholder="email" />
+                                <Form.Control value={email} maxLength={45} onChange={(e) => setEmail(e.target.value)} size="sm" type="email" placeholder="email" />
                             </Form.Group>
                         </Row>
                         <Row className="mb-3">
                             <Form.Group as={Col}>
                                 <Form.Label>Celular</Form.Label>
-                                <Form.Control value={celular} onChange={(e) => setCelular(e.target.value)} size="sm" type="text" placeholder="2299999-9999" />
+                                <Form.Control value={celular} maxLength={11} onChange={(e) => setCelular(e.target.value)} size="sm" type="text" placeholder="2299999-9999" />
                             </Form.Group>
 
                             <Form.Group as={Col}>
                                 <Form.Label>Telefone</Form.Label>
-                                <Form.Control value={telefone} onChange={(e) => setTelefone(e.target.value)} size="sm" type="text" placeholder="223050-3050" />
+                                <Form.Control value={telefone} maxLength={11} onChange={(e) => setTelefone(e.target.value)} size="sm" type="text" placeholder="223050-3050" />
                             </Form.Group>
                         </Row>
                         <Row>
@@ -302,29 +302,29 @@ const Novomembro = () => {
                     </div>
                 </Col>
 
-                <Col xs lg="5" md={{ span: 4, offset: 0 }}>
+                <Col  lg="5" >
                     <div className="fundo">
                         <h4>Localização</h4>
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="zip-code">
                                 <Form.Label>CEP</Form.Label>
-                                <Form.Control value={cep} onChange={(e) => setCep(e.target.value)} size="sm" type="text" placeholder="CEP" />
+                                <Form.Control value={cep} maxLength={9} onChange={(e) => setCep(e.target.value)} size="sm" type="text" placeholder="CEP" />
                             </Form.Group>
                         </Row>
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridPassword">
                                 <Form.Label>Endereço</Form.Label>
-                                <Form.Control value={endereco} onChange={(e) => setEndereco(e.target.value)} size="sm" type="text" placeholder="Endereço" />
+                                <Form.Control value={endereco} maxLength={45} onChange={(e) => setEndereco(e.target.value)} size="sm" type="text" placeholder="Endereço" />
                             </Form.Group>
                         </Row>
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridPassword">
                                 <Form.Label>Número</Form.Label>
-                                <Form.Control value={numero} onChange={(e) => setNumero(e.target.value)} size="sm" type="text" placeholder="Número" />
+                                <Form.Control value={numero} maxLength={5} onChange={(e) => setNumero(e.target.value)} size="sm" type="text" placeholder="Número" />
                             </Form.Group>
                             <Form.Group as={Col} controlId="formGridPassword">
                                 <Form.Label>Complemento</Form.Label>
-                                <Form.Control value={complemento} onChange={(e) => setComplemento(e.target.value)} size="sm" type="text" placeholder="Complemento" />
+                                <Form.Control value={complemento} maxLength={15} onChange={(e) => setComplemento(e.target.value)} size="sm" type="text" placeholder="Complemento" />
                             </Form.Group>
                         </Row>
                     </div>
@@ -411,13 +411,13 @@ const Novomembro = () => {
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridPassword">
                                 <Form.Label>Chamado Ministerial</Form.Label>
-                                <Form.Control value={chamado} onChange={(e) => setChamado(e.target.value)} size="sm" type="text" placeholder="Chamado" />
+                                <Form.Control value={chamado} maxLength={25} onChange={(e) => setChamado(e.target.value)} size="sm" type="text" placeholder="Chamado" />
                             </Form.Group>
                         </Row>
                         <Row className="mb-3">
                             <Form.Group as={Col} controlId="formGridPassword">
                                 <Form.Label>Outras informações:</Form.Label>
-                                <Form.Control value={outrasinfos} onChange={(e) => setOutrasInfos(e.target.value)} as="textarea" size="sm" type="text" placeholder="" />
+                                <Form.Control value={outrasinfos} maxLength={255} onChange={(e) => setOutrasInfos(e.target.value)} as="textarea" size="sm" type="text" placeholder="" />
                             </Form.Group>
                         </Row>
                         <Row>

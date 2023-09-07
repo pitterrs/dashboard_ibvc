@@ -95,8 +95,8 @@ const Transacoes = () => {
                 ({ data }) => {
                     if (data.error === false) {
                         data.admin === 'true' ?
-                        console.log('Logado')
-                        : navigate('/unauthorized')
+                            console.log('Logado')
+                            : navigate('/unauthorized')
                     } else {
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
@@ -357,6 +357,9 @@ const Transacoes = () => {
                             }
 
                         }}
+                        getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+                        }
                     />
                 </Box>
             </Grid>

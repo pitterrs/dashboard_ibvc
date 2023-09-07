@@ -10,6 +10,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 import SearchIcon from "@mui/icons-material/Search";
+import { useNavigate } from "react-router-dom";
 
 const Topbar = () => {
   const theme = useTheme();
@@ -17,6 +18,7 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
   const { toggleSidebar, broken, rtl } = useProSidebar();
   const [logado, setLogado] = useState(false);
+  const navigate = useNavigate();
 
   const validation = async () => {
 
@@ -58,7 +60,7 @@ const Topbar = () => {
   };
 
   const handleConfig = () => {
-    window.location.replace(`${process.env.REACT_APP_API_URL}access`);
+    navigate('/access')
   };
 
   return (

@@ -44,12 +44,17 @@ const DeleteUser = ({ show3, setShow3, user, getUsers }) => {
         await axios
             .delete(`${process.env.REACT_APP_API_URL}deleteuser/` + user.id)
             .then(({ data }) => {
-                toast.success(data);
+                if (data.error === true) {
+                    toast.error(data.message)
+                } else {
+                    toast.success(data.message)
+                    setShow3(false);
+                    getUsers();
+                }
             })
-            .catch(({ data }) => toast.error(data));
+            .catch(({ data }) => toast.error('Ocorreu um erro ao tentar comutar as alterações, tente novamente mais tarde ou contate o administrador do sistema.'));
 
-        setShow3(false);
-        getUsers();
+        
     };
 
     return (

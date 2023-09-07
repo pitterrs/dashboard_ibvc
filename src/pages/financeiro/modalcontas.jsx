@@ -95,17 +95,17 @@ const EditConta = ({ show, setShow, onEdit, setOnEdit, getContas }) => {
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>Nome do Banco</Form.Label>
-                                        <Form.Control value={nome} onChange={(e) => setBanco(e.target.value)} size="sm" type="text" placeholder="" />
+                                        <Form.Control value={nome} maxLength={45} onChange={(e) => setBanco(e.target.value)} size="sm" type="text" placeholder="" />
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>Agência</Form.Label>
-                                        <Form.Control value={agencia} onChange={(e) => setAgencia(e.target.value)} size="sm" type="text" placeholder="" />
+                                        <Form.Control value={agencia} maxLength={8} onChange={(e) => setAgencia(e.target.value)} size="sm" type="text" placeholder="" />
                                     </Form.Group>
                                     <Form.Group as={Col} >
                                         <Form.Label>Nº da Conta</Form.Label>
-                                        <Form.Control value={conta} onChange={(e) => setConta(e.target.value)} size="sm" type="text" placeholder="" />
+                                        <Form.Control value={conta} maxLength={20} onChange={(e) => setConta(e.target.value)} size="sm" type="text" placeholder="" />
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3">

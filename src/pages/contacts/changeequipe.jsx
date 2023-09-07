@@ -72,7 +72,7 @@ const EditEquipe = ({ show3, setShow3, equipe, setEquipe, getEquipes }) => {
                 <Box m="20px" >
                     <Header title="Alterar Dados da Equipe" subtitle="Você está modificando os dados da equipe." />
                     <Row>
-                        <Col xs lg="5">
+                        <Col lg="5">
                             <div className="fundo">
                                 <Typography m='0 0 10px 0' variant="h3" fontWeight="600">
                                     Alterar Equipe

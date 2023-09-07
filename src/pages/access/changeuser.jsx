@@ -16,6 +16,11 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
     const [email, setEmail] = useState(user.email);
     const [admin, setAdmin] = useState(user.admin == 'true' ? 'true' : 'false');
     const [superAdmin, setSuperAdmin] = useState(user.super);
+    const [changemembros, setChangeMembros] = useState(user.changemembros);
+    const [viewequipes, setViewEquipes] = useState(user.viewequipes);
+    const [createequipes, setChangeEquipes] = useState(user.createequipes);
+    const [viewfinancas, setViewFinancas] = useState(user.viewfinancas);
+    const [createfinancas, setChangeFinancas] = useState(user.createfinancas);
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
         const key = localStorage.getItem("IBVC_key");
@@ -59,35 +64,75 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
                 nome,
                 email,
                 admin,
-                super: superAdmin
+                super: superAdmin,
+                changemembros,
+                viewequipes,
+                createequipes,
+                viewfinancas,
+                createfinancas
             })
             .then(
                 ({ data }) => {
-                    if (data.code) {
-                        toast.error('Erro ao adicionar registro no BD. Entre em contato com o administrador')
+                    if (data.error === true) {
+                        toast.error(data.message)
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
+                        setShow2(false);
+                        getUsers();
                     }
                 }
             )
             .catch(({ data }) => toast.error(data));
-        setShow2(false);
-        getUsers();
-
     }
 
     const setAdminFunction = (e) => {
-        if(e == true){
+        if (e == true) {
             setAdmin('true');
-        }else{
+        } else {
+            setAdmin('false');
+        }
+    }
+
+    const setChangeMembrosFunction = (e) => {
+        if (e == true) {
+            setAdmin('true');
+        } else {
+            setAdmin('false');
+        }
+    }
+    const setViewEquipesFunction = (e) => {
+        if (e == true) {
+            setAdmin('true');
+        } else {
+            setAdmin('false');
+        }
+    }
+    const setCreateEquipesFunction = (e) => {
+        if (e == true) {
+            setAdmin('true');
+        } else {
+            setAdmin('false');
+        }
+    }
+    const setViewFinancasFunction = (e) => {
+        if (e == true) {
+            setAdmin('true');
+        } else {
+            setAdmin('false');
+        }
+    }
+    const setCreateFinancasFunction = (e) => {
+        if (e == true) {
+            setAdmin('true');
+        } else {
             setAdmin('false');
         }
     }
 
     const setSuperAdminFunction = (e) => {
-        if(e == true){
+        if (e == true) {
             setSuperAdmin('true');
-        }else{
+        } else {
             setSuperAdmin('false');
         }
     }
@@ -126,7 +171,52 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
                                             type="checkbox"
                                             onChange={(e) => setAdminFunction(e.target.checked)}
                                             checked={admin == 'true' ? 'true' : false}
-                                            
+
+                                        />
+                                        <Form.Check
+                                            inline
+                                            label="Modificar Membros"
+                                            name="group1"
+                                            type="checkbox"
+                                            onChange={(e) => setAdminFunction(e.target.checked)}
+                                            checked={admin == 'true' ? 'true' : false}
+
+                                        />
+                                        <Form.Check
+                                            inline
+                                            label="Visualizar Equipes"
+                                            name="group1"
+                                            type="checkbox"
+                                            onChange={(e) => setAdminFunction(e.target.checked)}
+                                            checked={admin == 'true' ? 'true' : false}
+
+                                        />
+                                        <Form.Check
+                                            inline
+                                            label="Criar/Modificar Equipes"
+                                            name="group1"
+                                            type="checkbox"
+                                            onChange={(e) => setAdminFunction(e.target.checked)}
+                                            checked={admin == 'true' ? 'true' : false}
+
+                                        />
+                                        <Form.Check
+                                            inline
+                                            label="Visualizar Finanças"
+                                            name="group1"
+                                            type="checkbox"
+                                            onChange={(e) => setAdminFunction(e.target.checked)}
+                                            checked={admin == 'true' ? 'true' : false}
+
+                                        />
+                                        <Form.Check
+                                            inline
+                                            label="Criar/Modificar Finanças"
+                                            name="group1"
+                                            type="checkbox"
+                                            onChange={(e) => setAdminFunction(e.target.checked)}
+                                            checked={admin == 'true' ? 'true' : false}
+
                                         />
                                         <Form.Check
                                             inline

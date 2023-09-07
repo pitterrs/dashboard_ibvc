@@ -345,8 +345,8 @@ const ChangeReceita = ({ show3, setShow3, getTransacoes, onEdit, setOnEdit }) =>
                                 <Col xs lg="3">
                                     <Row className="mb-3">
                                         <Form.Group as={Col} >
-                                            <Form.Label>valor</Form.Label>
-                                            <Form.Control value={valor} onChange={(e) => mascaraMoeda(e.target.value)} size="sm" type="text" placeholder="R$0,00" />
+                                            <Form.Label>Valor</Form.Label>
+                                            <Form.Control value={valor} maxLength={22} onChange={(e) => mascaraMoeda(e.target.value)} size="sm" type="text" placeholder="R$0,00" />
                                         </Form.Group>
                                     </Row>
                                 </Col>

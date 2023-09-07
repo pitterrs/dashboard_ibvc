@@ -41,7 +41,7 @@ const ChangePass = ({ show4, setShow4, getUsers, user }) => {
     }
     useEffect(() => {
         validations();
-    }, []);
+    }, [setSenha]);
 
     const handleClose = () => {
         setShow4(false);
@@ -60,13 +60,13 @@ const ChangePass = ({ show4, setShow4, getUsers, user }) => {
                     if (data.error === true) {
                         toast.error(data.message)
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
                         setShow4(false);
                         getUsers();
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
+            .catch(({ data }) => toast.error('Ocorreu um erro ao tentar comutar as alterações, tente novamente mais tarde ou contate o administrador do sistema.'));
     }
 
     return (

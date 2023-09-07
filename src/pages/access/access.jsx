@@ -15,6 +15,7 @@ import AddUser from './adduser';
 import ChangeUser from './changeuser';
 import DeleteUser from './deleteuser';
 import ChangePass from './changepass';
+import Spinner from 'react-bootstrap/Spinner';
 
 const Access = () => {
     const theme = useTheme();
@@ -28,6 +29,8 @@ const Access = () => {
     const [show3, setShow3] = useState(false);
     const [show4, setShow4] = useState(false);
     const [user, setUser] = useState(null);
+    const [validation, setValidation] = useState(false);
+    const [loading, setLoading] = useState(true);
     const columns = [
         {
             field: "icone", headerName: "Ações", renderCell: ({ row: { id } }) => {
@@ -57,9 +60,11 @@ const Access = () => {
                 ({ data }) => {
                     if (data.error === false) {
                         data.admin === 'true' && data.super === 'true' ?
-                        console.log('Logado')
-                        : navigate('/unauthorized')
+                            // console.log('Logado')
+                            setValidation(true)
+                            : navigate('/unauthorized')
                     } else {
+                        setValidation(false);
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                     }
                 }
@@ -75,7 +80,11 @@ const Access = () => {
         try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}getusers`);
             setUsers(res.data);
-        } catch { }
+            setLoading(false);
+        } catch(err) { 
+            toast.error(err.message);
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -107,99 +116,98 @@ const Access = () => {
         setShow3(true);
     }
 
-return (
-    <Box m="20px">
+    return (
+        validation ?
+            <Box m="20px">
 
-            <Box
-                display={smScreen ? "flex" : "block"}
-                flexDirection={smScreen ? "row" : "column"}
-                justifyContent={smScreen ? "space-between" : "start"}
-                alignItems={smScreen ? "center" : "start"}
-                m="10px 0"
-            >
-                <Header title="Gerenciamento de acessos" subtitle="Estabeleça e administre os privilégios de acesso para todos os usuários." />
-            </Box>
-            <Grid p='10px' xs={12} backgroundColor={colors.primary[400]} >
-                <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='rigth'>
-                    <Grid xs={12} sm={12} md={6} lg={3} xl={1}>
-                        <Box
-                            width="100%"
-                            display="flex"
-                            alignItems="center"
-                            justifyContent="center"
-                            className='border-radius'
-                        >
-                            <Button onClick={() => handleCreate()} size="sm" variant='outline-light' >Adicionar Usuário</Button>
-                        </Box>
+                <Box
+                    display={smScreen ? "flex" : "block"}
+                    flexDirection={smScreen ? "row" : "column"}
+                    justifyContent={smScreen ? "space-between" : "start"}
+                    alignItems={smScreen ? "center" : "start"}
+                    m="10px 0"
+                >
+                    <Header title="Gerenciamento de acessos" subtitle="Estabeleça e administre os privilégios de acesso para todos os usuários." />
+                </Box>
+                <Grid p='10px' xs={12} backgroundColor={colors.primary[400]} >
+                    <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }} justifyContent='rigth'>
+                        <Grid xs={12} sm={12} md={6} lg={3} xl={1}>
+                            <Box
+                                width="100%"
+                                display="flex"
+                                alignItems="center"
+                                justifyContent="center"
+                                className='border-radius'
+                            >
+                                <Button onClick={() => handleCreate()} size="sm" variant='outline-light' >Adicionar Usuário</Button>
+                            </Box>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Box
-                backgroundColor={colors.primary[400]}
-                m="1px 0 0 0"
-                width="100%"
-                height="75vh"
-                sx={{
-                    "& .MuiDataGrid-root": {
-                        border: "none",
-                    },
-                    "& .MuiDataGrid-cell": {
-                        borderBottom: "none",
-                    },
-                    "& .name-column--cell": {
-                        color: colors.greenAccent[300],
-                    },
-                    "& .MuiDataGrid-columnHeaders": {
-                        backgroundColor: colors.blueAccent[700],
-                        borderBottom: "none",
-                    },
-                    "& .MuiDataGrid-virtualScroller": {
-                        backgroundColor: colors.primary[400],
-                    },
-                    "& .MuiDataGrid-footerContainer": {
-                        borderTop: "none",
-                        backgroundColor: colors.blueAccent[700],
-                    },
-                    "& .MuiCheckbox-root": {
-                        color: `${colors.greenAccent[200]} !important`,
-                    },
-                    "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-                        color: `${colors.grey[100]} !important`,
-                    },
-                }}
-            >
-                <DataGrid
-                    rows={users}
-                    columns={columns}
-                    components={{ Toolbar: GridToolbar }}
-                    pageSize={pageSize}
-                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                    rowsPerPageOptions={[5, 10, 20]}
-                // getCellClassName={(params) => {
-                //   if (params.field === 'valor' && params.row.categoria == 'Receita') {
-                //     return 'positivo';
-                //   } else if (params.field === 'valor' && params.row.categoria == 'Despesa') {
-                //     return 'negativo';
-                //   }
-
-                // }}
-                />
+                <Box
+                    backgroundColor={colors.primary[400]}
+                    m="1px 0 0 0"
+                    width="100%"
+                    height="75vh"
+                    sx={{
+                        "& .MuiDataGrid-root": {
+                            border: "none",
+                        },
+                        "& .MuiDataGrid-cell": {
+                            borderBottom: "none",
+                        },
+                        "& .name-column--cell": {
+                            color: colors.greenAccent[300],
+                        },
+                        "& .MuiDataGrid-columnHeaders": {
+                            backgroundColor: colors.blueAccent[700],
+                            borderBottom: "none",
+                        },
+                        "& .MuiDataGrid-virtualScroller": {
+                            backgroundColor: colors.primary[400],
+                        },
+                        "& .MuiDataGrid-footerContainer": {
+                            borderTop: "none",
+                            backgroundColor: colors.blueAccent[700],
+                        },
+                        "& .MuiCheckbox-root": {
+                            color: `${colors.greenAccent[200]} !important`,
+                        },
+                        "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+                            color: `${colors.grey[100]} !important`,
+                        },
+                    }}
+                >
+                    <DataGrid
+                        rows={users}
+                        columns={columns}
+                        components={{ Toolbar: GridToolbar }}
+                        pageSize={pageSize}
+                        onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                        rowsPerPageOptions={[5, 10, 20]}
+                        getRowClassName={(params) =>
+                            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+                        }
+                        loading={loading}
+                    />
+                </Box>
+                {show && (
+                    <AddUser show={show} setShow={setShow} getUsers={getUsers} />
+                )}
+                {show2 && (
+                    <ChangeUser show2={show2} setShow2={setShow2} user={user} getUsers={getUsers} />
+                )}
+                {show3 && (
+                    <DeleteUser show3={show3} setShow3={setShow3} user={user} getUsers={getUsers} />
+                )}
+                {show4 && (
+                    <ChangePass show4={show4} setShow4={setShow4} user={user} getUsers={getUsers} />
+                )}
+                <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
             </Box>
-            {show && (
-                <AddUser show={show} setShow={setShow} getUsers={getUsers} />
-            )}
-            {show2 && (
-                <ChangeUser show2={show2} setShow2={setShow2} user={user} getUsers={getUsers} />
-            )}
-            {show3 && (
-                <DeleteUser show3={show3} setShow3={setShow3} user={user} getUsers={getUsers} />
-            )}
-            {show4 && (
-                <ChangePass show4={show4} setShow4={setShow4} user={user} getUsers={getUsers} />
-            )}
-            <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
-        </Box>
-)
+            :
+            ''
+    )
 }
 
 export default Access;

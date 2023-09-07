@@ -171,6 +171,9 @@ const Fornecedores = () => {
                                 pageSize={pageSize}
                                 onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                                 rowsPerPageOptions={[5, 10, 20]}
+                                getRowClassName={(params) =>
+                                    params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+                                  }
                             />
                         </Box>
                     </Grid>

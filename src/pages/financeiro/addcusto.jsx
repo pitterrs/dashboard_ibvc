@@ -76,7 +76,7 @@ const AddCusto = ({ show2, setShow2, getCustos }) => {
                 <Box m="20px" >
                     <Header title="Criar Centro de Custo" subtitle="Você está criando um novo Centro de Custo." />
                     <Row>
-                        <Col xs lg="5">
+                        <Col lg="5">
                             <div>
                                 <Typography m='0 0 10px 0' variant="h3" fontWeight="600">
                                     Centro de Custo
@@ -84,7 +84,7 @@ const AddCusto = ({ show2, setShow2, getCustos }) => {
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>Nome do Centro de Custo</Form.Label>
-                                        <Form.Control maxLength='30' value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
+                                        <Form.Control maxLength={30} value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
                                     </Form.Group>
                                 </Row>
                             </div>

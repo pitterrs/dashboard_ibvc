@@ -87,7 +87,7 @@ const AddLancamento = ({ show2, setShow2, getLancamentos }) => {
                                 <Row className="mb-3">
                                     <Form.Group as={Col} >
                                         <Form.Label>Nome do Plano de Contas</Form.Label>
-                                        <Form.Control value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
+                                        <Form.Control value={nome} maxLength={20} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
                                     </Form.Group>
                                 </Row>
                                 <Row className="mb-3">

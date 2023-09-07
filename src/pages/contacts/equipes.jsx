@@ -27,6 +27,7 @@ const Equipes = () => {
     const [show2, setShow2] = useState(false);
     const [show3, setShow3] = useState(false);
     const [show4, setShow4] = useState(false);
+    const [loading, setLoading] = useState(true);
     const columns = [
         {
             field: "icone", headerName: "Ações", renderCell: ({ row: { id } }) => {
@@ -65,6 +66,7 @@ const Equipes = () => {
         try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}getequipes`);
             setEquipes(res.data);
+            setLoading(false)
         } catch { }
     }
 
@@ -165,6 +167,10 @@ const Equipes = () => {
                     pageSize={pageSize}
                     onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                     rowsPerPageOptions={[5, 10, 20]}
+                    getRowClassName={(params) =>
+                        params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+                      }
+                    loading={loading}
                 // getCellClassName={(params) => {
                 //   if (params.field === 'valor' && params.row.categoria == 'Receita') {
                 //     return 'positivo';

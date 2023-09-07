@@ -30,6 +30,7 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
     const [show3, setShow3] = useState(false);
     const [show5, setShow5] = useState(false);
     const [membro, setMembro] = useState();
+    const [loading, setLoading] = useState(true);
     const columns = [
         {
             field: "icone", headerName: "", renderCell: ({ row: { id_membro } }) => {
@@ -69,6 +70,7 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
         try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembrosequipe/` + equipe.id_equipe);
             setMembrosEquipe(res.data);
+            setLoading(false)
         } catch { }
     }
 
@@ -160,6 +162,10 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
                             pageSize={pageSize}
                             onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
                             rowsPerPageOptions={[5, 10, 20]}
+                            getRowClassName={(params) =>
+                                params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+                              }
+                            loading={loading}
                         // getCellClassName={(params) => {
                         //   if (params.field === 'valor' && params.row.categoria == 'Receita') {
                         //     return 'positivo';

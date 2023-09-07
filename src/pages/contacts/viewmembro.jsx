@@ -86,7 +86,7 @@ const ViewMembro = ({ show2, setShow2, membro, setMembro }) => {
                     <Header title="Modificar Membro" subtitle="Você está modificando um membro" />
                     <Box>
                         <Row>
-                            <Col xs lg="6">
+                            <Col lg="6">
                                 <div className="fundo">
                                     <h4>Informações Pessoais</h4>
                                     <Row className="mb-3">
@@ -166,7 +166,7 @@ const ViewMembro = ({ show2, setShow2, membro, setMembro }) => {
                                 </div>
                             </Col>
 
-                            <Col xs lg="5" md={{ span: 4, offset: 0 }}>
+                            <Col lg="6">
                                 <div className="fundo">
                                     <h4>Localização</h4>
                                     <Row className="mb-3">

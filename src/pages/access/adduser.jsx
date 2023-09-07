@@ -16,6 +16,11 @@ const AddUser = ({ show, setShow, getUsers }) => {
     const [senha, setSenha] = useState();
     const [admin, setAdmin] = useState(false);
     const [superAdmin, setSuperAdmin] = useState(false);
+    const [changemembros, setChangeMembros] = useState(false);
+    const [viewequipes, setViewEquipes] = useState(false);
+    const [createequipes, setChangeEquipes] = useState(false);
+    const [viewfinancas, setViewFinancas] = useState(false);
+    const [createfinancas, setChangeFinancas] = useState(false);
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
         const key = localStorage.getItem("IBVC_key");
@@ -64,20 +69,25 @@ const AddUser = ({ show, setShow, getUsers }) => {
                 senha,
                 key,
                 admin,
-                super: superAdmin
+                super: superAdmin,
+                changemembros,
+                viewequipes,
+                createequipes,
+                viewfinancas,
+                createfinancas
             })
             .then(
                 ({ data }) => {
                     if (data.error === true) {
                         toast.error(data.message)
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
                         setShow(false);
                         getUsers();
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
+            .catch(({ data }) => toast.error('Ocorreu um erro na conexão, favor entre em contato com o administrador do sistema ou tenta novamente mais tarde.'));
     }
 
     function createKey(tamanho) {
@@ -123,13 +133,48 @@ const AddUser = ({ show, setShow, getUsers }) => {
                                 </Row>
                                 <Row className="mb-3">
                                     <Form.Label>Administração de acessos:</Form.Label>
-                                    <Col xs lg="6">
+                                    <Col xs lg="12">
                                         <Form.Check
                                             inline
                                             label="Finanças"
                                             name="group1"
                                             type="checkbox"
                                             onChange={(e) => setAdmin(e.target.checked)}
+                                        />
+                                         <Form.Check
+                                            inline
+                                            label="Modificar Membros"
+                                            name="group2"
+                                            type="checkbox"
+                                            onChange={(e) => setChangeMembros(e.target.checked)}
+                                        />
+                                         <Form.Check
+                                            inline
+                                            label="Visualizar Equipes"
+                                            name="group2"
+                                            type="checkbox"
+                                            onChange={(e) => setViewEquipes(e.target.checked)}
+                                        />
+                                         <Form.Check
+                                            inline
+                                            label="Criar/Modificar Equipes"
+                                            name="group2"
+                                            type="checkbox"
+                                            onChange={(e) => setChangeEquipes(e.target.checked)}
+                                        />
+                                         <Form.Check
+                                            inline
+                                            label="Visualizar Finanças"
+                                            name="group2"
+                                            type="checkbox"
+                                            onChange={(e) => setViewFinancas(e.target.checked)}
+                                        />
+                                         <Form.Check
+                                            inline
+                                            label="Criar/Modificar Finanças"
+                                            name="group2"
+                                            type="checkbox"
+                                            onChange={(e) => setChangeFinancas(e.target.checked)}
                                         />
                                         <Form.Check
                                             inline
