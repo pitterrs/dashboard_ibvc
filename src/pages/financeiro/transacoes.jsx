@@ -125,7 +125,7 @@ const Transacoes = () => {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}gettransacoes/` + init + '/' + end);
             setTransacoes(ChangeData(res.data))
         } catch (error) {
-            console.log('erro desconhecido');
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`)
         }
     }
 

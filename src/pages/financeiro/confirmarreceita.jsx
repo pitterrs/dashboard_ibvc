@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 const ConfirmarReceita = ({ show5, setShow5, getTransacoes, onEdit, setOnEdit }) => {
     const navigate = useNavigate();
     const [logado, setLogado] = useState(false);
-    
+
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
         const key = localStorage.getItem("IBVC_key");
@@ -52,51 +52,65 @@ const ConfirmarReceita = ({ show5, setShow5, getTransacoes, onEdit, setOnEdit })
         setOnEdit(null)
     }
     const pago = async (e) => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
         await axios
             .put(`${process.env.REACT_APP_API_URL}changestatus/` + onEdit.id, {
-                status: status
+                status: status,
+                token,
+                key
             })
             .then(
                 ({ data }) => {
-                    if (data.code) {
-                        toast.error('Erro ao alterar registro no BD. Entre em contato com o administrador')
+                    if (data.error === true) {
+                        toast.error(data.message)
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
+                        setShow5(false);
+                        setOnEdit(null)
+                        getTransacoes();
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
-
-        setShow5(false);
-        setOnEdit(null)
-        getTransacoes();
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     }
     return (
         logado ?
-        <Modal size="xl" show={show5} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title id="example-modal-sizes-title-sm">
-                    Alterar status da Receita?
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Typography variant="h5" >
-                    Deseja realmente alterar o status da receita para '{status}' ?
-                </Typography>
-                <Typography variant="h5" >
-                    Você pode alterar o status novamente a qualquer momento pelo mesmo botão.
-                </Typography>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" size="sm" onClick={handleClose} >
-                    Fechar
-                </Button>
-                <Button variant="success" size="sm" onClick={() => pago()} >
-                    Lançamento {status}
-                </Button>
-            </Modal.Footer>
-        </Modal>
-        : ''
+            <Modal size="xl" show={show5} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-sm">
+                        Alterar status da Receita?
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Typography variant="h5" >
+                        Deseja realmente alterar o status da receita para '{status}' ?
+                    </Typography>
+                    <Typography variant="h5" >
+                        Você pode alterar o status novamente a qualquer momento pelo mesmo botão.
+                    </Typography>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" size="sm" onClick={handleClose} >
+                        Fechar
+                    </Button>
+                    <Button variant="success" size="sm" onClick={() => pago()} >
+                        Lançamento {status}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            : ''
     )
 }
 

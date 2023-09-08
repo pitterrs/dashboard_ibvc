@@ -56,70 +56,87 @@ const AddFornecedor = ({ show2, setShow2, getFornecedores }) => {
         if (!nome) { return toast.warn("Campo 'Nome' é obrigatório"); }
         if (!documento) { return toast.warn("Campo 'CPF/CNPJ' é obrigatório"); }
 
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
         await axios
             .post(`${process.env.REACT_APP_API_URL}addfornecedor`, {
                 nome: nome,
                 documento: documento,
-                contato: contato
+                contato: contato,
+                token,
+                key
             })
             .then(
                 ({ data }) => {
-                    if (data.code) {
-                        toast.error('Erro ao adicionar registro no BD. Entre em contato com o administrador')
+                    if (data.error === true) {
+                        toast.error(data.message)
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
                         setNome('')
+                        setShow2(false);
+                        getFornecedores();
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
 
-        setShow2(false);
-        getFornecedores();
+
     }
     return (
         logado ?
-        <Modal size="xl" show={show2} onHide={handleClose}>
-            <Modal.Body>
-                <Box m="20px" >
-                    <Header title="Criar Cadastro de Pessoa ou Fornecedor" subtitle="Você está criando um novo cadastro de pessoa ou fornecedor." />
-                    <Row>
-                        <Col xs lg="5">
-                            <div>
-                                <Typography m='0 0 10px 0' variant="h3" fontWeight="600">
-                                    Pessoa/Fornecedor
-                                </Typography>
-                                <Row className="mb-3">
-                                    <Form.Group as={Col} >
-                                        <Form.Label>Nome da Pessoa ou Fornecedor</Form.Label>
-                                        <Form.Control maxLength='45' value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
-                                    </Form.Group>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Form.Group as={Col} >
-                                        <Form.Label>CPF ou CNPJ</Form.Label>
-                                        <Form.Control value={documento} maxLength={18} onChange={(e) => setDocumento(e.target.value)} size="sm" type="text" placeholder="Documento" />
-                                    </Form.Group>
-                                    <Form.Group as={Col} >
-                                        <Form.Label>Contato</Form.Label>
-                                        <Form.Control value={contato} maxLength={11} onChange={(e) => setContato(e.target.value)} size="sm" type="text" placeholder="Telefone/Celular de Contato" />
-                                    </Form.Group>
-                                </Row>
-                            </div>
-                        </Col>
-                    </Row>
-                </Box>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="outline-primary" size="sm" onClick={handleCreate}>
-                    Criar
-                </Button>
-                <Button variant="outline-success" size="sm" onClick={handleClose}>
-                    Fechar
-                </Button>
-            </Modal.Footer>
-        </Modal>
-        : ''
+            <Modal size="xl" show={show2} onHide={handleClose}>
+                <Modal.Body>
+                    <Box m="20px" >
+                        <Header title="Criar Cadastro de Pessoa ou Fornecedor" subtitle="Você está criando um novo cadastro de pessoa ou fornecedor." />
+                        <Row>
+                            <Col xs lg="5">
+                                <div>
+                                    <Typography m='0 0 10px 0' variant="h3" fontWeight="600">
+                                        Pessoa/Fornecedor
+                                    </Typography>
+                                    <Row className="mb-3">
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Nome da Pessoa ou Fornecedor</Form.Label>
+                                            <Form.Control maxLength='45' value={nome} onChange={(e) => setNome(e.target.value)} size="sm" type="text" placeholder="Nome" />
+                                        </Form.Group>
+                                    </Row>
+                                    <Row className="mb-3">
+                                        <Form.Group as={Col} >
+                                            <Form.Label>CPF ou CNPJ</Form.Label>
+                                            <Form.Control value={documento} maxLength={18} onChange={(e) => setDocumento(e.target.value)} size="sm" type="text" placeholder="Documento" />
+                                        </Form.Group>
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Contato</Form.Label>
+                                            <Form.Control value={contato} maxLength={11} onChange={(e) => setContato(e.target.value)} size="sm" type="text" placeholder="Telefone/Celular de Contato" />
+                                        </Form.Group>
+                                    </Row>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Box>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-primary" size="sm" onClick={handleCreate}>
+                        Criar
+                    </Button>
+                    <Button variant="outline-success" size="sm" onClick={handleClose}>
+                        Fechar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            : ''
     )
 }
 

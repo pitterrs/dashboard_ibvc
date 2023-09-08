@@ -40,9 +40,16 @@ const DeleteUser = ({ show3, setShow3, user, getUsers }) => {
     }, []);
 
     const deletar = async (e) => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
 
         await axios
-            .delete(`${process.env.REACT_APP_API_URL}deleteuser/` + user.id)
+            .delete(`${process.env.REACT_APP_API_URL}deleteuser/` + user.id, {
+                data:{
+                    token,
+                    key
+                }
+            })
             .then(({ data }) => {
                 if (data.error === true) {
                     toast.error(data.message)
@@ -52,9 +59,18 @@ const DeleteUser = ({ show3, setShow3, user, getUsers }) => {
                     getUsers();
                 }
             })
-            .catch(({ data }) => toast.error('Ocorreu um erro ao tentar comutar as alterações, tente novamente mais tarde ou contate o administrador do sistema.'));
-
-        
+            .catch(error => {
+                if(error.response.status === 401){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if(error.response.status === 500){
+                    toast.error(error.response.data.message);
+                }
+                if(error.response.status === 403){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     };
 
     return (

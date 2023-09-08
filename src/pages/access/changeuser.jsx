@@ -58,6 +58,9 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
     }
     const handleChange = async () => {
 
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
         if (!nome) { return toast.warn("Preencha o campo 'Nome'"); }
         if (!email) { return toast.warn("Preencha o campo 'Email'"); }
 
@@ -70,7 +73,9 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
                 viewequipes,
                 createequipes,
                 viewfinancas,
-                createfinancas
+                createfinancas,
+                token,
+                key
             })
             .then(
                 ({ data }) => {
@@ -83,7 +88,18 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
+            .catch(error =>{
+                if(error.response.status === 401){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if(error.response.status === 500){
+                    toast.error(error.response.data.message);
+                }
+                if(error.response.status === 403){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     }
 
     const setChangeMembrosFunction = (e) => {

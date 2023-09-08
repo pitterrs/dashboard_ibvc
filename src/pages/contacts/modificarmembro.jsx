@@ -10,6 +10,7 @@ import Header from "../../components/Header";
 import { Box } from "@mui/material";
 import DeleteMembro from './deletarmembro';
 import "./novomembro.css";
+import Image from 'react-bootstrap/Image';
 
 const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
     const [logado, setLogado] = useState(false);
@@ -92,6 +93,9 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
 
         if (!nome) { return toast.warn("Campo 'Nome' é obrigatório"); }
 
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
         await axios
             .put(`${process.env.REACT_APP_API_URL}changemembro/` + membro[0].id, {
                 nome: nome,
@@ -112,20 +116,33 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
                 batismo: batismo,
                 chamado: chamado,
                 outrasinfos: outrasinfos,
-                data_casamento: data_casamento
+                data_casamento: data_casamento,
+                token,
+                key
             }).then(
                 ({ data }) => {
-                    if (data.code) {
-                        toast.error('Erro ao modificar registro no BD. Entre em contato com o administrador')
+                    if (data.error === true) {
+                        toast.error(data.message)
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
                         setShow(false);
                         getMembros();
                         setMembro(null);
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
+            .catch(error =>{
+                if(error.response.status === 401){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if(error.response.status === 500){
+                    toast.error(error.response.data.message);
+                }
+                if(error.response.status === 403){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
 
         //Captura a quantidade de membros ativos atualmente
         try {

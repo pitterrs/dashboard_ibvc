@@ -76,14 +76,51 @@ const Access = () => {
     }
 
     const getUsers = async () => {
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}getusers`);
-            setUsers(res.data);
-            setLoading(false);
-        } catch(err) { 
-            toast.error(err.message);
-            setLoading(false);
+
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': token,
+                'Key': key
+            }
         }
+
+        await axios.get(`${process.env.REACT_APP_API_URL}getusers`, config)
+            .then(({ data }) => {
+                if (data.error === false) {
+                    setUsers(data.data);
+                    setLoading(false);
+                } else {
+                    toast.error(data.message);
+                    setLoading(false);
+                }
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                    setLoading(false);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
+
+        // try {
+        //     const res = await axios.get(`${process.env.REACT_APP_API_URL}getusers`, config);
+        //     setUsers(res.data);
+        //     setLoading(false);
+        // } catch (err) {
+        //     toast.error(err.message);
+        //     setLoading(false);
+        // }
     }
 
     useEffect(() => {

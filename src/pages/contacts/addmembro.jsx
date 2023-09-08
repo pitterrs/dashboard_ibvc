@@ -54,13 +54,33 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
 
     const getMembros = async () => {
 
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembros`);
-            setMembros(changeData(res.data))
-        } catch (error) {
-            console.log('erro desconhecido');
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': token,
+                'Key': key
+            }
         }
 
+        axios.get(`${process.env.REACT_APP_API_URL}getmembros`, config)
+            .then(({ data }) => {
+                if (data.error === false) {
+                    setMembros(changeData(data.data))
+                } else {
+                    toast.error(data.message)
+                }
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                } else {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+                }
+            });
     }
 
     const changeData = (data) => {
@@ -96,6 +116,9 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
             console.log('erro desconhecido');
         }
 
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
         await axios
             .post(`${process.env.REACT_APP_API_URL}addmembroequipe`, {
                 id_equipe: id_equipe,
@@ -103,20 +126,32 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
                 id_membro: id_membro,
                 nome_membro: nome_membro,
                 funcao: funcao,
+                token,
+                key
             })
             .then(
                 ({ data }) => {
-                    if (data.code) {
-                        toast.error('Erro ao adicionar registro no BD. Entre em contato com o administrador')
+                    if (data.error === true) {
+                        toast.error(data.message)
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
+                        setShow(false);
+                        getMembrosEquipe();
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
-        setShow(false);
-        getMembrosEquipe();
-
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+            });
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
     }
 
     const handleChange = (e) => {
@@ -132,57 +167,57 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
 
     return (
         logado ?
-        <Modal size="xl" show={show} onHide={handleClose}>
-            <Modal.Body >
-                <Box m="20px" >
-                    <Header title="Criar Equipe" subtitle="Você está uma nova Equipe." />
-                    <Row>
-                        <Col xs lg="9">
-                            <div className='fundo'>
-                                <Row className="mb-3">
-                                    <Col xs lg="6">
-                                        <Form.Group as={Col} >
-                                            <Form.Label>Nome da Equipe</Form.Label>
-                                            <Select
-                                                className="basic-single"
-                                                classNamePrefix="select"
-                                                isDisabled={isDisabled}
-                                                isLoading={isLoading}
-                                                isClearable={isClearable}
-                                                isRtl={isRtl}
-                                                isSearchable={isSearchable}
-                                                defaultValue=''
-                                                name="name"
-                                                options={membros}
-                                                onChange={handleChange}
-
-                                            />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Col xs lg="3">
+            <Modal size="xl" show={show} onHide={handleClose}>
+                <Modal.Body >
+                    <Box m="20px" >
+                        <Header title="Criar Equipe" subtitle="Você está uma nova Equipe." />
+                        <Row>
+                            <Col xs lg="9">
+                                <div className='fundo'>
                                     <Row className="mb-3">
-                                        <Form.Group as={Col} >
-                                            <Form.Label>Função</Form.Label>
-                                            <Form.Control maxLength='20' value={funcao} onChange={(e) => setFuncao(e.target.value)} size="sm" type="text" placeholder="Função" />
-                                        </Form.Group>
+                                        <Col xs lg="6">
+                                            <Form.Group as={Col} >
+                                                <Form.Label>Nome da Equipe</Form.Label>
+                                                <Select
+                                                    className="basic-single"
+                                                    classNamePrefix="select"
+                                                    isDisabled={isDisabled}
+                                                    isLoading={isLoading}
+                                                    isClearable={isClearable}
+                                                    isRtl={isRtl}
+                                                    isSearchable={isSearchable}
+                                                    defaultValue=''
+                                                    name="name"
+                                                    options={membros}
+                                                    onChange={handleChange}
+
+                                                />
+                                            </Form.Group>
+                                        </Col>
                                     </Row>
-                                </Col>
-                            </div>
-                        </Col>
-                    </Row>
-                </Box>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="outline-primary" size="sm" onClick={handleCreate}>
-                    Adicionar Membro
-                </Button>
-                <Button variant="outline-success" size="sm" onClick={handleClose}>
-                    Fechar
-                </Button>
-            </Modal.Footer>
-        </Modal>
-        : ''
+                                    <Col xs lg="3">
+                                        <Row className="mb-3">
+                                            <Form.Group as={Col} >
+                                                <Form.Label>Função</Form.Label>
+                                                <Form.Control maxLength='20' value={funcao} onChange={(e) => setFuncao(e.target.value)} size="sm" type="text" placeholder="Função" />
+                                            </Form.Group>
+                                        </Row>
+                                    </Col>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Box>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-primary" size="sm" onClick={handleCreate}>
+                        Adicionar Membro
+                    </Button>
+                    <Button variant="outline-success" size="sm" onClick={handleClose}>
+                        Fechar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            : ''
     )
 }
 

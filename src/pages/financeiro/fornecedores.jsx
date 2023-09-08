@@ -83,7 +83,7 @@ const Fornecedores = () => {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}getfornecedores`);
             setRows(res.data)
         } catch {
-            console.log('erro desconhecido');
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`)
         }
     }
 

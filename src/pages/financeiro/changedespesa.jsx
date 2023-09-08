@@ -142,6 +142,9 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
         valornovo = valornovo.replace(',', '.');
         valornovo = valornovo.trim();
 
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
         await axios
             .put(`${process.env.REACT_APP_API_URL}changetransacao/` + onEdit.id, {
                 data: data,
@@ -157,28 +160,36 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
                 plano: plano,
                 pagamento: pagamento,
                 valor: valornovo,
-                status: 'Não Pago'
+                status: 'Não Pago',
+                token,
+                key
             })
             .then(
                 ({ data }) => {
                     if (data.code) {
-                        if (data.errno == '1062') {
-                            toast.error('Membro já faz parte da Comissão de Finanças, selecione um membro diferente.')
+                        if (data.error === true) {
+                            toast.error(data.message)
                         } else {
-                            toast.error('Erro ao adicionar registro no BD. Entre em contato com o administrador')
+                            toast.success(data.message)
+                            setShow4(false);
+                            setOnEdit(null)
+                            getTransacoes();
                         }
-                    } else {
-                        toast.success(data)
-                        // setId('')
-                        // setNome('')
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
-
-        setShow4(false);
-        setOnEdit(null)
-        getTransacoes();
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     };
 
     const handleChange = (e) => {
@@ -238,118 +249,118 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
 
     return (
         logado ?
-        <Modal size="xl" show={show4} onHide={handleClose}>
-            <Modal.Body className='borda4'>
-                <Box m="20px" >
-                    <Header title="Modificar Despesa" subtitle="Você está modificando uma nova saída." />
-                    <Row>
-                        <Col xs lg="9">
-                            <div className='fundo'>
-                                <Col xs lg="5">
+            <Modal size="xl" show={show4} onHide={handleClose}>
+                <Modal.Body className='borda4'>
+                    <Box m="20px" >
+                        <Header title="Modificar Despesa" subtitle="Você está modificando uma nova saída." />
+                        <Row>
+                            <Col xs lg="9">
+                                <div className='fundo'>
+                                    <Col xs lg="5">
+                                        <Row className="mb-3">
+                                            <Form.Group as={Col} >
+                                                <Form.Label>Data de Lançamento</Form.Label>
+                                                <Form.Control value={data} onChange={(e) => setData(e.target.value)} size="sm" type="date" placeholder="Data de Lançamento" />
+                                            </Form.Group>
+                                        </Row>
+                                    </Col>
                                     <Row className="mb-3">
                                         <Form.Group as={Col} >
-                                            <Form.Label>Data de Lançamento</Form.Label>
-                                            <Form.Control value={data} onChange={(e) => setData(e.target.value)} size="sm" type="date" placeholder="Data de Lançamento" />
+                                            <Form.Label>Descrição</Form.Label>
+                                            <Form.Control value={descricao} maxLength={45} onChange={(e) => setDescricao(e.target.value)} size="sm" type="text" placeholder="Descrição" />
                                         </Form.Group>
                                     </Row>
-                                </Col>
-                                <Row className="mb-3">
-                                    <Form.Group as={Col} >
-                                        <Form.Label>Descrição</Form.Label>
-                                        <Form.Control value={descricao} maxLength={45} onChange={(e) => setDescricao(e.target.value)} size="sm" type="text" placeholder="Descrição" />
-                                    </Form.Group>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Form.Group as={Col} >
-                                        <Form.Label>Origem do Pagamento</Form.Label>
-                                        <Form.Select size="sm" aria-label="Default select example" onChange={(e) => fillbanco(e.target.value)}>
-                                            <option value="">Selecione...</option>
-                                            {
-                                                bancos.map(
-                                                    (e) => {
-                                                        return <option selected={banco == e.nome ? 'true' : ''} key={e.id} value={e.id}>{e.nome}</option>
-                                                    }
-                                                )
-                                            }
-                                        </Form.Select>
-                                    </Form.Group>
-                                    <Form.Group as={Col} >
-                                        <Form.Label>Centro de Custo</Form.Label>
-                                        <Form.Select size="sm" aria-label="Default select example" onChange={(e) => fillcusto(e.target.value)}>
-                                            <option value="">Selecione...</option>
-                                            {
-                                                custos.map(
-                                                    (e) => {
-                                                        return <option selected={custo == e.nome ? 'true' : ''} key={e.id} value={e.id}>{e.nome}</option>
-                                                    }
-                                                )
-                                            }
-                                        </Form.Select>
-                                    </Form.Group>
-                                    <Form.Group as={Col} >
-                                        <Form.Label>Categoria</Form.Label>
-                                        <Form.Control disabled value='Despesa' size="sm" type="text" placeholder="" />
-                                    </Form.Group>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Form.Group as={Col} >
-                                        <Form.Label>Pessoa ou Fornecedor</Form.Label>
-                                        <Select
-                                            className="basic-single"
-                                            classNamePrefix="select"
-                                            isDisabled={isDisabled}
-                                            isLoading={isLoading}
-                                            isClearable={isClearable}
-                                            isRtl={isRtl}
-                                            isSearchable={isSearchable}
-                                            defaultValue=''
-                                            name="name"
-                                            value={defaultfornecedor}
-                                            options={fornecedores}
-                                            onChange={handleChange}
+                                    <Row className="mb-3">
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Origem do Pagamento</Form.Label>
+                                            <Form.Select size="sm" aria-label="Default select example" onChange={(e) => fillbanco(e.target.value)}>
+                                                <option value="">Selecione...</option>
+                                                {
+                                                    bancos.map(
+                                                        (e) => {
+                                                            return <option selected={banco == e.nome ? 'true' : ''} key={e.id} value={e.id}>{e.nome}</option>
+                                                        }
+                                                    )
+                                                }
+                                            </Form.Select>
+                                        </Form.Group>
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Centro de Custo</Form.Label>
+                                            <Form.Select size="sm" aria-label="Default select example" onChange={(e) => fillcusto(e.target.value)}>
+                                                <option value="">Selecione...</option>
+                                                {
+                                                    custos.map(
+                                                        (e) => {
+                                                            return <option selected={custo == e.nome ? 'true' : ''} key={e.id} value={e.id}>{e.nome}</option>
+                                                        }
+                                                    )
+                                                }
+                                            </Form.Select>
+                                        </Form.Group>
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Categoria</Form.Label>
+                                            <Form.Control disabled value='Despesa' size="sm" type="text" placeholder="" />
+                                        </Form.Group>
+                                    </Row>
+                                    <Row className="mb-3">
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Pessoa ou Fornecedor</Form.Label>
+                                            <Select
+                                                className="basic-single"
+                                                classNamePrefix="select"
+                                                isDisabled={isDisabled}
+                                                isLoading={isLoading}
+                                                isClearable={isClearable}
+                                                isRtl={isRtl}
+                                                isSearchable={isSearchable}
+                                                defaultValue=''
+                                                name="name"
+                                                value={defaultfornecedor}
+                                                options={fornecedores}
+                                                onChange={handleChange}
 
-                                        />
-                                    </Form.Group>
-                                </Row>
-                                <Row className="mb-3">
-                                    <Form.Group as={Col} >
-                                        <Form.Label>Tipo de Despesa</Form.Label>
-                                        <Form.Select onChange={(e) => fillplano(e.target.value)} size="sm" aria-label="Default select example">
-                                            <option value="">Selecione...</option>
-                                            {
-                                                planos.map(
-                                                    (e) => {
-                                                        return <option selected={plano == e.nome ? 'true' : ''} key={e.id} value={e.id}>{e.nome}</option>
-                                                    }
-                                                )
-                                            }
-                                        </Form.Select>
-                                    </Form.Group>
-                                    <Form.Group as={Col} >
-                                        <Form.Label>Meio de Pagamento</Form.Label>
-                                        <Form.Select value={pagamento} onChange={(e) => setPagamento(e.target.value)} size="sm" aria-label="Default select example">
-                                            <option value="">Selecione...</option>
-                                            <option value="Dinheiro">Dinheiro</option>
-                                            <option value="PIX">PIX</option>
-                                            <option value="Débito">Débito</option>
-                                            <option value="Crédito">Crédito</option>
-                                            <option value="TED">TED</option>
-                                            <option value="DOC">DOC</option>
-                                            <option value="Depósito Bancário">Depósito Bancário</option>
-                                            <option value="Boleto">Boleto</option>
-                                            <option value="Cheque">Cheque</option>
-                                        </Form.Select>
-                                    </Form.Group>
-                                </Row>
-                                <Col xs lg="3">
-                                    <Row className="mb-3">
-                                        <Form.Group as={Col} >
-                                            <Form.Label>Valor</Form.Label>
-                                            <Form.Control value={valor} maxLength={22} onChange={(e) => mascaraMoeda(e.target.value)} size="sm" type="text" placeholder="R$0,00" />
+                                            />
                                         </Form.Group>
                                     </Row>
-                                </Col>
-                                {/* <Row className="mb-3">
+                                    <Row className="mb-3">
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Tipo de Despesa</Form.Label>
+                                            <Form.Select onChange={(e) => fillplano(e.target.value)} size="sm" aria-label="Default select example">
+                                                <option value="">Selecione...</option>
+                                                {
+                                                    planos.map(
+                                                        (e) => {
+                                                            return <option selected={plano == e.nome ? 'true' : ''} key={e.id} value={e.id}>{e.nome}</option>
+                                                        }
+                                                    )
+                                                }
+                                            </Form.Select>
+                                        </Form.Group>
+                                        <Form.Group as={Col} >
+                                            <Form.Label>Meio de Pagamento</Form.Label>
+                                            <Form.Select value={pagamento} onChange={(e) => setPagamento(e.target.value)} size="sm" aria-label="Default select example">
+                                                <option value="">Selecione...</option>
+                                                <option value="Dinheiro">Dinheiro</option>
+                                                <option value="PIX">PIX</option>
+                                                <option value="Débito">Débito</option>
+                                                <option value="Crédito">Crédito</option>
+                                                <option value="TED">TED</option>
+                                                <option value="DOC">DOC</option>
+                                                <option value="Depósito Bancário">Depósito Bancário</option>
+                                                <option value="Boleto">Boleto</option>
+                                                <option value="Cheque">Cheque</option>
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Row>
+                                    <Col xs lg="3">
+                                        <Row className="mb-3">
+                                            <Form.Group as={Col} >
+                                                <Form.Label>Valor</Form.Label>
+                                                <Form.Control value={valor} maxLength={22} onChange={(e) => mascaraMoeda(e.target.value)} size="sm" type="text" placeholder="R$0,00" />
+                                            </Form.Group>
+                                        </Row>
+                                    </Col>
+                                    {/* <Row className="mb-3">
                                     <Typography m='0 0 10px 0' variant="h5" fontWeight="600">
                                         Repetir Transação
                                     </Typography>
@@ -375,21 +386,21 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
                                         <Form.Control value={vezes} onChange={(e) => setVezes(e.target.value)} size="sm" type="number" placeholder="Número de vezes" />
                                     </Form.Group>
                                 </Row> */}
-                            </div>
-                        </Col>
-                    </Row>
-                </Box>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="outline-primary" size="sm" onClick={handleEdit}>
-                    Salvar Despesa
-                </Button>
-                <Button variant="outline-success" size="sm" onClick={handleClose}>
-                    Fechar
-                </Button>
-            </Modal.Footer>
-        </Modal>
-        : ''
+                                </div>
+                            </Col>
+                        </Row>
+                    </Box>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-primary" size="sm" onClick={handleEdit}>
+                        Salvar Despesa
+                    </Button>
+                    <Button variant="outline-success" size="sm" onClick={handleClose}>
+                        Fechar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            : ''
     )
 }
 

@@ -8,6 +8,7 @@ import axios from "axios";
 import Button from '@mui/material/Button';
 import Header from "../../components/Header";
 import ModificarMembro from "./modificarmembro";
+import { useNavigate } from "react-router-dom";
 
 const Membros = () => {
 
@@ -16,6 +17,7 @@ const Membros = () => {
   const [membro, setMembro] = useState(null);
   const [loading, setLoading] = useState(true);
   const [logado, setLogado] = useState(false);
+  const navigate = useNavigate()
 
   const validations = async () => {
     const token = localStorage.getItem("IBVC_token");
@@ -31,7 +33,7 @@ const Membros = () => {
           if (data.error === false) {
             setLogado(true);
             console.log('Logado')
-          }else{
+          } else {
             setLogado(false);
             window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
           }
@@ -47,32 +49,32 @@ const Membros = () => {
   const ChangeData = (data) => {
     let retorno = {};
     for (var linha of data) {
-      
-      if (linha.nascimento){
+
+      if (linha.nascimento) {
         const ano_aniversario = linha.nascimento.substr(0, 4);
         const mes_aniversario = linha.nascimento.substr(5, 2);
         const dia_aniversario = linha.nascimento.substr(8, 2);
         // const idade = idade(ano,mes,dia);
-        const CalcIdade = (ano_aniversario, mes_aniversario, dia_aniversario) =>{
+        const CalcIdade = (ano_aniversario, mes_aniversario, dia_aniversario) => {
           var d = new Date,
-              ano_atual = d.getFullYear(),
-              mes_atual = d.getMonth() + 1,
-              dia_atual = d.getDate(),
-      
-              ano_aniversario = +ano_aniversario,
-              mes_aniversario = +mes_aniversario,
-              dia_aniversario = +dia_aniversario,
-      
-              quantos_anos = ano_atual - ano_aniversario;
-      
+            ano_atual = d.getFullYear(),
+            mes_atual = d.getMonth() + 1,
+            dia_atual = d.getDate(),
+
+            ano_aniversario = +ano_aniversario,
+            mes_aniversario = +mes_aniversario,
+            dia_aniversario = +dia_aniversario,
+
+            quantos_anos = ano_atual - ano_aniversario;
+
           if (mes_atual < mes_aniversario || mes_atual == mes_aniversario && dia_atual < dia_aniversario) {
-              quantos_anos--;
+            quantos_anos--;
           }
-      
+
           return quantos_anos < 0 ? 0 : quantos_anos;
         }
 
-        const idade = CalcIdade(ano_aniversario,mes_aniversario,dia_aniversario);
+        const idade = CalcIdade(ano_aniversario, mes_aniversario, dia_aniversario);
 
         Object.defineProperty(linha, 'idade', {
           value: idade,
@@ -140,13 +142,47 @@ const Membros = () => {
   };
 
   const getMembros = async () => {
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembros`);
-      setMembros(ChangeData(res.data))
-      setLoading(false);
-    } catch (error) {
-      console.log('erro desconhecido');
-    }
+    const token = localStorage.getItem("IBVC_token");
+    const key = localStorage.getItem("IBVC_key");
+    
+    const config = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': token,
+          'Key': key
+      }
+  }
+
+    axios.get(`${process.env.REACT_APP_API_URL}getmembros`, config)
+      .then(({ data }) => {
+        if (data.error === false) {
+          setMembros(ChangeData(data.data))
+          setLoading(false);
+        } else {
+          toast.error(data.message)
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        if(error.response.status === 401){
+          window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+        }else{
+          navigate('/error');
+        }
+        // window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+      });
+    // const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembros`)
+    //   .then(({ data }) => {
+    //     if (data) {
+    //       setMembros(ChangeData(data))
+    //       setLoading(false);
+    //     } else {
+    //       window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+    //     }
+    //   }).catch(({ err }) => {
+    //     window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+    //   })
   }
 
   const theme = useTheme();
@@ -193,59 +229,59 @@ const Membros = () => {
 
   return (
     logado ?
-    <Box m="20px">
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="Relatório de Membros" subtitle="Relatório com todos os membros cadastrados" />
+      <Box m="20px">
+        <Box display="flex" justifyContent="space-between" alignItems="center">
+          <Header title="Relatório de Membros" subtitle="Relatório com todos os membros cadastrados" />
+        </Box>
+        <Box
+          m="8px 0 0 0"
+          width="100%"
+          height="80vh"
+          sx={{
+            "& .MuiDataGrid-root": {
+              border: "none",
+            },
+            "& .MuiDataGrid-cell": {
+              borderBottom: "none",
+            },
+            "& .name-column--cell": {
+              color: colors.greenAccent[300],
+            },
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: colors.blueAccent[700],
+              borderBottom: "none",
+            },
+            "& .MuiDataGrid-virtualScroller": {
+              backgroundColor: colors.primary[400],
+            },
+            "& .MuiDataGrid-footerContainer": {
+              borderTop: "none",
+              backgroundColor: colors.blueAccent[700],
+            },
+            "& .MuiCheckbox-root": {
+              color: `${colors.greenAccent[200]} !important`,
+            },
+            "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+              color: `${colors.grey[100]} !important`,
+            },
+          }}
+        >
+          <DataGrid
+            rows={membros}
+            columns={columns}
+            components={{ Toolbar: GridToolbar }}
+            getRowClassName={(params) =>
+              params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+            }
+            loading={loading}
+          />
+        </Box>
+        {show && (
+          <ModificarMembro show={show} setShow={setShow} membro={membro} setMembro={setMembro} getMembros={getMembros} />
+        )}
+        <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
       </Box>
-      <Box
-        m="8px 0 0 0"
-        width="100%"
-        height="80vh"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .name-column--cell": {
-            color: colors.greenAccent[300],
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: colors.primary[400],
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
-          },
-          "& .MuiCheckbox-root": {
-            color: `${colors.greenAccent[200]} !important`,
-          },
-          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]} !important`,
-          },
-        }}
-      >
-        <DataGrid
-          rows={membros}
-          columns={columns}
-          components={{ Toolbar: GridToolbar }}
-          getRowClassName={(params) =>
-            params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
-          }
-          loading={loading}
-        />
-      </Box>
-      {show && (
-        <ModificarMembro show={show} setShow={setShow} membro={membro} setMembro={setMembro} getMembros={getMembros} />
-      )}
-      <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
-    </Box>
-    : ''
+      : ''
   );
 };
 

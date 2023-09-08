@@ -50,51 +50,65 @@ const ConfirmarDespesa = ({ show6, setShow6, getTransacoes, onEdit, setOnEdit })
         setOnEdit(null)
     }
     const pago = async (e) => {
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
         await axios
             .put(`${process.env.REACT_APP_API_URL}changestatus/` + onEdit.id, {
-                status: status
+                status: status,
+                token,
+                key
             })
             .then(
                 ({ data }) => {
-                    if (data.code) {
-                        toast.error('Erro ao alterar registro no BD. Entre em contato com o administrador')
+                    if (data.error === true) {
+                        toast.error(data.message)
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
+                        setShow6(false);
+                        setOnEdit(null)
+                        getTransacoes();
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
-
-        setShow6(false);
-        setOnEdit(null)
-        getTransacoes();
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     }
     return (
         logado ?
-        <Modal size="xl" show={show6} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title id="example-modal-sizes-title-sm">
-                    Alterar status da Despesa?
-                </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Typography variant="h5" >
-                    Deseja realmente alterar o status da despesa para '{status}' ?
-                </Typography>
-                <Typography variant="h5" >
-                    Você pode alterar o status novamente a qualquer momento pelo mesmo botão.
-                </Typography>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" size="sm" onClick={handleClose} >
-                    Fechar
-                </Button>
-                <Button variant="danger" size="sm" onClick={() => pago()} >
-                    Lançamento {status}
-                </Button>
-            </Modal.Footer>
-        </Modal>
-         : ''
+            <Modal size="xl" show={show6} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-sm">
+                        Alterar status da Despesa?
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Typography variant="h5" >
+                        Deseja realmente alterar o status da despesa para '{status}' ?
+                    </Typography>
+                    <Typography variant="h5" >
+                        Você pode alterar o status novamente a qualquer momento pelo mesmo botão.
+                    </Typography>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" size="sm" onClick={handleClose} >
+                        Fechar
+                    </Button>
+                    <Button variant="danger" size="sm" onClick={() => pago()} >
+                        Lançamento {status}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            : ''
     )
 }
 

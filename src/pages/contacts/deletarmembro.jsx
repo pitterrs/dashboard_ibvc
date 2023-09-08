@@ -47,12 +47,40 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
         let totalmembrosinativos = 0;
         let qntmembrosatual = [];
         let qntmembrosatual2 = [];
+
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
         await axios
-            .delete(`${process.env.REACT_APP_API_URL}deletemembro/` + membro)
-            .then(({ data }) => {
-                toast.success(data);
+            .delete(`${process.env.REACT_APP_API_URL}deletemembro/` + membro, {
+                data: {
+                    token,
+                    key
+                }
             })
-            .catch(({ data }) => toast.error(data));
+            .then(({ data }) => {
+                if (data.error === true) {
+                    toast.error(data.message)
+                } else {
+                    toast.success(data.message)
+                    setConfirm(false);
+                    getMembros();
+                    setMembro(null);
+                    setShow(false);
+                }
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
 
         //Captura a quantidade de membros ativos atualmente
         try {
@@ -139,39 +167,34 @@ const DeleteMembro = ({ confirm, setConfirm, setShow, membro, setMembro, getMemb
                 }).then(({ data }) => console.log(data))
                 .catch(({ data }) => console.log(data));
         }
-
-        setConfirm(false);
-        getMembros();
-        setMembro(null);
-        setShow(false);
     };
 
     return (
         logado ?
-        <div>
-            <Modal
-                size="lg"
-                show={confirm}
-                onHide={handleClose}
-                aria-labelledby="example-modal-sizes-title-sm"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-sm">
-                        Deseja deletar o cadastro do membro?
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body><p>Esta ação não poderá ser desfeita uma vez confirmada. </p></Modal.Body>
-                <Modal.Footer>
-                    <Button variant="outline-secondary" size="sm" onClick={handleClose} >
-                        Fechar
-                    </Button>
-                    <Button variant="outline-danger" size="sm" onClick={() => deletar()} >
-                        Deletar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </div>
-        : ''
+            <div>
+                <Modal
+                    size="lg"
+                    show={confirm}
+                    onHide={handleClose}
+                    aria-labelledby="example-modal-sizes-title-sm"
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="example-modal-sizes-title-sm">
+                            Deseja deletar o cadastro do membro?
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body><p>Esta ação não poderá ser desfeita uma vez confirmada. </p></Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="outline-secondary" size="sm" onClick={handleClose} >
+                            Fechar
+                        </Button>
+                        <Button variant="outline-danger" size="sm" onClick={() => deletar()} >
+                            Deletar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+            : ''
     )
 }
 

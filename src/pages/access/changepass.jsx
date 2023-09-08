@@ -50,10 +50,15 @@ const ChangePass = ({ show4, setShow4, getUsers, user }) => {
 
         if (!senha) { return toast.warn("Preencha o campo 'Senha'"); }
 
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
         await axios
             .put(`${process.env.REACT_APP_API_URL}changpass`, {
                 id,
-                senha
+                senha,
+                token,
+                key
             })
             .then(
                 ({ data }) => {
@@ -66,7 +71,18 @@ const ChangePass = ({ show4, setShow4, getUsers, user }) => {
                     }
                 }
             )
-            .catch(({ data }) => toast.error('Ocorreu um erro ao tentar comutar as alterações, tente novamente mais tarde ou contate o administrador do sistema.'));
+            .catch(error =>{
+                if(error.response.status === 401){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if(error.response.status === 500){
+                    toast.error(error.response.data.message);
+                }
+                if(error.response.status === 403){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     }
 
     return (

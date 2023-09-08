@@ -12,6 +12,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./novomembro.css";
+import Image from 'react-bootstrap/Image';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -48,6 +49,8 @@ const Novomembro = () => {
     let totalmembrosinativos = 0;
     let qntmembrosatual2 = [];
     const [logado, setLogado] = useState(false);
+    const [imagem, setImagem] = useState();
+    const [imagembase64, setImagemBase64] = useState();
 
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
@@ -83,6 +86,9 @@ const Novomembro = () => {
 
     const handleCreate = async (e) => {
 
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
         if (!nome) { return toast.warn("Campo 'Nome' é obrigatório"); }
 
         await axios
@@ -105,14 +111,16 @@ const Novomembro = () => {
                 batismo: batismo,
                 chamado: chamado,
                 outrasinfos: outrasinfos,
-                data_casamento: data_casamento
+                data_casamento: data_casamento,
+                token,
+                key
             })
             .then(
                 ({ data }) => {
-                    if (data.code) {
+                    if (data.error === true) {
                         toast.error('Erro ao adicionar registro no BD. Entre em contato com o administrador')
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
                         setNome('')
                         setEmail('')
                         setCelular('')
@@ -135,7 +143,18 @@ const Novomembro = () => {
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
+            .catch(error =>{
+                if(error.response.status === 401){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if(error.response.status === 500){
+                    toast.error(error.response.data.message);
+                }
+                if(error.response.status === 403){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
 
         //Captura a quantidade de membros ativos atualmente
         try {
@@ -225,6 +244,19 @@ const Novomembro = () => {
 
     }
 
+    // const setImagemFunction = (data) => {
+    //     var lerArquivo = new FileReader();
+
+    //     lerArquivo.onload = function (imagem) {
+    //         const imagembase64_aux = imagem.target.result;
+    //         setImagemBase64(imagembase64_aux);
+    //         setImagem(imagembase64_aux);
+    //     }
+
+    //     lerArquivo.readAsDataURL(data);
+
+    // }
+
     return (
         logado ?
             // <React.Fragment>
@@ -234,6 +266,17 @@ const Novomembro = () => {
                     <Col lg="5">
                         <div className="fundo">
                             <h4>Informações Pessoais</h4>
+                            {/* <Row className="mb-1">
+                                <Form.Group controlId="formFileSm" className="mb-3">
+                                    <Form.Label>Selecionar uma foto:</Form.Label>
+                                    <Form.Control type="file" size="sm" onChange={(e) => setImagemFunction(e.target.files[0])} />
+                                </Form.Group>
+                            </Row> */}
+                            {/* <Row className="mb-3">
+                                <Col xs={6} md={4}>
+                                    <Image className="imagem" src={imagembase64} rounded />
+                                </Col>
+                            </Row> */}
                             <Row className="mb-3">
                                 <Form.Group as={Col} >
                                     <Form.Label>Nome</Form.Label>

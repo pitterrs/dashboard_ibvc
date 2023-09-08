@@ -67,11 +67,42 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
     }
 
     const getMembrosEquipe = async () => {
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembrosequipe/` + equipe.id_equipe);
-            setMembrosEquipe(res.data);
-            setLoading(false)
-        } catch { }
+
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': token,
+                'Key': key
+            }
+        }
+
+        await axios.get(`${process.env.REACT_APP_API_URL}getmembrosequipe/` + equipe.id_equipe, config)
+            .then(({ data }) => {
+                if (data.error === false) {
+                    setMembrosEquipe(data.data);
+                    setLoading(false)
+                } else {
+                    toast.error(data.message);
+                    setLoading(false);
+                }
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                    setLoading(false);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     }
 
     useEffect(() => {
@@ -164,7 +195,7 @@ const ViewEquipe = ({ show4, setShow4, equipe, setEquipe, getEquipes }) => {
                             rowsPerPageOptions={[5, 10, 20]}
                             getRowClassName={(params) =>
                                 params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
-                              }
+                            }
                             loading={loading}
                         // getCellClassName={(params) => {
                         //   if (params.field === 'valor' && params.row.categoria == 'Receita') {

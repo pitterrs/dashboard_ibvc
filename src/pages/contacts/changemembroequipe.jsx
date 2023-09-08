@@ -52,31 +52,31 @@ const ChangeMembroEquipe = ({ show3, setShow3, membro, getMembrosEquipe }) => {
             });
     }
 
-    const getMembros = async () => {
+    // const getMembros = async () => {
 
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembros`);
-            setMembros(changeData(res.data))
-        } catch (error) {
-            console.log('erro desconhecido');
-        }
+    //     try {
+    //         const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembros`);
+    //         setMembros(changeData(res.data))
+    //     } catch (error) {
+    //         window.location.replace(`${process.env.REACT_APP_SITE_URL}error`)
+    //     }
 
-    }
+    // }
 
-    const changeData = (data) => {
-        for (var linha of data) {
-            Object.defineProperty(linha, 'label', {
-                value: linha.nome,
-            })
-        }
-        return (
-            data
-        )
-    };
+    // const changeData = (data) => {
+    //     for (var linha of data) {
+    //         Object.defineProperty(linha, 'label', {
+    //             value: linha.nome,
+    //         })
+    //     }
+    //     return (
+    //         data
+    //     )
+    // };
 
     useEffect(() => {
         validations();
-        getMembros();
+        // getMembros();
     }, [setMembros]);
 
     const handleClose = () => {
@@ -87,22 +87,39 @@ const ChangeMembroEquipe = ({ show3, setShow3, membro, getMembrosEquipe }) => {
 
         if (!nome_membro) { return toast.warn("Preencha o campo 'Nome'"); }
 
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
         await axios
             .put(`${process.env.REACT_APP_API_URL}changemembroequipe/` + membro.id_membro, {
                 funcao: funcao,
+                token,
+                key
             })
             .then(
                 ({ data }) => {
-                    if (data.code) {
-                        toast.error('Erro ao adicionar registro no BD. Entre em contato com o administrador')
+                    if (data.error === true) {
+                        toast.error(data.message)
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
+                        setShow3(false);
+                        getMembrosEquipe();
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
-        setShow3(false);
-        getMembrosEquipe();
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
+
 
     }
 
@@ -119,44 +136,44 @@ const ChangeMembroEquipe = ({ show3, setShow3, membro, getMembrosEquipe }) => {
 
     return (
         logado ?
-        <Modal size="xl" show={show3} onHide={handleClose}>
-            <Modal.Body >
-                <Box m="20px" >
-                    <Header title="Criar Equipe" subtitle="Você está uma nova Equipe." />
-                    <Row>
-                        <Col xs lg="9">
-                            <div className='fundo'>
-                                <Row className="mb-3">
-                                    <Col xs lg="6">
-                                        <Form.Group as={Col} >
-                                            <Form.Label>Nome da Equipe</Form.Label>
-                                            <Form.Control disabled='true' maxLength='45' value={nome_membro} size="sm" type="text" placeholder="Nome" />
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                                <Col xs lg="3">
+            <Modal size="xl" show={show3} onHide={handleClose}>
+                <Modal.Body >
+                    <Box m="20px" >
+                        <Header title="Criar Equipe" subtitle="Você está uma nova Equipe." />
+                        <Row>
+                            <Col xs lg="9">
+                                <div className='fundo'>
                                     <Row className="mb-3">
-                                        <Form.Group as={Col} >
-                                            <Form.Label>Função</Form.Label>
-                                            <Form.Control maxLength='20' value={funcao} onChange={(e) => setFuncao(e.target.value)} size="sm" type="text" placeholder="Função" />
-                                        </Form.Group>
+                                        <Col xs lg="6">
+                                            <Form.Group as={Col} >
+                                                <Form.Label>Nome da Equipe</Form.Label>
+                                                <Form.Control disabled='true' maxLength='45' value={nome_membro} size="sm" type="text" placeholder="Nome" />
+                                            </Form.Group>
+                                        </Col>
                                     </Row>
-                                </Col>
-                            </div>
-                        </Col>
-                    </Row>
-                </Box>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="outline-primary" size="sm" onClick={handleCreate}>
-                    Salvar Alterações
-                </Button>
-                <Button variant="outline-success" size="sm" onClick={handleClose}>
-                    Fechar
-                </Button>
-            </Modal.Footer>
-        </Modal>
-        : ''
+                                    <Col xs lg="3">
+                                        <Row className="mb-3">
+                                            <Form.Group as={Col} >
+                                                <Form.Label>Função</Form.Label>
+                                                <Form.Control maxLength='20' value={funcao} onChange={(e) => setFuncao(e.target.value)} size="sm" type="text" placeholder="Função" />
+                                            </Form.Group>
+                                        </Row>
+                                    </Col>
+                                </div>
+                            </Col>
+                        </Row>
+                    </Box>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="outline-primary" size="sm" onClick={handleCreate}>
+                        Salvar Alterações
+                    </Button>
+                    <Button variant="outline-success" size="sm" onClick={handleClose}>
+                        Fechar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+            : ''
     )
 }
 

@@ -47,6 +47,8 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
     const deletar = async (e) => {
 
         let conta = [];
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
 
         try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}checkconta/` + onEdit.id);
@@ -58,44 +60,63 @@ const DeleteConta = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, getConta
         if (conta[0].valor != null) { return toast.error("Conta Bancária possui lançamentos ou programações e não pode ser deletada."); }
 
         await axios
-            .delete(`${process.env.REACT_APP_API_URL}deleteconta/` + onEdit.id)
-            .then(({ data }) => {
-                toast.success(data);
+            .delete(`${process.env.REACT_APP_API_URL}deleteconta/` + onEdit.id, {
+                data: {
+                    token,
+                    key
+                }
             })
-            .catch(({ data }) => toast.error(data));
-
-        setConfirm(false);
-        getContas();
-        setOnEdit(null);
-        setShow(false);
+            .then(({ data }) => {
+                if (data.error === true) {
+                    toast.error(data.message)
+                } else {
+                    toast.success(data.message)
+                    setConfirm(false);
+                    getContas();
+                    setOnEdit(null);
+                    setShow(false);
+                }
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     };
 
     return (
         logado ?
-        <div>
-            <Modal
-                size="lg"
-                show={confirm}
-                onHide={handleClose}
-                aria-labelledby="example-modal-sizes-title-sm"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-sm">
-                        Deseja deletar o cadastro da Conta Bancária?
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body><p>Esta ação não poderá ser desfeita uma vez confirmada. </p></Modal.Body>
-                <Modal.Footer>
-                    <Button variant="outline-secondary" size="sm" onClick={handleClose} >
-                        Fechar
-                    </Button>
-                    <Button variant="outline-danger" size="sm" onClick={() => deletar()} >
-                        Deletar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </div>
-        : ''
+            <div>
+                <Modal
+                    size="lg"
+                    show={confirm}
+                    onHide={handleClose}
+                    aria-labelledby="example-modal-sizes-title-sm"
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="example-modal-sizes-title-sm">
+                            Deseja deletar o cadastro da Conta Bancária?
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body><p>Esta ação não poderá ser desfeita uma vez confirmada. </p></Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="outline-secondary" size="sm" onClick={handleClose} >
+                            Fechar
+                        </Button>
+                        <Button variant="outline-danger" size="sm" onClick={() => deletar()} >
+                            Deletar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+            : ''
     )
 }
 

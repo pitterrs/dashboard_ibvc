@@ -62,11 +62,34 @@ const Casamento = () => {
   const getMembros = async () => {
     let aniversario_atual = [];
     let aniversariantes_aux = [];
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_API_URL}getmembros`);
-      setMembros(res.data);
-      aniversariantes_aux = res.data;
-    } catch { }
+    const token = localStorage.getItem("IBVC_token");
+    const key = localStorage.getItem("IBVC_key");
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': token,
+        'Key': key
+      }
+    }
+
+    await axios.get(`${process.env.REACT_APP_API_URL}getmembros`, config)
+      .then(({ data }) => {
+        if (data.error === false) {
+          setMembros(data.data);
+          aniversariantes_aux = data.data;
+        } else {
+          toast.error(data.message)
+        }
+      })
+      .catch(error => {
+        if (error.response.status === 401) {
+          window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+        } else {
+          window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+        }
+      });
 
     const newDate = new Date();
     const month = newDate.getUTCMonth() + 1;

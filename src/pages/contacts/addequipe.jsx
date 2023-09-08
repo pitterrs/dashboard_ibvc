@@ -46,6 +46,10 @@ const AddEquipe = ({ show, setShow, getEquipes }) => {
         setShow(false);
     }
     const handleCreate = async () => {
+
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
+
         let new_id_equipe = 0;
         if (!nome) { return toast.warn("Preencha o campo 'Nome'"); }
 
@@ -54,27 +58,39 @@ const AddEquipe = ({ show, setShow, getEquipes }) => {
             new_id_equipe = res.data[0].id_equipe ? res.data[0].id_equipe : 0;
             new_id_equipe = new_id_equipe + 1;
         } catch (error) {
-            console.log('erro desconhecido');
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`)
         }
 
         await axios
             .post(`${process.env.REACT_APP_API_URL}addequipe`, {
                 nome: nome,
-                id_equipe: new_id_equipe
+                id_equipe: new_id_equipe,
+                token,
+                key
             })
             .then(
                 ({ data }) => {
-                    if (data.code) {
+                    if (data.error === true) {
                         toast.error('Erro ao adicionar registro no BD. Entre em contato com o administrador')
                     } else {
-                        toast.success(data)
+                        toast.success(data.message)
+                        setShow(false);
+                        getEquipes();
                     }
                 }
             )
-            .catch(({ data }) => toast.error(data));
-        setShow(false);
-        getEquipes();
-
+            .catch(error =>{
+                if(error.response.status === 401){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if(error.response.status === 500){
+                    toast.error(error.response.data.message);
+                }
+                if(error.response.status === 403){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+            });
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
     }
 
     return (

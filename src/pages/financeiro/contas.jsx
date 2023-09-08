@@ -78,7 +78,7 @@ const Contas = () => {
             setContas(contas_aux)
             // setContas(res.data)
         } catch {
-            console.log('erro desconhecido');
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`)
         }
     }
     useEffect(() => {

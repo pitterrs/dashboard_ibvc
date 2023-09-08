@@ -44,44 +44,66 @@ const DeleteMembroEquipe = ({ show5, setShow5, membro, setMembro, getMembrosEqui
 
     const deletar = async (e) => {
 
-        await axios
-            .delete(`${process.env.REACT_APP_API_URL}deletemembroequipe/` + membro.id_membro)
-            .then(({ data }) => {
-                toast.success(data);
-            })
-            .catch(({ data }) => toast.error(data));
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
 
-        setShow5(false);
-        getMembrosEquipe();
-        setMembro(null);
+        await axios
+            .delete(`${process.env.REACT_APP_API_URL}deletemembroequipe/` + membro.id_membro, {
+                data: {
+                    token,
+                    key
+                }
+            })
+            .then(({ data }) => {
+                if (data.error === true) {
+                    toast.error(data.message)
+                } else {
+                    toast.success(data.message)
+                    setShow5(false);
+                    getMembrosEquipe();
+                    setMembro(null);
+                }
+            })
+            .catch(error => {
+                if (error.response.status === 401) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if (error.response.status === 500) {
+                    toast.error(error.response.data.message);
+                }
+                if (error.response.status === 403) {
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     };
 
     return (
         logado ?
-        <div>
-            <Modal
-                size="lg"
-                show={show5}
-                onHide={handleClose}
-                aria-labelledby="example-modal-sizes-title-sm"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-sm">
-                        Deseja remover o membro da equipe?
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body><p>Esta ação não poderá ser desfeita uma vez confirmada. </p></Modal.Body>
-                <Modal.Footer>
-                    <Button variant="outline-secondary" size="sm" onClick={handleClose} >
-                        Fechar
-                    </Button>
-                    <Button variant="outline-danger" size="sm" onClick={() => deletar()} >
-                        Deletar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </div>
-        : ''
+            <div>
+                <Modal
+                    size="lg"
+                    show={show5}
+                    onHide={handleClose}
+                    aria-labelledby="example-modal-sizes-title-sm"
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="example-modal-sizes-title-sm">
+                            Deseja remover o membro da equipe?
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body><p>Esta ação não poderá ser desfeita uma vez confirmada. </p></Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="outline-secondary" size="sm" onClick={handleClose} >
+                            Fechar
+                        </Button>
+                        <Button variant="outline-danger" size="sm" onClick={() => deletar()} >
+                            Deletar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+            : ''
     )
 }
 

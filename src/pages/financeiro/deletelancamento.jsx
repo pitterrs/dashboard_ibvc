@@ -46,45 +46,68 @@ const DeleteLancamento = ({ confirm, setConfirm, setShow, onEdit, setOnEdit, get
 
     const deletar = async (e) => {
 
-        await axios
-            .delete(`${process.env.REACT_APP_API_URL}deleteplano/` + onEdit.id)
-            .then(({ data }) => {
-                toast.success(data);
-            })
-            .catch(({ data }) => toast.error(data));
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
 
-        setConfirm(false);
-        getLancamentos();
-        setOnEdit(null);
-        setShow(false);
+        
+        await axios
+            .delete(`${process.env.REACT_APP_API_URL}deleteplano/` + onEdit.id, {
+                data: {
+                    token,
+                    key
+                }
+            })
+            .then(({ data }) => {
+                if (data.error === true) {
+                    toast.error(data.message)
+                } else {
+                    toast.success(data.message)
+                    setConfirm(false);
+                    getLancamentos();
+                    setOnEdit(null);
+                    setShow(false);
+                }
+            })
+            .catch(error => {
+                if(error.response.status === 401){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if(error.response.status === 500){
+                    toast.error(error.response.data.message);
+                }
+                if(error.response.status === 403){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     };
 
     return (
         logado ?
-        <div>
-            <Modal
-                size="lg"
-                show={confirm}
-                onHide={handleClose}
-                aria-labelledby="example-modal-sizes-title-sm"
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title id="example-modal-sizes-title-sm">
-                        Deseja deletar o cadastro do Plano de Contas?
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body><p>Esta ação não poderá ser desfeita uma vez confirmada. </p></Modal.Body>
-                <Modal.Footer>
-                    <Button variant="outline-secondary" size="sm" onClick={handleClose} >
-                        Fechar
-                    </Button>
-                    <Button variant="outline-danger" size="sm" onClick={() => deletar()} >
-                        Deletar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-        </div>
-        : ''
+            <div>
+                <Modal
+                    size="lg"
+                    show={confirm}
+                    onHide={handleClose}
+                    aria-labelledby="example-modal-sizes-title-sm"
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="example-modal-sizes-title-sm">
+                            Deseja deletar o cadastro do Plano de Contas?
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body><p>Esta ação não poderá ser desfeita uma vez confirmada. </p></Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="outline-secondary" size="sm" onClick={handleClose} >
+                            Fechar
+                        </Button>
+                        <Button variant="outline-danger" size="sm" onClick={() => deletar()} >
+                            Deletar
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </div>
+            : ''
     )
 }
 

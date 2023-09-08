@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import axios from "axios";
 import Header from "../../components/Header";
 import { Box } from "@mui/material";
-import DeleteMembro from './deletarmembro';
 import "./novomembro.css";
 
 const ViewMembro = ({ show2, setShow2, membro, setMembro }) => {

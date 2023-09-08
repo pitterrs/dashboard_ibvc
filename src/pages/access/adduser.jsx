@@ -33,7 +33,7 @@ const AddUser = ({ show, setShow, getUsers }) => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                        data.admin === 'true' && data.super === 'true' ?
+                        data.super === 'true' ?
                             console.log('Logado')
                             : navigate('/unauthorized')
                     } else {
@@ -60,21 +60,25 @@ const AddUser = ({ show, setShow, getUsers }) => {
         if (!email) { return toast.warn("Preencha o campo 'Email'"); }
         if (!senha) { return toast.warn("Preencha o campo 'Senha'"); }
 
-        const key = createKey(25);
+        const chave = createKey(25);
+        const token = localStorage.getItem("IBVC_token");
+        const key = localStorage.getItem("IBVC_key");
 
         await axios
             .post(`${process.env.REACT_APP_API_URL}adduser`, {
                 nome,
                 email,
                 senha,
-                key,
+                chave,
                 admin,
                 super: superAdmin,
                 changemembros,
                 viewequipes,
                 createequipes,
                 viewfinancas,
-                createfinancas
+                createfinancas,
+                token,
+                key
             })
             .then(
                 ({ data }) => {
@@ -87,7 +91,18 @@ const AddUser = ({ show, setShow, getUsers }) => {
                     }
                 }
             )
-            .catch(({ data }) => toast.error('Ocorreu um erro na conexão, favor entre em contato com o administrador do sistema ou tenta novamente mais tarde.'));
+            .catch(error =>{
+                if(error.response.status === 401){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
+                }
+                if(error.response.status === 500){
+                    toast.error(error.response.data.message);
+                }
+                if(error.response.status === 403){
+                    window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
+                }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
+            });
     }
 
     function createKey(tamanho) {

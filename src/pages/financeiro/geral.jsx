@@ -87,7 +87,7 @@ const VisaoGeral = () => {
             setContas(contas_aux)
             setSaldoTotal(total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
         } catch {
-            console.log('erro desconhecido');
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`)
         }
     }
 
@@ -100,7 +100,7 @@ const VisaoGeral = () => {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}getrecebimentos/` + date);
             setRecebimentos(res.data[0].valor == null ? 'R$0,00' : res.data[0].valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
         } catch {
-            console.log('erro desconhecido');
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`)
         }
     }
 
@@ -113,7 +113,7 @@ const VisaoGeral = () => {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}getpagamentos/` + date);
             setPagamentos(res.data[0].valor == null ? 'R$0,00' : res.data[0].valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }));
         } catch {
-            console.log('erro desconhecido');
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`)
         }
     }
 
@@ -125,7 +125,7 @@ const VisaoGeral = () => {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}getlastlancamentos/` + init + '/' + end);
             setRows(ChangeData(res.data));
         } catch {
-            console.log('erro desconhecido');
+            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`)
         }
     }
 
