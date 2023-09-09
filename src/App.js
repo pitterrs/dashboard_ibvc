@@ -25,6 +25,7 @@ import Login from "./pages/login/login";
 import Unauthorized from "./pages/unauthorized/unauthorized";
 import Access from "./pages/access/access";
 import ErrorPage from "./pages/error/error";
+import Error404 from "./pages/error/error404";
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -40,6 +41,7 @@ const App = () => {
                   <Route path="/login" element={<Login />} />
                   <Route path="/unauthorized" element={<Unauthorized />} />
                   <Route path="/error" element={<ErrorPage />} />
+                  <Route path="*" element={<Error404 />} />
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/membros" element={<Membros />} />
                   <Route path="/novomembro" element={<Novomembro />} />

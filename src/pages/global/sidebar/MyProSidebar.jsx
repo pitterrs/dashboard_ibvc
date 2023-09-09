@@ -12,16 +12,21 @@ import ContactsOutlinedIcon from "@mui/icons-material/ContactsOutlined";
 import Woman2OutlinedIcon from '@mui/icons-material/Woman2Outlined';
 import BarChartOutlinedIcon from "@mui/icons-material/BarChartOutlined";
 import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
-import Diversity3OutlinedIcon from '@mui/icons-material/Diversity3Outlined';
-import CurrencyExchangeOutlinedIcon from '@mui/icons-material/CurrencyExchangeOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { toast } from "react-toastify";
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
-import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import SwitchRightOutlinedIcon from "@mui/icons-material/SwitchRightOutlined";
 import SwitchLeftOutlinedIcon from "@mui/icons-material/SwitchLeftOutlined";
+import Groups3SharpIcon from '@mui/icons-material/Groups3Sharp';
+import GroupAddSharpIcon from '@mui/icons-material/GroupAddSharp';
+import CakeIcon from '@mui/icons-material/Cake';
+import WcIcon from '@mui/icons-material/Wc';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
+import Groups2Icon from '@mui/icons-material/Groups2';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 import "./style.css"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -50,6 +55,8 @@ const MyProSidebar = () => {
   const { sidebarRTL, setSidebarRTL, sidebarImage } = useSidebarContext();
   const { collapseSidebar, toggleSidebar, collapsed, broken } = useProSidebar();
   const [logado, setLogado] = useState(false);
+  const UserName = localStorage.getItem("IBVC_userName");
+  const foto = localStorage.getItem("IBVC_foto");
   const validation = async () => {
 
     const token = localStorage.getItem("IBVC_token");
@@ -176,7 +183,8 @@ const MyProSidebar = () => {
                     alt="profile user"
                     width="100px"
                     height="100px"
-                    src={"../../assets/user.png"}
+                    src={`../../assets/${foto}`}
+                    // src={`../../assets/user.png`}
                     style={{ cursor: "pointer", borderRadius: "50%" }}
                   />
                 </Box>
@@ -187,7 +195,7 @@ const MyProSidebar = () => {
                     fontWeight="bold"
                     sx={{ m: "10px 0 0 0" }}
                   >
-                    Pitter Rezende
+                    {UserName}
                   </Typography>
                 </Box>
               </Box>
@@ -208,49 +216,34 @@ const MyProSidebar = () => {
               >
                 Secretaria
               </Typography>
-              {/* <Item
-              title="Manage Team"
-              to="/team"
-              icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            /> */}
               <Item
                 title="Relatório de Membros"
                 to="/membros"
-                icon={<ContactsOutlinedIcon />}
+                icon={<Groups3SharpIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />
               <Item
                 title="Cadastrar Membro"
                 to="/novomembro"
-                icon={<ContactsOutlinedIcon />}
+                icon={<GroupAddSharpIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />
               <Item
                 title="Aniversariantes"
                 to="/aniversario"
-                icon={<ContactsOutlinedIcon />}
+                icon={<CakeIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />
               <Item
                 title="Aniversário de Casamento"
                 to="/casamento"
-                icon={<ContactsOutlinedIcon />}
+                icon={<WcIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />
-              {/* <Item
-              title="Invoices Balances"
-              to="/invoices"
-              icon={<ReceiptOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            /> */}
-
               <Typography
                 variant="h6"
                 color={colors.grey[300]}
@@ -263,10 +256,10 @@ const MyProSidebar = () => {
                 to="/equipes"
                 selected={selected}
                 setSelected={setSelected}
-                icon={<ContactsOutlinedIcon />}
+                icon={<Diversity3Icon />}
               />
               {/* Inicio Sub Menu */}
-              <SubMenu component={<Link className="link texto-menu" />} icon={<Woman2OutlinedIcon className="tamanho" />} label="Mensageiras do Rei" >
+              <SubMenu component={<Link className="link texto-menu" />} icon={<Groups2Icon className="tamanho" />} label="Mensageiras do Rei" >
                 <MenuItem>
                   <Item
                     title="Gerenciar Membros"
@@ -301,7 +294,7 @@ const MyProSidebar = () => {
               <Item
                 title="Transações"
                 to="/transacoes"
-                icon={<PieChartOutlineOutlinedIcon />}
+                icon={<LocalAtmIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />
@@ -344,7 +337,7 @@ const MyProSidebar = () => {
               <Item
                 title="Gerenciar Acessos"
                 to="/access"
-                icon={<TimelineOutlinedIcon />}
+                icon={<LockOpenIcon />}
                 selected={selected}
                 setSelected={setSelected}
               />

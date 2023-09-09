@@ -60,6 +60,7 @@ const Login = () => {
                         localStorage.setItem("IBVC_email", data.email);
                         localStorage.setItem("IBVC_key", data.key);
                         localStorage.setItem("IBVC_token", data.token);
+                        localStorage.setItem("IBVC_foto", data.foto);
                         setMessage();
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}`);
                     }
