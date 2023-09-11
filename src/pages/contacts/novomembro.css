@@ -38,3 +38,9 @@
     width: 200px;
     height: 200px;
 }
+
+.nome-link{
+    text-decoration: none !important;
+    color: #FFF !important;
+    cursor: pointer;
+}

@@ -9,11 +9,13 @@ import Button from '@mui/material/Button';
 import Header from "../../components/Header";
 import ModificarMembro from "./modificarmembro";
 import { useNavigate } from "react-router-dom";
+import ShowMembro from "./showmembro";
 
 const Membros = () => {
 
   const [membros, setMembros] = useState([]);
   const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(false);
   const [membro, setMembro] = useState(null);
   const [loading, setLoading] = useState(true);
   const [logado, setLogado] = useState(false);
@@ -227,6 +229,8 @@ const Membros = () => {
     getMembros();
   }, [setMembros]);
 
+  
+  
   return (
     logado ?
       <Box m="20px">
@@ -266,6 +270,7 @@ const Membros = () => {
             },
           }}
         >
+          
           <DataGrid
             rows={membros}
             columns={columns}
@@ -274,10 +279,17 @@ const Membros = () => {
               params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
             }
             loading={loading}
+            onRowDoubleClick={(param) => {
+              setMembro(param.row)
+              setShow2(true)
+            }}
           />
         </Box>
         {show && (
           <ModificarMembro show={show} setShow={setShow} membro={membro} setMembro={setMembro} getMembros={getMembros} />
+        )}
+        {show2 && (
+          <ShowMembro show2={show2} setShow2={setShow2} membro={membro} setMembro={setMembro} getMembros={getMembros} />
         )}
         <ToastContainer autoClose={3000} position={toast.POSITION.BOTTOM_RIGHT} />
       </Box>

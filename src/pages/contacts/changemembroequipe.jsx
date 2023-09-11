@@ -151,12 +151,40 @@ const ChangeMembroEquipe = ({ show3, setShow3, membro, getMembrosEquipe }) => {
                                             </Form.Group>
                                         </Col>
                                     </Row>
-                                    <Col xs lg="3">
+                                    <Col xs lg="4">
                                         <Row className="mb-3">
-                                            <Form.Group as={Col} >
-                                                <Form.Label>Função</Form.Label>
-                                                <Form.Control maxLength='20' value={funcao} onChange={(e) => setFuncao(e.target.value)} size="sm" type="text" placeholder="Função" />
-                                            </Form.Group>
+                                            <Form.Label>Função</Form.Label>
+                                            {['radio'].map((type) => (
+                                                <div key={`inline-${type}`} className="mb-3" onChange={(e) => setFuncao(e.target.value)}>
+                                                    <Form.Check
+                                                        inline
+                                                        label="Líder"
+                                                        name="funcao"
+                                                        type={type}
+                                                        id="Lider"
+                                                        value='Líder'
+                                                        checked={funcao == 'Líder' ? 'True' : ''}
+                                                    />
+                                                    <Form.Check
+                                                        inline
+                                                        label="Relator"
+                                                        name="funcao"
+                                                        type={type}
+                                                        id="Relator"
+                                                        value='Relator'
+                                                        checked={funcao == 'Relator' ? 'True' : ''}
+                                                    />
+                                                    <Form.Check
+                                                        inline
+                                                        label="Membro"
+                                                        name="funcao"
+                                                        type={type}
+                                                        id="Membro"
+                                                        value='Membro'
+                                                        checked={funcao == 'Membro' ? 'True' : ''}
+                                                    />
+                                                </div>
+                                            ))}
                                         </Row>
                                     </Col>
                                 </div>

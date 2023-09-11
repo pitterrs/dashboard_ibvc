@@ -270,22 +270,7 @@ const Dashboard = () => {
         alignItems={smScreen ? "center" : "start"}
         m="10px 0"
       >
-        <Header title="Bem-Vindo" subtitle="" />
-
-        <Box>
-          <Button
-            sx={{
-              backgroundColor: colors.blueAccent[700],
-              color: colors.grey[100],
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "10px 20px",
-            }}
-          >
-            <DownloadOutlinedIcon sx={{ mr: "10px" }} />
-            Download Reports
-          </Button>
-        </Box>
+        <Header title="Bem-Vindo" subtitle="Sistema de administração IBVC" />
       </Box>
 
       {/* GRID & CHARTS */}
@@ -413,20 +398,13 @@ const Dashboard = () => {
                     Ativos/Inativos
                   </Typography>
                 </Box>
-                <Box>
-                  <IconButton>
-                    <DownloadOutlinedIcon
-                      sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                    />
-                  </IconButton>
-                </Box>
               </Box>
               <Box height="250px" m="-20px 0 0 0">
                 <LineChart isDashboard={true} />
               </Box>
             </Box>
           </Grid>
-          <Grid xs={12} sm={12} md={6}>
+          {/* <Grid xs={12} sm={12} md={6}>
             <Box backgroundColor={colors.primary[400]} p="30px">
               <Typography variant="h5" fontWeight="600">
                 Campaign
@@ -478,9 +456,9 @@ const Dashboard = () => {
                 <GeographyChart isDashboard={true} />
               </Box>
             </Box>
-          </Grid>
+          </Grid> */}
         </Grid>
-        <Grid xs={12} sm={12} md={4} lg={4} xl={4}>
+        {/* <Grid xs={12} sm={12} md={4} lg={4} xl={4}>
           <Box
             backgroundColor={colors.primary[400]}
             maxHeight="100vh"
@@ -537,7 +515,7 @@ const Dashboard = () => {
               );
             })}
           </Box>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
     : 

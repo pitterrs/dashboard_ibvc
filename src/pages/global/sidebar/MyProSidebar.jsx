@@ -154,7 +154,7 @@ const MyProSidebar = () => {
                   ml="15px"
                 >
                   <Typography variant="h3" color={colors.grey[100]}>
-                    ADMINIS
+                    IBVC
                   </Typography>
                   <IconButton
                     onClick={

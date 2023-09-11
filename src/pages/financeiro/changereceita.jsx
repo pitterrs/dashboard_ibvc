@@ -127,15 +127,13 @@ const ChangeReceita = ({ show3, setShow3, getTransacoes, onEdit, setOnEdit }) =>
     }
     const handleEdit = async () => {
 
-        // if (!data) { return toast.warn("Preencha o campo 'Nome'"); }
-        // if (!descricao) { return toast.warn("Preencha o campo 'Cargo'"); }
-        // if (!banco || banco == 'Selecione...') { return toast.warn("Preencha o campo 'Cargo'"); }
-        // if (!data) { return toast.warn("Preencha o campo 'Cargo'"); }
-        // if (!data) { return toast.warn("Preencha o campo 'Cargo'"); }
-        // if (!data) { return toast.warn("Preencha o campo 'Cargo'"); }
-        // if (!data) { return toast.warn("Preencha o campo 'Cargo'"); }
-        // if (!data) { return toast.warn("Preencha o campo 'Cargo'"); }
-        // if (!data) { return toast.warn("Preencha o campo 'Cargo'"); }
+        if (!data) { return toast.warn("Preencha o campo 'Data de Lançamento'"); }
+        if (!descricao) { return toast.warn("Preencha o campo 'Descrição'"); }
+        if (!banco) { return toast.warn("Selecione a Origem do Recebimento"); }
+        if (!fornecedor) { return toast.warn("Selecione a Pessoa ou Fornecedor"); }
+        if (!plano) { return toast.warn("Selecione o Tipo da Receita"); }
+        if (!pagamento) { return toast.warn("Selecione o Meio de Pagamento"); }
+        if (!valor || valor === 0) { return toast.warn("Digite um valor valido"); }
 
         let valornovo = valor;
         valornovo = valornovo.replace('R$', '');

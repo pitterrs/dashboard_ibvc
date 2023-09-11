@@ -126,8 +126,14 @@ const AddDespesa = ({ show2, setShow2, getTransacoes }) => {
         let lastidr = '';
         let datas = [];
         let dataatual = '';
-        // if (!data) { return toast.warn("Preencha o campo 'Nome'"); }
-        // if (!descricao) { return toast.warn("Preencha o campo 'Cargo'"); }
+
+        if (!data) { return toast.warn("Preencha o campo 'Data de Lançamento'"); }
+        if (!descricao) { return toast.warn("Preencha o campo 'Descrição'"); }
+        if (!banco) { return toast.warn("Selecione a Origem do Pagamento"); }
+        if (!fornecedor) { return toast.warn("Selecione a Pessoa ou Fornecedor"); }
+        if (!plano) { return toast.warn("Selecione o Tipo da Despesa"); }
+        if (!pagamento) { return toast.warn("Selecione o Meio de Pagamento"); }
+        if (!valor || valor === 0) { return toast.warn("Digite um valor valido"); }
 
         if (repetir == 'repetir') {
             if (vezes == 0 || !vezes) { return toast.warn("Preencha o campo 'Repetir'") }

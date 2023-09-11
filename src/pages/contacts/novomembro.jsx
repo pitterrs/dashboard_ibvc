@@ -90,6 +90,11 @@ const Novomembro = () => {
         const key = localStorage.getItem("IBVC_key");
 
         if (!nome) { return toast.warn("Campo 'Nome' é obrigatório"); }
+        if (!genero) { return toast.warn("Campo 'Genero' é obrigatório"); }
+        if (!nascimento) { return toast.warn("Campo 'Data de Nascimento' é obrigatório"); }
+        if (!civil) { return toast.warn("Campo 'Estado Civil' é obrigatório"); }
+        if (!admissao) { return toast.warn("Campo 'Admissão' é obrigatório"); }
+        if (!situacao) { return toast.warn("Campo 'Situação na Igreja' é obrigatório"); }
 
         await axios
             .post(`${process.env.REACT_APP_API_URL}addmembro`, {

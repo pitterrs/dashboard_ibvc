@@ -106,6 +106,7 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
     const handleCreate = async () => {
         // let new_id_equipe = 0;
         if (!nome_membro) { return toast.warn("Preencha o campo 'Nome'"); }
+        if (!funcao) { return toast.warn("Selecione uma função para o membro"); }
 
         try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}checkmembroequipe/` + id_membro + '/' + id_equipe);
@@ -150,8 +151,8 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
                 if (error.response.status === 403) {
                     window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
                 }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
             });
-            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
     }
 
     const handleChange = (e) => {
@@ -170,7 +171,7 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
             <Modal size="xl" show={show} onHide={handleClose}>
                 <Modal.Body >
                     <Box m="20px" >
-                        <Header title="Criar Equipe" subtitle="Você está uma nova Equipe." />
+                        <Header title={'Adicionar Membro a Equipe ' + equipe.nome_equipe} subtitle="Você está adicionando um membro." />
                         <Row>
                             <Col xs lg="9">
                                 <div className='fundo'>
@@ -195,12 +196,43 @@ const AddMembro = ({ show, setShow, equipe, getMembrosEquipe }) => {
                                             </Form.Group>
                                         </Col>
                                     </Row>
-                                    <Col xs lg="3">
-                                        <Row className="mb-3">
+                                    <Col xs lg="4">
+                                        {/* <Row className="mb-3">
                                             <Form.Group as={Col} >
                                                 <Form.Label>Função</Form.Label>
                                                 <Form.Control maxLength='20' value={funcao} onChange={(e) => setFuncao(e.target.value)} size="sm" type="text" placeholder="Função" />
                                             </Form.Group>
+                                        </Row> */}
+                                        <Row>
+                                            <Form.Label>Função</Form.Label>
+                                            {['radio'].map((type) => (
+                                                <div key={`inline-${type}`} className="mb-3" onChange={(e) => setFuncao(e.target.value)}>
+                                                    <Form.Check
+                                                        inline
+                                                        label="Líder"
+                                                        name="funcao"
+                                                        type={type}
+                                                        id="Lider"
+                                                        value='Líder'
+                                                    />
+                                                    <Form.Check
+                                                        inline
+                                                        label="Relator"
+                                                        name="funcao"
+                                                        type={type}
+                                                        id="Relator"
+                                                        value='Relator'
+                                                    />
+                                                    <Form.Check
+                                                        inline
+                                                        label="Membro"
+                                                        name="funcao"
+                                                        type={type}
+                                                        id="Membro"
+                                                        value='Membro'
+                                                    />
+                                                </div>
+                                            ))}
                                         </Row>
                                     </Col>
                                 </div>

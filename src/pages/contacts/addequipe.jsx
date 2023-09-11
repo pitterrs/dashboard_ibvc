@@ -89,8 +89,8 @@ const AddEquipe = ({ show, setShow, getEquipes }) => {
                 if(error.response.status === 403){
                     window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
                 }
+                window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
             });
-            window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
     }
 
     return (
