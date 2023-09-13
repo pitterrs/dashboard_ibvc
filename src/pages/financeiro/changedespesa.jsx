@@ -164,15 +164,13 @@ const ChangeDespesa = ({ show4, setShow4, getTransacoes, onEdit, setOnEdit }) =>
             })
             .then(
                 ({ data }) => {
-                    if (data.code) {
-                        if (data.error === true) {
-                            toast.error(data.message)
-                        } else {
-                            toast.success(data.message)
-                            setShow4(false);
-                            setOnEdit(null)
-                            getTransacoes();
-                        }
+                    if (data.error === true) {
+                        toast.error(data.message)
+                    } else {
+                        toast.success(data.message)
+                        setShow4(false);
+                        setOnEdit(null)
+                        getTransacoes();
                     }
                 }
             )
