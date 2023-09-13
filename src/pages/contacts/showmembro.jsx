@@ -76,7 +76,8 @@ const ShowMembro = ({ show2, setShow2, membro, setMembro, getMembros }) => {
     const [outrasinfos, setOutrasInfos] = useState(membro.outrasinfos);
 
     const data_casamento_aux = (!membro.data_casamento ? membro.data_casamento : membro.data_casamento.substr(6, 4) + '-' + membro.data_casamento.substr(3, 2) + '-' + membro.data_casamento.substr(0, 2));
-    const [data_casamento, setDataCasamento] = useState(data_casamento_aux)
+    const [data_casamento, setDataCasamento] = useState(data_casamento_aux);
+    const foto = membro.foto;
 
     const handleClose = () => {
         setShow2(false);
@@ -94,6 +95,11 @@ const ShowMembro = ({ show2, setShow2, membro, setMembro, getMembros }) => {
                                 <Col lg="6">
                                     <div className="fundo">
                                         <h4>Informações Pessoais</h4>
+                                        <Row className="mb-3">
+                                            <Col xs={6} md={4}>
+                                                <Image className="imagem" src={foto} roundedCircle />
+                                            </Col>
+                                        </Row>
                                         <Row className="mb-3">
                                             <Form.Group as={Col} >
                                                 <Form.Label>Nome</Form.Label>

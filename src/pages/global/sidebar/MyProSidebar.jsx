@@ -183,7 +183,7 @@ const MyProSidebar = () => {
                     alt="profile user"
                     width="100px"
                     height="100px"
-                    src={`../../assets/${foto}`}
+                    src={foto}
                     // src={`../../assets/user.png`}
                     style={{ cursor: "pointer", borderRadius: "50%" }}
                   />

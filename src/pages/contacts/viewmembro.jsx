@@ -9,6 +9,7 @@ import axios from "axios";
 import Header from "../../components/Header";
 import { Box } from "@mui/material";
 import "./novomembro.css";
+import Image from 'react-bootstrap/Image';
 
 const ViewMembro = ({ show2, setShow2, membro, setMembro }) => {
 
@@ -71,7 +72,8 @@ const ViewMembro = ({ show2, setShow2, membro, setMembro }) => {
     const [outrasinfos, setOutrasInfos] = useState(membro.outrasinfos);
 
     // const data_casamento_aux = (!membro.data_casamento ? membro.data_casamento : membro.data_casamento.substr(6, 4) + '-' + membro.data_casamento.substr(3, 2) + '-' + membro.data_casamento.substr(0, 2));
-    const [data_casamento, setDataCasamento] = useState(membro.data_casamento)
+    const [data_casamento, setDataCasamento] = useState(membro.data_casamento);
+    const foto = membro.foto;
 
     const handleClose = () => {
         setShow2(false);
@@ -88,6 +90,11 @@ const ViewMembro = ({ show2, setShow2, membro, setMembro }) => {
                             <Col lg="6">
                                 <div className="fundo">
                                     <h4>Informações Pessoais</h4>
+                                    <Row className="mb-3">
+                                            <Col xs={6} md={4}>
+                                                <Image className="imagem" src={foto} roundedCircle />
+                                            </Col>
+                                        </Row>
                                     <Row className="mb-3">
                                         <Form.Group as={Col} >
                                             <Form.Label>Nome</Form.Label>

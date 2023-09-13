@@ -42,6 +42,7 @@ const Novomembro = () => {
     const [chamado, setChamado] = useState("");
     const [outrasinfos, setOutrasInfos] = useState("");
     const [data_casamento, setDataCasamento] = useState();
+    const [foto, setFoto] = useState(null);
     // const [qntmembrosatual, setQntMembrosAtual] = useState();
     // const [totalmembrosativos, setTotalMembrosAtivos] = useState();
     let totalmembrosativos = 0;
@@ -96,29 +97,35 @@ const Novomembro = () => {
         if (!admissao) { return toast.warn("Campo 'Admissão' é obrigatório"); }
         if (!situacao) { return toast.warn("Campo 'Situação na Igreja' é obrigatório"); }
 
+        const dados = new FormData();
+        dados.append("nome", nome);
+        dados.append("email", email);
+        dados.append("celular", celular);
+        dados.append("telefone", telefone);
+        dados.append("genero", genero);
+        dados.append("nascimento", nascimento);
+        dados.append("civil", civil);
+        dados.append("cep", cep);
+        dados.append("endereco", endereco);
+        dados.append("numero", numero);
+        dados.append("complemento", complemento);
+        dados.append("admissao", admissao);
+        dados.append("data_admissao", data_admissao);
+        dados.append("situacao", situacao);
+        dados.append("conversao", conversao);
+        dados.append("batismo", batismo);
+        dados.append("chamado", chamado);
+        dados.append("outrasinfos", outrasinfos);
+        dados.append("data_casamento", data_casamento);
+        dados.append("token", token);
+        dados.append("key", key);
+        dados.append("imagem", foto);
+
         await axios
-            .post(`${process.env.REACT_APP_API_URL}addmembro`, {
-                nome: nome,
-                email: email,
-                celular: celular,
-                telefone: telefone,
-                genero: genero,
-                nascimento: nascimento,
-                civil: civil,
-                cep: cep,
-                endereco: endereco,
-                numero: numero,
-                complemento: complemento,
-                admissao: admissao,
-                data_admissao: data_admissao,
-                situacao: situacao,
-                conversao: conversao,
-                batismo: batismo,
-                chamado: chamado,
-                outrasinfos: outrasinfos,
-                data_casamento: data_casamento,
-                token,
-                key
+            .post(`${process.env.REACT_APP_API_URL}addmembro`, dados, {
+                headers: {
+                    "Content-Type": `multipart/form-data`,
+                },
             })
             .then(
                 ({ data }) => {
@@ -148,14 +155,14 @@ const Novomembro = () => {
                     }
                 }
             )
-            .catch(error =>{
-                if(error.response.status === 401){
+            .catch(error => {
+                if (error.response.status === 401) {
                     window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
                 }
-                if(error.response.status === 500){
+                if (error.response.status === 500) {
                     toast.error(error.response.data.message);
                 }
-                if(error.response.status === 403){
+                if (error.response.status === 403) {
                     window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`);
                 }
                 window.location.replace(`${process.env.REACT_APP_SITE_URL}error`);
@@ -249,18 +256,17 @@ const Novomembro = () => {
 
     }
 
-    // const setImagemFunction = (data) => {
-    //     var lerArquivo = new FileReader();
+    const setImagemFunction = (data) => {
 
-    //     lerArquivo.onload = function (imagem) {
-    //         const imagembase64_aux = imagem.target.result;
-    //         setImagemBase64(imagembase64_aux);
-    //         setImagem(imagembase64_aux);
-    //     }
+        setFoto(data);
+        var lerArquivo = new FileReader();
 
-    //     lerArquivo.readAsDataURL(data);
-
-    // }
+        lerArquivo.onload = function (imagem) {
+            const imagembase64_aux = imagem.target.result;
+            setImagem(imagembase64_aux);
+        }
+        lerArquivo.readAsDataURL(data);
+    }
 
     return (
         logado ?
@@ -271,17 +277,19 @@ const Novomembro = () => {
                     <Col lg="5">
                         <div className="fundo">
                             <h4>Informações Pessoais</h4>
-                            {/* <Row className="mb-1">
+                            <Row className="mb-1">
                                 <Form.Group controlId="formFileSm" className="mb-3">
-                                    <Form.Label>Selecionar uma foto:</Form.Label>
-                                    <Form.Control type="file" size="sm" onChange={(e) => setImagemFunction(e.target.files[0])} />
+                                    <Form.Label>Selecione uma foto:</Form.Label>
+                                    <Form.Control accept={['.png', '.jpg', 'jpeg']} rest la type="file" size="sm" onChange={(e) => setImagemFunction(e.target.files[0])} />
                                 </Form.Group>
-                            </Row> */}
-                            {/* <Row className="mb-3">
-                                <Col xs={6} md={4}>
-                                    <Image className="imagem" src={imagembase64} rounded />
-                                </Col>
-                            </Row> */}
+                            </Row>
+                            {imagem &&
+                                <Row className="mb-3">
+                                    <Col xs={6} md={4}>
+                                        <Image className="imagem" src={imagem} roundedCircle />
+                                    </Col>
+                                </Row>
+                            }
                             <Row className="mb-3">
                                 <Form.Group as={Col} >
                                     <Form.Label>Nome</Form.Label>
