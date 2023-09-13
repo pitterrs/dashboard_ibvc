@@ -251,7 +251,7 @@ const AddUser = ({ show, setShow, getUsers }) => {
                 </Box>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="outline-primary" size="sm" onClick={handleCreate}>
+                <Button className='cursor-pointer' variant="outline-primary" size="sm" onClick={handleCreate}>
                     {/* <Button variant="outline-primary" size="sm" onClick={uploadimage}> */}
                     Cadastrar Usuário
                 </Button>
