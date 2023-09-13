@@ -51,7 +51,6 @@ const Novomembro = () => {
     let qntmembrosatual2 = [];
     const [logado, setLogado] = useState(false);
     const [imagem, setImagem] = useState();
-    const [imagembase64, setImagemBase64] = useState();
 
     const validations = async () => {
         const token = localStorage.getItem("IBVC_token");
@@ -152,6 +151,8 @@ const Novomembro = () => {
                         setBatismo()
                         setChamado('')
                         setOutrasInfos('')
+                        setFoto(null)
+                        setImagem(null)
                     }
                 }
             )
