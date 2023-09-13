@@ -32,7 +32,7 @@ const Login = () => {
             .then(
                 ({ data }) => {
                     if (data.error === false) {
-                            window.location.replace(`${process.env.REACT_APP_SITE_URL}`)
+                        window.location.replace(`${process.env.REACT_APP_SITE_URL}`)
                     }
                 }
             )
@@ -72,6 +72,15 @@ const Login = () => {
                 setMessage('Ocorreu um erro ao tentar realizar o login. Contate o administrador do sistema');
             });
     }
+
+    document.addEventListener("keypress", function (e) {
+        if (e.key === 'Enter') {
+            if (!email) { return setMessage("Preencha o campo 'Email'") }
+            if (!senha) { return setMessage("Preencha o campo 'Senha'"); }
+            handleSend()
+        }
+    });
+
     return (
         <Box m="20px" >
 
