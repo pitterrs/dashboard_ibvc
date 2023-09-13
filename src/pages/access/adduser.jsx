@@ -89,7 +89,7 @@ const AddUser = ({ show, setShow, getUsers }) => {
         await axios
             .post(`${process.env.REACT_APP_API_URL}adduser`, dados, {
                 headers: {
-                    "Content-Type": `multipart/form-data`,
+                    "content-type": `multipart/form-data`,
                 },
             })
             .then(
