@@ -80,6 +80,7 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
     const [data_casamento, setDataCasamento] = useState(data_casamento_aux)
     const [imagem, setImagem] = useState(membro[0].foto);
     const [foto, setFoto] = useState(null);
+    const [nome_conjuge, setNome_Conjuge] = useState(membro[0].conjuge);
 
     const handleClose = () => {
         setShow(false);
@@ -121,6 +122,7 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
         dados.append("token", token);
         dados.append("key", key);
         dados.append("imagem", foto);
+        dados.append("nome_conjuge", nome_conjuge);
 
         await axios
             .put(`${process.env.REACT_APP_API_URL}changemembro/` + membro[0].id, dados, {
@@ -354,6 +356,10 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
                                             <Form.Group as={Col}>
                                                 <Form.Label>Data de Casamento</Form.Label>
                                                 <Form.Control value={data_casamento} onChange={(e) => setDataCasamento(e.target.value)} size="sm" type="date" />
+                                            </Form.Group>
+                                            <Form.Group as={Col}>
+                                                <Form.Label>Nome do Cônjuge</Form.Label>
+                                                <Form.Control value={nome_conjuge} onChange={(e) => setNome_Conjuge(e.target.value)} size="sm" type="text" />
                                             </Form.Group>
                                         </Row>
                                     </div>

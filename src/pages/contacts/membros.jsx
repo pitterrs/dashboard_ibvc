@@ -203,6 +203,7 @@ const Membros = () => {
     { field: "genero", headerName: "Genero", width: 90 },
     { field: "nascimento", type: 'date', headerName: "Nascimento", width: 100 },
     { field: "civil", headerName: "Estado Civil", width: 110 },
+    { field: "conjuge", headerName: "Cônjuge", width: 200 },
     { field: "data_casamento", headerName: "Dt. Casamento", width: 120 },
     { field: "admissao", headerName: "Admissão", width: 110 },
     { field: "data_admissao", headerName: "Dt. Admissão", width: 105 },

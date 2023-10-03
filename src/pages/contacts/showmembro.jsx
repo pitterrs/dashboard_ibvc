@@ -78,6 +78,7 @@ const ShowMembro = ({ show2, setShow2, membro, setMembro, getMembros }) => {
     const data_casamento_aux = (!membro.data_casamento ? membro.data_casamento : membro.data_casamento.substr(6, 4) + '-' + membro.data_casamento.substr(3, 2) + '-' + membro.data_casamento.substr(0, 2));
     const [data_casamento, setDataCasamento] = useState(data_casamento_aux);
     const foto = membro.foto;
+    const [nome_conjuge, setNome_Conjuge] = useState(membro.conjuge);
 
     const handleClose = () => {
         setShow2(false);
@@ -172,6 +173,10 @@ const ShowMembro = ({ show2, setShow2, membro, setMembro, getMembros }) => {
                                             <Form.Group as={Col}>
                                                 <Form.Label>Data de Casamento</Form.Label>
                                                 <Form.Control disabled value={data_casamento} onChange={(e) => setDataCasamento(e.target.value)} size="sm" type="date" />
+                                            </Form.Group>
+                                            <Form.Group as={Col}>
+                                                <Form.Label>Nome do Cônjuge</Form.Label>
+                                                <Form.Control disabled value={nome_conjuge} onChange={(e) => setNome_Conjuge(e.target.value)} size="sm" type="text" />
                                             </Form.Group>
                                         </Row>
                                     </div>

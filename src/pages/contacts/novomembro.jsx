@@ -43,8 +43,8 @@ const Novomembro = () => {
     const [outrasinfos, setOutrasInfos] = useState("");
     const [data_casamento, setDataCasamento] = useState();
     const [foto, setFoto] = useState(null);
-    // const [qntmembrosatual, setQntMembrosAtual] = useState();
-    // const [totalmembrosativos, setTotalMembrosAtivos] = useState();
+    const [nome_conjuge, setNome_Conjuge] = useState("");
+
     let totalmembrosativos = 0;
     let qntmembrosatual = [];
     let totalmembrosinativos = 0;
@@ -119,6 +119,7 @@ const Novomembro = () => {
         dados.append("token", token);
         dados.append("key", key);
         dados.append("imagem", foto);
+        dados.append("nome_conjuge", nome_conjuge);
 
         await axios
             .post(`${process.env.REACT_APP_API_URL}addmembro`, dados, {
@@ -136,19 +137,20 @@ const Novomembro = () => {
                         setEmail('')
                         setCelular('')
                         setTelefone('')
-                        setGenero('')
-                        setNascimento()
-                        setCivil('Selecionar')
-                        setDataCasamento()
+                        setGenero(null)
+                        setNascimento(null)
+                        setCivil(null)
+                        setDataCasamento(null)
+                        setNome_Conjuge('')
                         setCep('')
                         setEndereco('')
                         setNumero('')
                         setComplemento('')
-                        setAdmissao('')
-                        setDataAdmissao()
-                        setSituacao('')
-                        setConversao()
-                        setBatismo()
+                        setAdmissao(null)
+                        setDataAdmissao(null)
+                        setSituacao(null)
+                        setConversao(null)
+                        setBatismo(null)
                         setChamado('')
                         setOutrasInfos('')
                         setFoto(null)
@@ -359,6 +361,10 @@ const Novomembro = () => {
                                 <Form.Group as={Col}>
                                     <Form.Label>Data de Casamento</Form.Label>
                                     <Form.Control value={data_casamento} onChange={(e) => setDataCasamento(e.target.value)} size="sm" type="date" />
+                                </Form.Group>
+                                <Form.Group as={Col}>
+                                    <Form.Label>Nome do Cônjuge</Form.Label>
+                                    <Form.Control value={nome_conjuge} onChange={(e) => setNome_Conjuge(e.target.value)} size="sm" type="text" />
                                 </Form.Group>
                             </Row>
                         </div>

@@ -7,7 +7,6 @@ import "./novomembro.css"
 import Button from 'react-bootstrap/Button';
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import axios from "axios";
-import { validateSections } from '@mui/x-date-pickers/internals/hooks/useField/useField.utils';
 import { toast } from "react-toastify";
 const Casamento = () => {
 
@@ -17,7 +16,6 @@ const Casamento = () => {
   const [pageSize, setPageSize] = useState(10);
   const [aniversariantes, setAniversariantes] = useState([])
   const [membros, setMembros] = useState([]);
-  const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
   const [numero, setNumero] = useState();
   const [loading, setLoading] = useState(true);
   const columns = [
@@ -31,7 +29,8 @@ const Casamento = () => {
       headerName: "Data",
       width: 140,
     },
-    { field: "nome", headerName: "Nome", width: 180 },
+    { field: "nome", headerName: "Nome", width: 350 },
+    { field: "conjuge", headerName: "Cônjuge", width: 350 },
   ];
 
   const validations = async () => {
@@ -132,7 +131,11 @@ const Casamento = () => {
         Object.defineProperty(linha, 'data', {
           value: formatDate,
         })
-        aniversario.push(linha)
+        if(aniversario.find((casamento) => casamento.nome === linha.nome || casamento.conjuge === linha.nome)) {
+
+        }else{
+          aniversario.push(linha)
+        }
       }
     }
     setAniversariantes(aniversario);
