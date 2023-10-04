@@ -258,25 +258,6 @@ const MyProSidebar = () => {
                 setSelected={setSelected}
                 icon={<Diversity3Icon />}
               />
-              {/* Inicio Sub Menu */}
-              <SubMenu component={<Link className="link texto-menu" />} icon={<Groups2Icon className="tamanho" />} label="Mensageiras do Rei" >
-                <MenuItem>
-                  <Item
-                    title="Gerenciar Membros"
-                    to="/mensageiras"
-                    selected={selected}
-                    setSelected={setSelected}
-                  />
-                </MenuItem>
-                <MenuItem>
-                  <Item
-                    title="Adicionar Mensageira"
-                    to="/addmensageira"
-                    selected={selected}
-                    setSelected={setSelected}
-                  />
-                </MenuItem>
-              </SubMenu>
               <Typography
                 variant="h6"
                 color={colors.grey[300]}
