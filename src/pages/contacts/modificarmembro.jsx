@@ -58,6 +58,7 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
     const [civil, setCivil] = useState(membro[0].civil);
     const [cep, setCep] = useState(membro[0].cep);
     const [endereco, setEndereco] = useState(membro[0].endereco);
+    const [bairro, setBairro] = useState(membro[0].bairro);
     const [numero, setNumero] = useState(membro[0].numero);
     const [complemento, setComplemento] = useState(membro[0].complemento);
     const [admissao, setAdmissao] = useState(membro[0].admissao);
@@ -109,6 +110,7 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
         dados.append("civil", civil);
         dados.append("cep", cep);
         dados.append("endereco", endereco);
+        dados.append("bairro", bairro);
         dados.append("numero", numero);
         dados.append("complemento", complemento);
         dados.append("admissao", admissao);
@@ -250,7 +252,7 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
     }
 
     const setImagemFunction = (data) => {
-        if (data?.size > 524288) {
+        if (data?.size > 5500000) {
             return toast.warn('Arquivo muito grande. Selecione um arquivo menor')
         }
         if (data == undefined) {
@@ -380,6 +382,14 @@ const ModificarMembro = ({ show, setShow, membro, setMembro, getMembros }) => {
                                                 <Form.Control value={endereco} maxLength={45} onChange={(e) => setEndereco(e.target.value)} size="sm" type="text" placeholder="Endereço" />
                                             </Form.Group>
                                         </Row>
+                                        <Col lg="6">
+                                            <Row className="mb-3">
+                                                <Form.Group as={Col} controlId="formGridPassword">
+                                                    <Form.Label>Bairro</Form.Label>
+                                                    <Form.Control value={bairro} maxLength={30} onChange={(e) => setBairro(e.target.value)} size="sm" type="text" placeholder="Bairro" />
+                                                </Form.Group>
+                                            </Row>
+                                        </Col>
                                         <Row className="mb-3">
                                             <Form.Group as={Col} controlId="formGridPassword">
                                                 <Form.Label>Número</Form.Label>

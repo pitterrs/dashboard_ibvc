@@ -58,6 +58,7 @@ const ShowMembro = ({ show2, setShow2, membro, setMembro, getMembros }) => {
     const [civil, setCivil] = useState(membro.civil);
     const [cep, setCep] = useState(membro.cep);
     const [endereco, setEndereco] = useState(membro.endereco);
+    const [bairro, setBairro] = useState(membro.bairro);
     const [numero, setNumero] = useState(membro.numero);
     const [complemento, setComplemento] = useState(membro.complemento);
     const [admissao, setAdmissao] = useState(membro.admissao);
@@ -197,6 +198,14 @@ const ShowMembro = ({ show2, setShow2, membro, setMembro, getMembros }) => {
                                                 <Form.Control disabled value={endereco} maxLength={45} onChange={(e) => setEndereco(e.target.value)} size="sm" type="text" placeholder="Endereço" />
                                             </Form.Group>
                                         </Row>
+                                        <Col lg="6">
+                                            <Row className="mb-3">
+                                                <Form.Group as={Col} controlId="formGridPassword">
+                                                    <Form.Label>Bairro</Form.Label>
+                                                    <Form.Control disabled value={bairro} maxLength={30} onChange={(e) => setBairro(e.target.value)} size="sm" type="text" placeholder="Bairro" />
+                                                </Form.Group>
+                                            </Row>
+                                        </Col>
                                         <Row className="mb-3">
                                             <Form.Group as={Col} controlId="formGridPassword">
                                                 <Form.Label>Número</Form.Label>

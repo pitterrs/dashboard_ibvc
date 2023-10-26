@@ -32,6 +32,7 @@ const Novomembro = () => {
     const [civil, setCivil] = useState("");
     const [cep, setCep] = useState("");
     const [endereco, setEndereco] = useState("");
+    const [bairro, setBairro] = useState("");
     const [numero, setNumero] = useState("");
     const [complemento, setComplemento] = useState("");
     const [admissao, setAdmissao] = useState("");
@@ -106,6 +107,7 @@ const Novomembro = () => {
         dados.append("civil", civil);
         dados.append("cep", cep);
         dados.append("endereco", endereco);
+        dados.append("bairro", bairro);
         dados.append("numero", numero);
         dados.append("complemento", complemento);
         dados.append("admissao", admissao);
@@ -260,7 +262,11 @@ const Novomembro = () => {
     }
 
     const setImagemFunction = (data) => {
-
+        if (data?.size > 5500000) {
+            setImagem();
+            setFoto();
+            return toast.error('Arquivo muito grande. Selecione um arquivo menor')
+        }
         setFoto(data);
         var lerArquivo = new FileReader();
 
@@ -269,6 +275,21 @@ const Novomembro = () => {
             setImagem(imagembase64_aux);
         }
         lerArquivo.readAsDataURL(data);
+    }
+
+    const setCep2 = async (data) =>{
+        setCep(data);
+        var novocep = data.replace('-','');
+        if(novocep.length == 8){
+            try {
+            const res = await axios.get(`https://viacep.com.br/ws/${novocep}/json`);
+            setCep(res.data.cep ? res.data.cep : data);
+            setEndereco(res.data.logradouro ? res.data.logradouro : '');
+            setBairro(res.data.bairro ? res.data.bairro : '');
+            } catch(error) {
+                setCep(error);
+            }
+        }
     }
 
     return (
@@ -376,15 +397,23 @@ const Novomembro = () => {
                             <Row className="mb-3">
                                 <Form.Group as={Col} controlId="zip-code">
                                     <Form.Label>CEP</Form.Label>
-                                    <Form.Control value={cep} maxLength={9} onChange={(e) => setCep(e.target.value)} size="sm" type="text" placeholder="CEP" />
+                                    <Form.Control value={cep} maxLength={9} onChange={(e) => setCep2(e.target.value)} size="sm" type="text" placeholder="Digite o CEP" />
                                 </Form.Group>
                             </Row>
                             <Row className="mb-3">
                                 <Form.Group as={Col} controlId="formGridPassword">
-                                    <Form.Label>Endereço</Form.Label>
+                                    <Form.Label>Rua</Form.Label>
                                     <Form.Control value={endereco} maxLength={45} onChange={(e) => setEndereco(e.target.value)} size="sm" type="text" placeholder="Endereço" />
                                 </Form.Group>
                             </Row>
+                            <Col lg="6">
+                                <Row className="mb-3">
+                                    <Form.Group as={Col} controlId="formGridPassword">
+                                        <Form.Label>Bairro</Form.Label>
+                                        <Form.Control value={bairro} maxLength={30} onChange={(e) => setBairro(e.target.value)} size="sm" type="text" placeholder="Bairro" />
+                                    </Form.Group>
+                                </Row>
+                            </Col>
                             <Row className="mb-3">
                                 <Form.Group as={Col} controlId="formGridPassword">
                                     <Form.Label>Número</Form.Label>

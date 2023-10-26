@@ -97,7 +97,7 @@ const Dashboard = () => {
 
     //Captura a quantidade de membros ativos atualmente
     try {
-      const res = await axios.get(`h${process.env.REACT_APP_API_URL}totalmembrosativos`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}totalmembrosativos`);
       totalMembrosativos = res.data[0].quantidade
     } catch (error) {
       console.log('erro desconhecido');

@@ -40,7 +40,7 @@ const ViewMembro = ({ show2, setShow2, membro, setMembro }) => {
 
     useEffect(() => {
         validations();
-      }, []);
+    }, []);
 
     const [nome, setNome] = useState(membro.nome);
     const [email, setEmail] = useState(membro.email);
@@ -54,6 +54,7 @@ const ViewMembro = ({ show2, setShow2, membro, setMembro }) => {
     const [civil, setCivil] = useState(membro.civil);
     const [cep, setCep] = useState(membro.cep);
     const [endereco, setEndereco] = useState(membro.endereco);
+    const [bairro, setBairro] = useState(membro.bairro);
     const [numero, setNumero] = useState(membro.numero);
     const [complemento, setComplemento] = useState(membro.complemento);
     const [admissao, setAdmissao] = useState(membro.admissao);
@@ -91,10 +92,10 @@ const ViewMembro = ({ show2, setShow2, membro, setMembro }) => {
                                 <div className="fundo">
                                     <h4>Informações Pessoais</h4>
                                     <Row className="mb-3">
-                                            <Col xs={6} md={4}>
-                                                <Image className="imagem" src={foto} roundedCircle />
-                                            </Col>
-                                        </Row>
+                                        <Col xs={6} md={4}>
+                                            <Image className="imagem" src={foto} roundedCircle />
+                                        </Col>
+                                    </Row>
                                     <Row className="mb-3">
                                         <Form.Group as={Col} >
                                             <Form.Label>Nome</Form.Label>
@@ -187,6 +188,14 @@ const ViewMembro = ({ show2, setShow2, membro, setMembro }) => {
                                             <Form.Control disabled='true' value={endereco} onChange={(e) => setEndereco(e.target.value)} size="sm" type="text" placeholder="Endereço" />
                                         </Form.Group>
                                     </Row>
+                                    <Col lg="6">
+                                        <Row className="mb-3">
+                                            <Form.Group as={Col} controlId="formGridPassword">
+                                                <Form.Label>Bairro</Form.Label>
+                                                <Form.Control value={bairro} maxLength={30} onChange={(e) => setBairro(e.target.value)} size="sm" type="text" placeholder="Bairro" />
+                                            </Form.Group>
+                                        </Row>
+                                    </Col>
                                     <Row className="mb-3">
                                         <Form.Group as={Col} controlId="formGridPassword">
                                             <Form.Label>Número</Form.Label>

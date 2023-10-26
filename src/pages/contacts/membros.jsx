@@ -81,6 +81,7 @@ const Membros = () => {
         Object.defineProperty(linha, 'idade', {
           value: idade,
         })
+        
       }
 
       if (linha.nascimento) {
@@ -94,7 +95,7 @@ const Membros = () => {
         })
       }
 
-      if (linha.data_admissao) {
+      if (linha.data_admissao && linha.data_admissao != "0000-00-00") {
         const newdate = new Date(linha.data_admissao);
         const dia = (newdate.getUTCDate()) < 10 ? `0${(newdate.getUTCDate())}` : (newdate.getUTCDate());;
         const mes = (newdate.getUTCMonth() + 1) < 10 ? `0${(newdate.getUTCMonth() + 1)}` : (newdate.getUTCMonth() + 1);
@@ -105,7 +106,7 @@ const Membros = () => {
         })
       }
 
-      if (linha.data_casamento) {
+      if (linha.data_casamento && linha.data_casamento != "0000-00-00") {
         const newdate = new Date(linha.data_casamento);
         const dia = (newdate.getUTCDate()) < 10 ? `0${(newdate.getUTCDate())}` : (newdate.getUTCDate());;
         const mes = (newdate.getUTCMonth() + 1) < 10 ? `0${(newdate.getUTCMonth() + 1)}` : (newdate.getUTCMonth() + 1);
@@ -116,7 +117,7 @@ const Membros = () => {
         })
       }
 
-      if (linha.conversao) {
+      if (linha.conversao && linha.conversao != "0000-00-00") {
         const newdate = new Date(linha.conversao);
         const dia = (newdate.getUTCDate()) < 10 ? `0${(newdate.getUTCDate())}` : (newdate.getUTCDate());;
         const mes = (newdate.getUTCMonth() + 1) < 10 ? `0${(newdate.getUTCMonth() + 1)}` : (newdate.getUTCMonth() + 1);
@@ -127,7 +128,7 @@ const Membros = () => {
         })
       }
 
-      if (linha.batismo) {
+      if (linha.batismo && linha.batismo != "0000-00-00") {
         const newdate = new Date(linha.batismo);
         const dia = (newdate.getUTCDate()) < 10 ? `0${(newdate.getUTCDate())}` : (newdate.getUTCDate());;
         const mes = (newdate.getUTCMonth() + 1) < 10 ? `0${(newdate.getUTCMonth() + 1)}` : (newdate.getUTCMonth() + 1);
