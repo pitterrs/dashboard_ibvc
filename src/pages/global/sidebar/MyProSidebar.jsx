@@ -92,25 +92,25 @@ const MyProSidebar = () => {
     inputImg.click();
   }
 
-  const setImagemFunction = (data) => {
-    if (data?.size > 524288) {
-      return toast.warn('Arquivo muito grande. Selecione um arquivo menor')
-    }
-    if (data == undefined) {
-      setImagem(null);
-      setFoto(null);
-    } else {
-      setFoto(data);
-      var lerArquivo = new FileReader();
+  // const setImagemFunction = (data) => {
+  //   if (data?.size > 524288) {
+  //     return toast.warn('Arquivo muito grande. Selecione um arquivo menor')
+  //   }
+  //   if (data == undefined) {
+  //     setImagem(null);
+  //     setFoto(null);
+  //   } else {
+  //     setFoto(data);
+  //     var lerArquivo = new FileReader();
 
-      lerArquivo.onload = function (imagem) {
-        const imagembase64_aux = imagem.target.result;
-        setImagem(imagembase64_aux);
-      }
+  //     lerArquivo.onload = function (imagem) {
+  //       const imagembase64_aux = imagem.target.result;
+  //       setImagem(imagembase64_aux);
+  //     }
 
-      lerArquivo.readAsDataURL(data);
-    }
-  }
+  //     lerArquivo.readAsDataURL(data);
+  //   }
+  // }
   
   return (
     logado ?
@@ -212,8 +212,8 @@ const MyProSidebar = () => {
                     src={foto}
                     // src={`../../assets/user.png`}
                     style={{ cursor: "pointer", borderRadius: "50%" }}
-                    onClick={clicou}
-                    onChange={(e) => setImagemFunction(e.target.files[0])}
+                    // onClick={clicou}
+                    // onChange={(e) => setImagemFunction(e.target.files[0])}
                   />
                 </Box>
                 <Box textAlign="center">

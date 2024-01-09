@@ -20,7 +20,7 @@ const LineChart = ({ isDashboard = false }) => {
         let n = 0;
         while(n < 12){
           Object.defineProperty(dados[0].data[n], 'y', {
-            value: res2.data[n].quantidade,
+            value: res2.data[n]?.quantidade ? res2.data[n].quantidade : 0,
           })
           n++;
         }
@@ -28,7 +28,7 @@ const LineChart = ({ isDashboard = false }) => {
         n = 0;
         while(n < 12){
           Object.defineProperty(dados[1].data[n], 'y', {
-            value: res.data[n].quantidade,
+            value: res.data[n]?.quantidade ? res.data[n]?.quantidade : 0,
           })
           n++;
         }
