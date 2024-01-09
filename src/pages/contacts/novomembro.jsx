@@ -92,6 +92,7 @@ const Novomembro = () => {
 
         if (!nome) { return toast.warn("Campo 'Nome' é obrigatório"); } 
         if (!genero) { return toast.warn("Campo 'Genero' é obrigatório"); }
+        if (!nascimento) { return toast.warn("Campo 'Nascimento' é obrigatório"); }
 
         const dados = new FormData();
         dados.append("nome", nome);
