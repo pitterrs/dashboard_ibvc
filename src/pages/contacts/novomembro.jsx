@@ -90,7 +90,7 @@ const Novomembro = () => {
         const token = localStorage.getItem("IBVC_token");
         const key = localStorage.getItem("IBVC_key");
 
-        if (!nome) { return toast.warn("Campo 'Nome' é obrigatório"); }
+        if (!nome) { return toast.warn("Campo 'Nome' é obrigatório"); } 
         if (!genero) { return toast.warn("Campo 'Genero' é obrigatório"); }
 
         const dados = new FormData();
