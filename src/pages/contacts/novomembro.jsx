@@ -92,10 +92,6 @@ const Novomembro = () => {
 
         if (!nome) { return toast.warn("Campo 'Nome' é obrigatório"); }
         if (!genero) { return toast.warn("Campo 'Genero' é obrigatório"); }
-        if (!nascimento) { return toast.warn("Campo 'Data de Nascimento' é obrigatório"); }
-        if (!civil) { return toast.warn("Campo 'Estado Civil' é obrigatório"); }
-        if (!admissao) { return toast.warn("Campo 'Admissão' é obrigatório"); }
-        if (!situacao) { return toast.warn("Campo 'Situação na Igreja' é obrigatório"); }
 
         const dados = new FormData();
         dados.append("nome", nome);
@@ -334,7 +330,7 @@ const Novomembro = () => {
 
                                 <Form.Group as={Col}>
                                     <Form.Label>Telefone</Form.Label>
-                                    <Form.Control value={telefone} maxLength={11} onChange={(e) => setTelefone(e.target.value)} size="sm" type="text" placeholder="223050-3050" />
+                                    <Form.Control value={telefone} maxLength={11} onChange={(e) => setTelefone(e.target.value)} size="sm" type="text" placeholder="223030-3030" />
                                 </Form.Group>
                             </Row>
                             <Row>

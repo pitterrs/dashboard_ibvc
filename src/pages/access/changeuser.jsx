@@ -42,7 +42,7 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
                         data.super === 'true' ?
                             setLogado(true)
                             :
-                            navigate('/unauthorized')
+                            window.location.replace(`${process.env.REACT_APP_SITE_URL}unauthorized`)
                     } else {
                         setLogado(false)
                         window.location.replace(`${process.env.REACT_APP_SITE_URL}login`);
@@ -200,7 +200,7 @@ const ChangeUser = ({ show2, setShow2, getUsers, user }) => {
                                 <div className='fundo'>
                                     <Row className="mb-3">
                                         <Col xs={6} md={4}>
-                                            <Image className="imagem" src={imagem} onClick={clicou} roundedCircle />
+                                            <Image className="imagem pointer" src={imagem} onClick={clicou} roundedCircle />
                                             <Form.Control id='input' className='input' accept={['.png', '.jpg', 'jpeg']} onChange={(e) => setImagemFunction(e.target.files[0])} rest la type="file" size="sm" />
                                         </Col>
                                     </Row>

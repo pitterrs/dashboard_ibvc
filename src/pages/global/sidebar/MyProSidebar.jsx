@@ -71,10 +71,10 @@ const MyProSidebar = () => {
         ({ data }) => {
           if (data.error === false) {
             setLogado(true);
-          }else{
+          } else {
             setLogado(false);
-            (data.number === 401 ? 
-            toast.error(data.message) : setLogado(false))
+            (data.number === 401 ?
+              toast.error(data.message) : setLogado(false))
             // navigate('/login');
           }
         }
@@ -86,6 +86,32 @@ const MyProSidebar = () => {
   useEffect(() => {
     validation();
   }, []);
+
+  const clicou = () => {
+    const inputImg = document.getElementById('input')
+    inputImg.click();
+  }
+
+  const setImagemFunction = (data) => {
+    if (data?.size > 524288) {
+      return toast.warn('Arquivo muito grande. Selecione um arquivo menor')
+    }
+    if (data == undefined) {
+      setImagem(null);
+      setFoto(null);
+    } else {
+      setFoto(data);
+      var lerArquivo = new FileReader();
+
+      lerArquivo.onload = function (imagem) {
+        const imagembase64_aux = imagem.target.result;
+        setImagem(imagembase64_aux);
+      }
+
+      lerArquivo.readAsDataURL(data);
+    }
+  }
+  
   return (
     logado ?
       <Box
@@ -186,6 +212,8 @@ const MyProSidebar = () => {
                     src={foto}
                     // src={`../../assets/user.png`}
                     style={{ cursor: "pointer", borderRadius: "50%" }}
+                    onClick={clicou}
+                    onChange={(e) => setImagemFunction(e.target.files[0])}
                   />
                 </Box>
                 <Box textAlign="center">
